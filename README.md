@@ -44,11 +44,18 @@ var_dump($results);
 ->getCols();
 ```
 
-## Raw
+## Raw Fetch
 
 ```php
-$results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
-              ->getCols()
+$db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
+   ->getCols()
+```
+
+## Raw Exec
+
+```php
+$db->raw('UPDATE payments SET active = !active WHERE status = ? AND id > ?', [1])
+   ->exec()
 ```
 
 ## Insert
