@@ -343,13 +343,13 @@
 		* In/Not IN
 		*/
         public function in($column, $value, $andOr = _AND){
-            return $this->whereFactory($column, $value, $andOr, "%s IN({$this->createMarker($value)})");
+            return $this->whereFactory($column, (array)$value, $andOr, "%s IN({$this->createMarker((array)$value)})");
         }
         public function orIn($column, $value){
             return $this->in($column, $value, _OR);
         }
         public function notIn($column, $value, $andOr = _AND){
-            return $this->whereFactory($column, $value, $andOr, "%s NOT IN({$this->createMarker($value)})");
+            return $this->whereFactory($column, (array)$value, $andOr, "%s NOT IN({$this->createMarker((array)$value)})");
         }
         public function orNotIn($column, $value){
             return $this->in($column, $value, _OR);
