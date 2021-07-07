@@ -143,9 +143,9 @@ $db->filter(true)->table('users')->insert([
 ```php
 $db->leftJoin('images AS i', 'p.id', 'i.pid')
 $db->leftOuterJoin(...)
-$db->rightJoin(...)
+$db->rightJoin('images AS i', 'p.id = i.pid')
 $db->rightOuterJoin(...)
-$db->innerJoin(...)
+$db->innerJoin('images AS i ON p.id = i.pid')
 $db->fullOuterJoin(...)
 ```
 
