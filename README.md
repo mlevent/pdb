@@ -62,7 +62,7 @@ $db->onDuplicate($data, 'products');
 # Update
 
 ```php
-$db->isNull('slug')->update(['slug' => rand()]);
+$db->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
 ```
 
 # Delete
@@ -74,8 +74,8 @@ $db->where('active', 0)->delete('products');
 ## Raw
 
 ```php
-$results = $db->raw('SELECT id, name FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
-              ->getObj()
+$results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
+              ->getCols()
 ```
 
 ## Contributors
