@@ -164,17 +164,17 @@ var_dump($db->fromCache());
 ## Select
 
 ```php
-$db->select('id, name, price, tax');
+$db->select('id, name, price, tax')
 - OR -
-$db->select(['id', 'name', 'price', 'tax']);
+$db->select(['id', 'name', 'price', 'tax'])
 ```
 
 ## Table
 
 ```php
-$db->table('products');
+$db->table('products')
 - OR -
-$db->table(['products as p', 'variants as v']);
+$db->table(['products as p', 'variants as v'])
 ```
 
 ## Order
@@ -190,9 +190,21 @@ $db->orderBy('id', 'desc')
 ## Group
 
 ```php
-$db->groupBy('id');
+$db->groupBy('id')
 - OR -
-$db->groupBy(['id', 'name']);
+$db->groupBy('id, name')
+- OR -
+$db->groupBy(['id', 'name'])
+```
+
+## Having
+
+```php
+$db->having('stock', 5')
+- OR -
+$db->having('stock > 5')
+- OR -
+$db->having('stock > ?', 5)
 ```
 
 ## Where
