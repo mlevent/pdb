@@ -112,7 +112,7 @@ $db->where('active', 0)->delete('products');
 
 | Primary | Not Null |     Not Null | Null |
 | ------- | :------: | -----------: | ---- |
-| ID      |   Name   |        Email | Age  |
+| id      |   name   |        email | age  |
 | 1       | John Doe | john@doe.com | 32   |
 | 2       | Jane Doe | jane@doe.com | 19   |
 
@@ -134,7 +134,7 @@ $db->filter(true)->table('users')->insert([
 ]);
 ```
 
--   Column 'age' cannot be null
+-   Column 'email' cannot be null
 
 # Join
 
