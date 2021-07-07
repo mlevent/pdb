@@ -695,7 +695,7 @@
                     }
                 endif;
             }
-            return !$isBatchData ? reset($filtered) : $filtered;
+            return !$isBatchData ? reset($filtered) : array_values($filtered);
         }
 
         /**
@@ -762,15 +762,17 @@
             if(!is_null($table)) 
                 $this->table($table);
 
-            $query = "UPDATE {$this->tableBuild()} SET {$this->createMarkerWithKey($data)} {$this->whereBuild()}";
+            if($this->isFilter)
+                $data = $this->filterData($this->tableBuild(), $data, $this->isFilterValid);
 
-            $runQuery = $this->pdo->prepare($query);
-
-            if($runQuery->execute(array_merge(array_values($data), $this->whereParams)))
-                $this->killQuery($query, $data);
-                $this->rowCount = $runQuery->rowCount();
-                return $this->rowCount;
-
+            if($data){
+                $query = "UPDATE {$this->tableBuild()} SET {$this->createMarkerWithKey($data)} {$this->whereBuild()}";
+                $runQuery = $this->pdo->prepare($query);
+                if($runQuery->execute(array_merge(array_values($data), $this->whereParams)))
+                    $this->killQuery($query, $data);
+                    $this->rowCount = $runQuery->rowCount();
+                    return $this->rowCount;
+            }
             return false;
         }
 

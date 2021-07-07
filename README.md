@@ -73,7 +73,7 @@ $batchData = [
     ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
 ];
 
-$db->filter(true)->insert($batchData, 'products');
+$db->insert($batchData, 'products');
 ```
 
 ## On Duplicate
@@ -98,6 +98,16 @@ $db->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
 
 ```php
 $db->where('active', 0)->delete('products');
+```
+
+## Filter insert/onDuplicate/replaceInto/Update
+
+```php
+$insert = $db->filter(true)->table('users')->insert([
+    'name'  => 'John Doe',
+    'age'   => 39,
+    'price' => 3994
+]);
 ```
 
 # Join
