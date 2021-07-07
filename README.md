@@ -146,12 +146,14 @@ OR
 $db->leftJoin('images AS i', 'p.id = i.pid')
 OR
 $db->leftJoin('images AS i ON p.id = i.pid')
-$db->leftOuterJoin(...)
-$db->rightJoin(...)
-$db->rightOuterJoin(...)
-$db->innerJoin(...)
-$db->fullOuterJoin(...)
 ```
+
+-   $db->leftJoin(...)
+-   $db->leftOuterJoin(...)
+-   $db->rightJoin(...)
+-   $db->rightOuterJoin(...)
+-   $db->innerJoin(...)
+-   $db->fullOuterJoin(...)
 
 # Cache
 
