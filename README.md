@@ -36,12 +36,12 @@ var_dump($results);
 ## Fetch Types
 
 ```php
-$db->table('payments')->get();
-$db->table('payments')->getObj();
-$db->table('payments')->getRow();
-$db->table('payments')->getRowObj();
-$db->select('id')->table('payments')->getCol();
-$db->select('id')->table('payments')->getCols();
+->get();
+->getObj();
+->getRow();
+->getRowObj();
+->getCol();
+->getCols();
 ```
 
 ## Raw
