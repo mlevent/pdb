@@ -79,13 +79,21 @@ $db->insert($batchData, 'products');
 ## On Duplicate
 
 ```php
-$data = [
+$db->table('products')->onDuplicate([
     ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
     ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9'],
     ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
-];
+]);
+```
 
-$db->onDuplicate($data, 'products');
+## Replace Into
+
+```php
+$db->table('products')->replaceInto([
+    ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
+    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9'],
+    ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
+]);
 ```
 
 # Update
@@ -100,13 +108,25 @@ $db->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
 $db->where('active', 0)->delete('products');
 ```
 
-## Filter insert/onDuplicate/replaceInto/update
+## Filter Insert / On Duplicate/ Replace Into / Update
 
-| Tables        |      Are      |  Cool |
-| ------------- | :-----------: | ----: |
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      |   centered    |   $12 |
-| zebra stripes |   are neat    |    $1 |
+| Primary |  Not Null  | Null |
+| ------- | :--------: | ---: |
+| ID      |    Name    |  Age |
+| ---     | :--------: |  --: |
+| 1       |  John Doe  |   32 |
+| 2       |  Jane Doe  |   19 |
+| 3       | Mike Tyson |   56 |
+
+```php
+$insert = $db->filter()->table('users')->insert([
+'name' => 'John Doe',
+'age' => 39,
+'price' => 3994
+]);
+```
+
+| 4 | Walter Bishop | 39 |
 
 ```php
 $insert = $db->filter(true)->table('users')->insert([
