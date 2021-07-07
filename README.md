@@ -207,7 +207,18 @@ $db->having('stock > 5')
 $db->having('stock > ?', 5)
 ```
 
-## Where
+## Limit / Offset / Pager
+
+```php
+$db->limit(100)
+# OR #
+$db->limit(100, 10)
+# OR #
+$db->limit(100)
+$db->offset(0)
+# OR #
+$db->pager(100, 2)
+```
 
 ## Contributors
 

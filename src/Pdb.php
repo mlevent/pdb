@@ -260,7 +260,7 @@
             $this->offset = $offset;
             return $this;
         }
-        public function paging($limit, $page = 1){
+        public function pager($limit, $page = 1){
             if($limit < 1) $limit = 1;
             if($page  < 1) $page  = 1;
             $this->limit  = $limit;
