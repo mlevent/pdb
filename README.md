@@ -113,7 +113,6 @@ $db->where('active', 0)->delete('products');
 | Primary |  Not Null  | Null |
 | ------- | :--------: | ---: |
 | ID      |    Name    |  Age |
-| ---     | :--------: |  --: |
 | 1       |  John Doe  |   32 |
 | 2       |  Jane Doe  |   19 |
 | 3       | Mike Tyson |   56 |
@@ -126,7 +125,9 @@ $insert = $db->filter()->table('users')->insert([
 ]);
 ```
 
-| 4 | Walter Bishop | 39 |
+| ID  |     Name      | Age |
+| --- | :-----------: | --: |
+| 4   | Walter Bishop |  39 |
 
 ```php
 $insert = $db->filter(true)->table('users')->insert([
