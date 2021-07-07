@@ -1,5 +1,5 @@
 {
-    "name": "mlevent/pdob",
+    "name": "mlevent/pdb",
     "description": "PHP için özelleştirilmiş PDO sınıfı",
     "type": "library",
     "license": "MIT",

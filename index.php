@@ -2,7 +2,7 @@
 
     require __DIR__.'/vendor/autoload.php';
 
-    $db = new Mlevent\Pdob(['database' => 'ecommerce', 'username' => 'root']);
+    $db = new \Mlevent\Pdb(['database' => 'ecommerce', 'username' => 'root']);
 
     /** SELECT */
     //$db->select('id, name, price, tax')
@@ -143,11 +143,8 @@
             
             #$insertData = array('product_name' => 'Haystack', 'url_slug' => 'deneme', 'product_code' => 'lanben2', 'price' => '125.50', 'price_old' => '322', 'tax' => 16, 'discount' => 0, 'stock' => 0, 'stock_status' => 0, 'cargo_free' => 0, 'cargo_paid' => 0, 'cargo_price' => 0, 'featured' => 0, 'marketplace' => 0, 'ad_services' => 'Normal', 'active' => 1, 'status' => 'Ban', 'on_sql' => 0, 'no_update' => 0, 'use_timer' => 0);
 
-            //pre($db->createMarkerWithKey($db->filterData('products', $insertData, true)));
-
-            //pre($db->createMarkerWithKeyBatch([['ads' => 23], ['ads' => 24]]));
-
-            #$query = $db->filter(true)->onDuplicate($insertDataBatch, 'products');
+            $query = $db->filter(true)->onDuplicate($insertDataBatch, 'products');
+            pre($query);
             #$query = $db->table('products')->filter(true)->onDuplicate($insertData);
 
             #$query = $db->table('products')->like('product_name', '%Deneme%')->update(['url_slug' => rand()]);
@@ -156,7 +153,7 @@
             #echo $db->table('products')->where('category_id', '164')->update(['url_slug' => rand()]);
             #echo $db->table('products')->where('id > ?', 34089)->delete();
 
-            pre($db->table('products')->where('id > ?', 1)->touch('active'));
+            //pre($db->table('products')->where('id > ?', 1)->touch('active'));
             
             pre($db->lastInsertId());
             pre($db->rowCount());

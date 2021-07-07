@@ -19,19 +19,19 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'f3e4e87ea98be1f57b5eec3b101fd8426bf3af41',
-    'name' => 'mlevent/pdo-db',
+    'reference' => 'cff84e8734569912ed509648765bfe30c09bdd87',
+    'name' => 'mlevent/pdb',
   ),
   'versions' => 
   array (
-    'mlevent/pdo-db' => 
+    'mlevent/pdb' => 
     array (
       'pretty_version' => 'dev-master',
       'version' => 'dev-master',
       'aliases' => 
       array (
       ),
-      'reference' => 'f3e4e87ea98be1f57b5eec3b101fd8426bf3af41',
+      'reference' => 'cff84e8734569912ed509648765bfe30c09bdd87',
     ),
   ),
 );

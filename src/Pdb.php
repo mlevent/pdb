@@ -9,7 +9,7 @@
     if(!defined('_AND')) define('_AND', 'AND');
     if(!defined('_OR'))  define('_OR',  'OR');
 
-    class Pdob
+    class Pdb
     {
         private $pdo;
         private $config;
