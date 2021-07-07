@@ -94,10 +94,10 @@ $db->table('products')->replaceInto([
 ]);
 ```
 
-## Update [Single or Batch]
+## Update
 
 ```php
-$db->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
+$db->where('update < ?', now())->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
 ```
 
 ## Delete
