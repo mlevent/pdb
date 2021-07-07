@@ -97,7 +97,7 @@ $db->table('products')->replaceInto([
 ## Update
 
 ```php
-$db->where('update < ?', now())->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
+$db->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
 ```
 
 ## Delete
