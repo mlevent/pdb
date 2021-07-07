@@ -2,13 +2,13 @@
 
 PHP için PDO sınıfı
 
-# Kurulum
+## Kurulum
 
 ```
 $ composer require mlevent/pdb
 ```
 
-# Örnek Kullanım
+## Örnek Kullanım
 
 ```php
 require '/vendor/autoload.php';
@@ -56,7 +56,7 @@ $db->raw('UPDATE payments SET active = !active WHERE status = ? AND id > ?', ['p
    ->exec()
 ```
 
-# Insert [Batch]
+## Insert [Batch]
 
 ```php
 $db->table('products')->insert([
@@ -74,7 +74,7 @@ $batchData = [
 $db->insert($batchData, 'products');
 ```
 
-# On Duplicate [Batch]
+## On Duplicate [Batch]
 
 ```php
 $db->table('products')->onDuplicate([
@@ -84,7 +84,7 @@ $db->table('products')->onDuplicate([
 ]);
 ```
 
-# Replace Into [Batch]
+## Replace Into [Batch]
 
 ```php
 $db->table('products')->replaceInto([
@@ -94,21 +94,21 @@ $db->table('products')->replaceInto([
 ]);
 ```
 
-# Update [Batch]
+## Update [Batch]
 
 ```php
 $db->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
 ```
 
-# Delete
+## Delete
 
 ```php
 $db->where('active', 0)->delete('products');
 ```
 
-# Filter
+## Filter
 
-## Insert / On Duplicate/ Replace Into / Update
+### Insert / On Duplicate/ Replace Into / Update
 
 | Primary | Not Null |     Not Null | Null |
 | ------- | :------: | -----------: | ---- |
@@ -136,7 +136,7 @@ $db->filter(true)->table('users')->insert([
 
 -   Column 'email' cannot be null
 
-# Join
+## Join
 
 ```php
 $db->leftJoin('images AS i', 'p.id', 'i.pid')
@@ -153,7 +153,7 @@ $db->leftJoin('images AS i ON p.id = i.pid')
 -   $db->innerJoin(...)
 -   $db->fullOuterJoin(...)
 
-# Cache
+## Cache
 
 ```php
 $db->table('products')->cache(30)->get();
