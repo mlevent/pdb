@@ -182,14 +182,19 @@ $db->table(['products as p', 'variants as v'])
 ```php
 $db->where('id', 32886)
 # OR #
-$db->where('stock >= 2 AND active = 0')
-# OR #
-$db->where('stock >= ? AND active = ?', [3, 1])
+$db->where('stock >= ? AND active = ?', [2, 1])
 # OR #
 $db->where(['stock > ?', 'active > ?'], [2, 1])
 # OR #
 $db->where(['stock' => 2, 'active' => 1])
+# OR #
+$db->where('stock >= 2 AND active = 1')
 ```
+
+-   $db->where(...)
+-   $db->orWhere(...)
+-   $db->notWhere(...)
+-   $db->orNotWhere(...)
 
 ## Order
 

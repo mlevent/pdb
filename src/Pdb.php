@@ -319,7 +319,7 @@
         public function orNotWhere($column, $value = null){
             return $this->notWhere($column, $value, _OR);
         }
-        public function whereBuild(){
+        protected function whereBuild(){
             return !is_null($this->where) ? 'WHERE ' . $this->where : null;
         }
 
