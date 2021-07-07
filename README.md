@@ -19,7 +19,11 @@ $db = new \Mlevent\Pdb([
     'password' => 'test',
     'charset'  => 'utf8'
 ]);
+```
 
+## Fetch
+
+```php
 $results = $db->select('id, name, code, slug, price, stock, active, created')
               ->table('products')
               ->where(['categoryId = ?', 'price > ?'], [1237, 50])
@@ -29,12 +33,19 @@ $results = $db->select('id, name, code, slug, price, stock, active, created')
 var_dump($results);
 ```
 
+## Raw
+
+```php
+$results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
+              ->getCols()
+```
+
 ## Insert
 
 ```php
 $db->table('products')->insert([
-    'name' => 'Apple Iphone X 128 Gb',
-    'code' => 'APPLEX128',
+    'name'  => 'Apple Iphone X 128 Gb',
+    'code'  => 'APPLEX128',
     'price' => '999.9'
 ]);
 
@@ -69,13 +80,6 @@ $db->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
 
 ```php
 $db->where('active', 0)->delete('products');
-```
-
-## Raw
-
-```php
-$results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
-              ->getCols()
 ```
 
 ## Contributors
