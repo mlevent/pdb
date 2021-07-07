@@ -4,7 +4,7 @@
 
     session_start();
 
-    $db = new Mert\Core\Factory\Db\Db(['database' => 'ecommerce', 'username' => 'root']);
+    $db = new Mlevent\Pdob(['database' => 'ecommerce', 'username' => 'root']);
 
     /** SELECT */
     //$db->select('id, name, price, tax')
@@ -105,6 +105,9 @@
                             //->count('id', 'ss')
                             //->sum('price', 'sp')
                             ->table('products as u')
+                            /*->group(function($q){
+                                $q->where('p.id IN(?)', '13')->orWhere('p.name = ?', 'hasan');
+                            })*/
                             //->leftJoin('products as p', 'p.id', '3')
                             //->where(['price', 'product_code'], [3, 3])
                             //->where(['price' => 3, 'product_code' => 4], _OR)
@@ -122,15 +125,15 @@
                             //->where(['u.productId > 3', 'u.price > 3'])
                             //->where(['u.productId > ?', 'u.price > ?'], [3,2])
                             ->orderBy('u.id')
-                            ->cache(10)
+                            //->cache(10)
                             //->in('u.productId', [1,2,3])
                             //->having('count(u.name)', 0)
                             //->groupBy('u.name')
                             //->limit(10)
                             ->getObj();
             
-            pre($db->fromCache());
-            pre($data);
+            var_dump($db->fromCache());
+            var_dump($data);
 
             $insertDataBatch = [
                             array('product_name' => 'Deneme 1', 'url_slug' => 'deneme', 'product_code' => 'limon1', 'category_id' => 1, 'price' => '125.50', 'barcode' => 161242353453245, 'stock' => 1, 'min_age' => 0, 'max_age' => 3, 'gender' => 'Kız', 'active' => 1),
@@ -155,57 +158,8 @@
             #echo $db->table('products')->where('product_name', 'deneme')->update(['url_slug' => rand()]);
             #echo $db->table('products')->where('id > ?', 34089)->delete();
             
-            pre($db->lastInsertId());
-            pre($db->rowCount());
-            pre($db->queryCount());
-            pre($db->lastQuery());
-            pre($db->queryHistory());
-
-            //App::db()->onDuplicate($data, 'urunler');
-
-            //App::db()->table('urunler')->where('productId', 9)->update($data);
-            exit;
-            $query = App::db()
-                    ->table('urunler')
-                    //->notWhere(['name' => 'Hasan', 'id' => 13], _AND)
-                    //->findInSet(13, 'p.id')
-                    //->pagination(10, 1)
-                    //->orBetween('id', 4, 16)
-                    //->innerJoin('products_meta as pm', 'pm.productId = ?', 3)
-                    //->orWhere(['id' => 15, 'name' => 'hasan'], 'AND')
-                    //->where('id', 13)
-                    //->where('id > ? and id < ?', [2,39])
-                    //->in('p.id', [12,13,14,15])
-                    //->where('id = ? AND name = ?', [13, 'Hasan'])
-                    //->orNull(['created_at', 'price'], 'OR')
-                    //->where('id > ?', 3)
-                    //->where('id > 3')
-                    /*
-                    ->group(function($q){
-                        $q->where('p.id IN(?)', '13')->orWhere('p.name = ?', 'hasan');
-                    })
-                    */
-                    /*
-                    ->where([
-                        
-                        'p.price' => 0, 
-                        'p.created_at IS NULL'
-                    ])
-                    */
-                    ->where('price > ?', 100)
-                    ->limit(2)
-                    ->get();
-
-                    pre($query);
-                    
-                    pre(App::db()->rowCount());
-                    pre(App::db()->getReadParams()); 
-                    pre(App::db()->queryHistory());
-                    pre(App::db()->queryCount());
-            
-
-            /*
-            $db->from('users')
-                ->where('id', 1)
-                ->get();
-               */
+            var_dump($db->lastInsertId());
+            var_dump($db->rowCount());
+            var_dump($db->queryCount());
+            var_dump($db->lastQuery());
+            var_dump($db->queryHistory());

@@ -1,6 +1,6 @@
 <?php
 
-    namespace Mert\Core\Factory\Db;
+    namespace Mlevent;
 
     use PDOException;
     use PDO;
@@ -9,7 +9,7 @@
     if(!defined('_AND')) define('_AND', 'AND');
     if(!defined('_OR'))  define('_OR',  'OR');
 
-    class Db
+    class Pdob
     {
         private $pdo;
         private $config;
@@ -593,7 +593,7 @@
             if($this->cache)
                 $this->cache->hash($query, join((array)$params), $fetch, $cursor);
 
-            if(!$cached = $this->cache->get())
+            if(!$this->cache || !$cached = $this->cache->get())
             {
                 $runQuery = $this->pdo->prepare($query);
                 if($runQuery->execute($params)){

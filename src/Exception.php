@@ -1,6 +1,6 @@
 <?php
 
-    namespace Mert\Core\Factory\Db;
+    namespace Mlevent;
 
     /**
     * Class Exception
