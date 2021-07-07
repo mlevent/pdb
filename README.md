@@ -56,7 +56,7 @@ $db->raw('UPDATE payments SET active = !active WHERE status = ? AND id > ?', ['p
    ->exec()
 ```
 
-## Insert [Single OR Batch]
+## Insert [Single or Batch]
 
 ```php
 $db->table('products')->insert([
@@ -74,7 +74,7 @@ $batchData = [
 $db->insert($batchData, 'products');
 ```
 
-## On Duplicate [Single OR Batch]
+## On Duplicate [Single or Batch]
 
 ```php
 $db->table('products')->onDuplicate([
@@ -84,7 +84,7 @@ $db->table('products')->onDuplicate([
 ]);
 ```
 
-## Replace Into [Single OR Batch]
+## Replace Into [Single or Batch]
 
 ```php
 $db->table('products')->replaceInto([
@@ -94,7 +94,7 @@ $db->table('products')->replaceInto([
 ]);
 ```
 
-## Update [Single OR Batch]
+## Update [Single or Batch]
 
 ```php
 $db->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
