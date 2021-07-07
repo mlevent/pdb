@@ -177,6 +177,24 @@ $db->table('products');
 $db->table(['products as p', 'variants as v']);
 ```
 
+## Order
+
+```php
+$db->orderBy('id')
+- OR -
+$db->orderBy('id desc, name asc')
+- OR -
+$db->orderBy('id', 'desc')
+```
+
+## Group
+
+```php
+$db->groupBy('id');
+- OR -
+$db->groupBy(['id', 'name']);
+```
+
 ## Where
 
 ## Contributors
