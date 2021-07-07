@@ -32,13 +32,11 @@ var_dump($results);
 ## Insert
 
 ```php
-$insert = $db->table('products')->insert([
+$db->table('products')->insert([
     'name' => 'Apple Iphone X 128 Gb',
     'code' => 'APPLEX128',
     'price' => '999.9'
 ]);
-
-var_dump($insert)
 
 $batchData = [
     ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
@@ -46,9 +44,7 @@ $batchData = [
     ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
 ];
 
-$batchInsert = $db->filter(true)->insert($batchData, 'products');
-
-var_dump($batchInsert)
+$db->filter(true)->insert($batchData, 'products');
 ```
 
 ## On Duplicate
@@ -60,9 +56,19 @@ $data = [
     ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
 ];
 
-$onDuplicate = $db->onDuplicate($data, 'products');
+$db->onDuplicate($data, 'products');
+```
 
-var_dump($onDuplicate)
+# Update
+
+```php
+$db->isNull('slug')->update(['slug' => rand()]);
+```
+
+# Delete
+
+```php
+$db->where('active', 0)->delete('products');
 ```
 
 ## Raw
@@ -70,8 +76,6 @@ var_dump($onDuplicate)
 ```php
 $results = $db->raw('SELECT id, name FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
               ->getObj()
-
-var_dump($results);
 ```
 
 ## Contributors
