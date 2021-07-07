@@ -108,7 +108,9 @@ $db->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
 $db->where('active', 0)->delete('products');
 ```
 
-## Filter Insert / On Duplicate/ Replace Into / Update
+# Filter
+
+## Insert / On Duplicate/ Replace Into / Update
 
 | Primary | Not Null |     Not Null | Null |
 | ------- | :------: | -----------: | ---- |
@@ -150,7 +152,9 @@ $db->fullOuterJoin(...)
 # Cache
 
 ```php
-$db->table('products')->cache(30)->
+$db->table('products')->cache(30)->get();
+var_dump($db->fromCache());
+# bool(true)
 ```
 
 ## Contributors
