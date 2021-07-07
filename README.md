@@ -2,13 +2,13 @@
 
 PHP için PDO sınıfı
 
-## Kurulum
+# Kurulum
 
 ```
 $ composer require mlevent/pdb
 ```
 
-## Örnek Kullanım
+# Örnek Kullanım
 
 ```php
 require '/vendor/autoload.php';
@@ -56,7 +56,7 @@ $db->raw('UPDATE payments SET active = !active WHERE status = ? AND id > ?', ['p
    ->exec()
 ```
 
-## Insert [Batch]
+# Insert [Batch]
 
 ```php
 $db->table('products')->insert([
@@ -74,7 +74,7 @@ $batchData = [
 $db->insert($batchData, 'products');
 ```
 
-## On Duplicate [Batch]
+# On Duplicate [Batch]
 
 ```php
 $db->table('products')->onDuplicate([
@@ -84,7 +84,7 @@ $db->table('products')->onDuplicate([
 ]);
 ```
 
-## Replace Into [Batch]
+# Replace Into [Batch]
 
 ```php
 $db->table('products')->replaceInto([
