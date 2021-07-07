@@ -223,9 +223,9 @@
         /**
         * Sıralama tanımlamak için kullanılır
 		*/
-        public function orderBy($orderBy, $orderDir = null){
-            if(!is_null($orderDir)){
-                $this->orderBy = $orderBy . ' ' . $orderDir;
+        public function orderBy($orderBy, $dir = null){
+            if(!is_null($dir)){
+                $this->orderBy = $orderBy . ' ' . $dir;
             } else{
                 $this->orderBy = stristr($orderBy, ' ') || $orderBy == 'rand()'
                     ? $orderBy
@@ -276,16 +276,11 @@
 		*/
         public function having($field, $value = null){
             if($this->findMarker($field)){
-                $this->having = !is_null($this->having) 
-                    ? $this->having . ' AND '. $field 
-                    : $field;
-                    $this->addHavingParams($value);
+                $this->having = $field;
             } else {
-                $having = !is_null($value) ? $field . ' > ' .$value : $field;
-                $this->having = !is_null($this->having) 
-                    ? $this->having . ' AND '. $having 
-                    : $having;
+                $this->having = !is_null($value) ? $field . ' > ' .$value : $field;
             }
+            $this->addHavingParams($value);
             return $this;
         }
         public function havingBuild(){
@@ -440,11 +435,16 @@
         /**
         * Sorgu için parametre aktarır
 		*/
-        public function addParams($params, $type = 'whereParams'){
+        protected function addParams($params, $type = 'whereParams'){
             if(is_array($params))
                 foreach($params as $p) $this->$type[] = $p;
             else
-                $this->$type[] = $params;
+                if(!is_null($params))
+                    $this->$type[] = $params;
+        }
+        protected function delParams($key){
+            if(isset($this->$key))
+                $this->$key = [];
         }
         public function addWhereParams($params){
             $this->addParams($params);
@@ -453,6 +453,7 @@
             $this->addParams($params, 'joinParams');
         }
         public function addHavingParams($params){
+            $this->delParams('havingParams');
             $this->addParams($params, 'havingParams');
         }
         public function addRawParams($params){
