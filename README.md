@@ -117,7 +117,7 @@ $db->where('active', 0)->delete('products');
 | 2       | Jane Doe | jane@doe.com | 19   |
 
 ```php
-$insert = $db->filter()->table('users')->insert([
+$db->filter()->table('users')->insert([
     'name'  => 'John Doe',
     'email' => 'walter@bishop.com',
     'age'   => 39,
@@ -125,12 +125,12 @@ $insert = $db->filter()->table('users')->insert([
 ]);
 ```
 
-| ID  |     Name      |             Email | Age |
-| --- | :-----------: | ----------------: | --- |
-| 3   | Walter Bishop | walter@bishop.com | 39  |
+```
+New record added
+```
 
 ```php
-$insert = $db->filter(true)->table('users')->insert([
+$db->filter(true)->table('users')->insert([
     'name' => 'Walter Bishop',
     'age'  => 'walter@bishop.com'
 ]);
