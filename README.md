@@ -110,31 +110,34 @@ $db->where('active', 0)->delete('products');
 
 ## Filter Insert / On Duplicate/ Replace Into / Update
 
-| Primary |  Not Null  | Null |
-| ------- | :--------: | ---: |
-| ID      |    Name    |  Age |
-| 1       |  John Doe  |   32 |
-| 2       |  Jane Doe  |   19 |
-| 3       | Mike Tyson |   56 |
+| Primary | Not Null |     Not Null | Null |
+| ------- | :------: | -----------: | ---- |
+| ID      |   Name   |        Email | Age  |
+| 1       | John Doe | john@doe.com | 32   |
+| 2       | Jane Doe | jane@doe.com | 19   |
 
 ```php
 $insert = $db->filter()->table('users')->insert([
-'name' => 'John Doe',
-'age' => 39,
-'price' => 3994
-]);
-```
-
-| ID  |     Name      | Age |
-| --- | :-----------: | --: |
-| 4   | Walter Bishop |  39 |
-
-```php
-$insert = $db->filter(true)->table('users')->insert([
     'name'  => 'John Doe',
+    'email' => 'walter@bishop.com',
     'age'   => 39,
     'price' => 3994
 ]);
+```
+
+| ID  |     Name      |             Email | Age |
+| --- | :-----------: | ----------------: | --- |
+| 3   | Walter Bishop | walter@bishop.com | 39  |
+
+```php
+$insert = $db->filter(true)->table('users')->insert([
+    'name' => 'Walter Bishop',
+    'age'  => 'walter@bishop.com'
+]);
+```
+
+```
+Column 'age' cannot be null
 ```
 
 # Join
