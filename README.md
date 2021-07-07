@@ -140,9 +140,9 @@ $db->filter(true)->table('users')->insert([
 
 ```php
 $db->leftJoin('images AS i', 'p.id', 'i.pid')
-- OR -
+# OR #
 $db->leftJoin('images AS i', 'p.id = i.pid')
-- OR -
+# OR #
 $db->leftJoin('images AS i ON p.id = i.pid')
 ```
 
@@ -165,7 +165,7 @@ var_dump($db->fromCache());
 
 ```php
 $db->select('id, name, price, tax')
-- OR -
+# OR #
 $db->select(['id', 'name', 'price', 'tax'])
 ```
 
@@ -173,7 +173,7 @@ $db->select(['id', 'name', 'price', 'tax'])
 
 ```php
 $db->table('products')
-- OR -
+# OR #
 $db->table(['products as p', 'variants as v'])
 ```
 
@@ -181,9 +181,9 @@ $db->table(['products as p', 'variants as v'])
 
 ```php
 $db->orderBy('id')
-- OR -
+# OR #
 $db->orderBy('id desc, name asc')
-- OR -
+# OR #
 $db->orderBy('id', 'desc')
 ```
 
@@ -191,9 +191,9 @@ $db->orderBy('id', 'desc')
 
 ```php
 $db->groupBy('id')
-- OR -
+# OR #
 $db->groupBy('id, name')
-- OR -
+# OR #
 $db->groupBy(['id', 'name'])
 ```
 
