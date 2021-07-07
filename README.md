@@ -54,7 +54,7 @@ $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NO
 ## Raw Exec
 
 ```php
-$db->raw('UPDATE payments SET active = !active WHERE status = ? AND id > ?', [1])
+$db->raw('UPDATE payments SET active = !active WHERE status = ? AND id > ?', ['paid', 1])
    ->exec()
 ```
 
