@@ -1,0 +1,21 @@
+{
+    "name": "mlevent/pdo-db",
+    "description": "PHP için özelleştirilmiş PDO sınıfı",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mert Levent",
+            "email": "ghergedan@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mlevent\\": "src"
+        }
+    },
+    "minimum-stability": "dev"
+}
