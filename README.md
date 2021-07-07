@@ -161,6 +161,20 @@ var_dump($db->fromCache());
 # bool(true)
 ```
 
+## Select
+
+```php
+$db->select('id, name, price, tax');
+```
+
+## Table
+
+```php
+$db->table('products') -OR- $db->table(['products as p', 'variants as v'])
+```
+
+## Where
+
 ## Contributors
 
 -   [mlevent](https://github.com/mlevent) Mert Levent - creator, maintainer
