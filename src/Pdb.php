@@ -281,7 +281,10 @@
                     : $field;
                     $this->addHavingParams($value);
             } else {
-                $this->having = !is_null($value) ? $field . ' > ' .$value : $field;
+                $having = !is_null($value) ? $field . ' > ' .$value : $field;
+                $this->having = !is_null($this->having) 
+                    ? $this->having . ' AND '. $having 
+                    : $having;
             }
             return $this;
         }

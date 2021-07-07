@@ -4,51 +4,12 @@
 
     $db = new \Mlevent\Pdb(['database' => 'ecommerce', 'username' => 'root']);
 
-    /** SELECT */
-    //$db->select('id, name, price, tax')
-    //$db->select(['id', 'name', 'price', 'tax'])
-
     /** TABLE *//*
     $db->table('products')
     $db->select('p.id, p.name, GROUP_CONCAT(v.attr) AS attributes')
        ->table(['products as p', 'variants as v'])
        ->where('p.id = v.pid')
        ->groupBy('v.pid')
-    */
-
-    /** RAW */
-    //$db->raw('SELECT id, name FROM table WHERE id > ?', 34000)->getObj()
-    //$db->raw('SELECT id, name FROM table WHERE id > ? AND active = ?', [34000, 1])->getObj()
-
-    /** Join *//*
-    $db->leftJoin('images as i', 'p.id', 'i.pid')
-    $db->leftJoin('images as i', 'p.id = i.pid')
-    $db->leftJoin('images as i ON p.id = i.pid')
-    */
-
-    /** Order *//*
-    $db->orderBy('id')
-    $db->orderBy('id desc, name asc')
-    $db->orderBy('id', 'desc')
-    */
-
-    /** Group *//*
-    $db->grpupBy('id')
-    $db->grpupBy(['id', 'name'])
-    */
-
-    /** Limit // Ofset // Paging *//*
-    $db->limit(100)
-    $db->limit(100, 10)
-    $db->offset(100)
-    $db->paging(100, 2)
-    */
-
-    /** Having *//*
-    $db->having('stock', 5')
-    $db->having('stock > 5')
-    $db->having('stock > ?', 5)
-    $db->having('id IN(?,?)', [3,5])
     */
 
     /** Where *//*
@@ -122,16 +83,19 @@
                             //->orIsNull(['created', 'url_slug'])
                             //->where(['u.productId > 3', 'u.price > 3'])
                             //->where(['u.productId > ?', 'u.price > ?'], [3,2])
-                            ->orderBy('u.id')
+                            ->orderBy('u.id', 'desc')
                             //->cache(10)
                             //->in('u.productId', [1,2,3])
-                            //->having('count(u.name)', 0)
+                            ->having('count(u.active) > ? and u.id > ?', [1,2])
+                            ->having('u.product_name > 4');
                             //->groupBy('u.name')
                             //->limit(10)
-                            ->getObj();
+                            //->getObj();
             
             #pre($db->fromCache());
-            #pre($data);
+            pre($db->getReadQuery());
+            pre($db->lastQuery());
+            exit;
 
             $insertDataBatch = [
                             array('product_name' => 'Deneme 1', 'url_slug' => 'deneme', 'product_code' => 'limon1', 'category_id' => 1, 'price' => '125.50', 'barcode' => 161242353453245, 'stock' => 1, 'min_age' => 0, 'max_age' => 3, 'gender' => 'Kız', 'active' => 1),
