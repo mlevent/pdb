@@ -51,7 +51,7 @@ $batchInsert = $db->filter(true)->insert($batchData, 'products');
 var_dump($batchInsert)
 ```
 
-## ON DUPLICATE
+## On Duplicate
 
 ```php
 $data = [
@@ -65,10 +65,10 @@ $onDuplicate = $db->onDuplicate($data, 'products');
 var_dump($onDuplicate)
 ```
 
-## RAW
+## Raw
 
 ```php
-$results = $db->raw('SELECT id, name FROM products WHERE active = ? AND MONTH(updated) = MONTH(NOW())', [1])
+$results = $db->raw('SELECT id, name FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
               ->getObj()
 
 var_dump($results);
