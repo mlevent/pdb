@@ -125,9 +125,7 @@ $db->filter()->table('users')->insert([
 ]);
 ```
 
-```
-New record added
-```
+-   New record added
 
 ```php
 $db->filter(true)->table('users')->insert([
@@ -136,9 +134,7 @@ $db->filter(true)->table('users')->insert([
 ]);
 ```
 
-```
-Column 'age' cannot be null
-```
+-   Column 'age' cannot be null
 
 # Join
 
