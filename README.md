@@ -196,7 +196,7 @@ $db->where('stock >= 2 AND active = 1 AND MONTH(updated) = MONTH(NOW())')
 -   $db->notWhere(...)
 -   $db->orNotWhere(...)
 
-## BETWEEN
+## Between
 
 ```php
 $db->between('price', 50, 250)
@@ -207,7 +207,7 @@ $db->between('price', 50, 250)
 -   $db->notBetween(...)
 -   $db->orNotBetween(...)
 
-## IS NULL / NOT NULL
+## Is Null / Not Null
 
 ```php
 $db->isNull('code')
@@ -222,7 +222,7 @@ $db->isNull(['code', 'price'], _OR)
 -   $db->notNull(...)
 -   $db->orNotNull(...)
 
-## IN / NOT IN
+## In / Not In
 
 ```php
 $db->in('id', [33922, 31221, 45344, 35444])
@@ -233,7 +233,7 @@ $db->in('id', [33922, 31221, 45344, 35444])
 -   $db->notIn(...)
 -   $db->orNotIn(...)
 
-## FIND_IN_SET
+## Find_In_Set
 
 ```php
 $db->findInSet('categoryId', 139)
@@ -242,7 +242,7 @@ $db->findInSet('categoryId', 139)
 -   $db->findInSet(...)
 -   $db->orFindInSet(...)
 
-## LIKE
+## Like
 
 ```php
 $db->like('name', '%Apple%')
