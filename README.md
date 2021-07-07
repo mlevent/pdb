@@ -35,14 +35,12 @@ var_dump($results);
 
 ## Fetch Types
 
-```php
-->get();
-->getObj();
-->getRow();
-->getRowObj();
-->getCol();
-->getCols();
-```
+-   ->get();
+-   ->getObj();
+-   ->getRow();
+-   ->getRowObj();
+-   ->getCol();
+-   ->getCols();
 
 ## Raw Fetch
 
