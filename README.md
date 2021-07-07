@@ -29,16 +29,49 @@ $results = $db->select('id, name, code, slug, price, stock, active, created')
 var_dump($results);
 ```
 
+## Insert
+
 ```php
-$data = [
-    ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', price => '999.9'],
-    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', price => '1149.9'],
-    ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', price => '1349.9'],
+$insert = $db->table('products')->insert([
+    'name' => 'Apple Iphone X 128 Gb',
+    'code' => 'APPLEX128',
+    'price' => '999.9'
+]);
+
+var_dump($insert)
+
+$batchData = [
+    ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
+    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9'],
+    ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
 ];
 
-$batchInsert = $db->insert($data, 'products');
+$batchInsert = $db->filter(true)->insert($batchData, 'products');
 
 var_dump($batchInsert)
+```
+
+## ON DUPLICATE
+
+```php
+$data = [
+    ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
+    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9'],
+    ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
+];
+
+$onDuplicate = $db->onDuplicate($data, 'products');
+
+var_dump($onDuplicate)
+```
+
+## RAW
+
+```php
+$results = $db->raw('SELECT id, name FROM products WHERE active = ? AND MONTH(updated) = MONTH(NOW())', [1])
+              ->getObj()
+
+var_dump($results);
 ```
 
 ## Contributors
