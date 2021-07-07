@@ -146,7 +146,7 @@
         /**
 		* Select Functions
 		*/
-        public function selectFunctions($field, $alias = null, $function = null){
+        protected function selectFunctions($field, $alias = null, $function = null){
             return $this->select($alias ? $function.'('.$field.') AS '.$alias : $function.'('.$field.')');
         }
         public function count($field, $alias = null){
@@ -187,7 +187,7 @@
         /**
         * JOIN İşlemleri
 		*/
-        public function join($from, $field = null, $params = null, $join = 'INNER'){
+        protected function join($from, $field = null, $params = null, $join = 'INNER'){
             if(!is_null($field)){
                 if(!is_null($params))
                     $field = $field . '=' . $params;

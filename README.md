@@ -33,6 +33,17 @@ $results = $db->select('id, name, code, slug, price, stock, active, created')
 var_dump($results);
 ```
 
+## Fetch Types
+
+```php
+$db->table('payments')->get();
+$db->table('payments')->getObj();
+$db->table('payments')->getRow();
+$db->table('payments')->getRowObj();
+$db->select('id')->table('payments')->getCol();
+$db->select('id')->table('payments')->getCols();
+```
+
 ## Raw
 
 ```php
@@ -80,6 +91,23 @@ $db->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
 
 ```php
 $db->where('active', 0)->delete('products');
+```
+
+# Join
+
+```php
+$db->leftJoin('images AS i', 'p.id', 'i.pid')
+$db->leftOuterJoin(...)
+$db->rightJoin(...)
+$db->rightOuterJoin(...)
+$db->innerJoin(...)
+$db->fullOuterJoin(...)
+```
+
+# Cache
+
+```php
+$db->table('products')->cache(30)->
 ```
 
 ## Contributors
