@@ -200,10 +200,10 @@ $db->groupBy(['id', 'name'])
 ## Having
 
 ```php
-$db->having('stock', 5')
-- OR -
+$db->having('stock', 5)
+# OR #
 $db->having('stock > 5')
-- OR -
+# OR #
 $db->having('stock > ?', 5)
 ```
 
