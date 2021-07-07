@@ -118,7 +118,7 @@ $db->where('active', 0)->delete('products');
 
 ```php
 $db->filter()->table('users')->insert([
-    'name'  => 'John Doe',
+    'name'  => 'Walter Bishop',
     'email' => 'walter@bishop.com',
     'age'   => 39,
     'price' => 3994
