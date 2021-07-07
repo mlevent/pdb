@@ -100,7 +100,13 @@ $db->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
 $db->where('active', 0)->delete('products');
 ```
 
-## Filter insert/onDuplicate/replaceInto/Update
+## Filter insert/onDuplicate/replaceInto/update
+
+| Tables        |      Are      |  Cool |
+| ------------- | :-----------: | ----: |
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      |   centered    |   $12 |
+| zebra stripes |   are neat    |    $1 |
 
 ```php
 $insert = $db->filter(true)->table('users')->insert([
