@@ -2,8 +2,6 @@
 
     require __DIR__.'/vendor/autoload.php';
 
-    session_start();
-
     $db = new Mlevent\Pdob(['database' => 'ecommerce', 'username' => 'root']);
 
     /** SELECT */
@@ -132,8 +130,8 @@
                             //->limit(10)
                             ->getObj();
             
-            var_dump($db->fromCache());
-            var_dump($data);
+            #pre($db->fromCache());
+            #pre($data);
 
             $insertDataBatch = [
                             array('product_name' => 'Deneme 1', 'url_slug' => 'deneme', 'product_code' => 'limon1', 'category_id' => 1, 'price' => '125.50', 'barcode' => 161242353453245, 'stock' => 1, 'min_age' => 0, 'max_age' => 3, 'gender' => 'Kız', 'active' => 1),
@@ -155,11 +153,19 @@
             #$query = $db->table('products')->like('product_name', '%Deneme%')->update(['url_slug' => rand()]);
             #$query = $db->like('product_code', '%limon%')->delete('products');
 
-            #echo $db->table('products')->where('product_name', 'deneme')->update(['url_slug' => rand()]);
+            #echo $db->table('products')->where('category_id', '164')->update(['url_slug' => rand()]);
             #echo $db->table('products')->where('id > ?', 34089)->delete();
+
+            pre($db->table('products')->where('id > ?', 1)->touch('active'));
             
-            var_dump($db->lastInsertId());
-            var_dump($db->rowCount());
-            var_dump($db->queryCount());
-            var_dump($db->lastQuery());
-            var_dump($db->queryHistory());
+            pre($db->lastInsertId());
+            pre($db->rowCount());
+            pre($db->queryCount());
+            pre($db->lastQuery());
+            pre($db->queryHistory());
+
+            function pre($var){
+                echo '<pre>';
+                print_r($var);
+                echo '</pre>';
+            }

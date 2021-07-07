@@ -467,6 +467,16 @@
         }
 
         /**
+		* Ham sorguyu çalıştırır
+		*/
+        public function exec(){
+            $runQuery = $this->pdo->prepare($this->rawQuery);
+            $runQuery->execute($this->rawParams);
+            $this->killQuery($this->rawQuery, $this->rawParams);
+            return $runQuery->rowCount();
+        }
+
+        /**
         * Koşulları tanımlamak için kullanılır
 		*/
         public function whereFactory($column, $value = null, $andOr = _AND, $pattern = "%s=?", $withoutParam = false){
@@ -765,6 +775,15 @@
         }
 
         /**
+		* Touch
+		*/
+        public function touch($column, $table = null){
+            if(!is_null($table)) 
+                $this->table($table);
+            return $this->raw("UPDATE {$this->tableBuild()} SET {$column} = !{$column} {$this->whereBuild()}", $this->whereParams)->exec();
+        }
+
+        /**
 		* Delete
 		*/
         public function delete($table = null){
@@ -811,12 +830,7 @@
         public function repair($table = null){
             return $this->runStructureTool('REPAIR', $table);
         }
-        public function runStructureTool($type, $table = null){
-
-            $execList = ['OPTIMIZE', 'ANALYZE', 'CHECK', 'CHECKSUM', 'REPAIR', 'TRUNCATE', 'DROP'];
-
-            if(!in_array($type, $execList))
-                return false;
+        protected function runStructureTool($type, $table = null){
 
             if(!is_null($table)) 
                 $this->table($table);
