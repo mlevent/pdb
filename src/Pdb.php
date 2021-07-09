@@ -163,7 +163,13 @@
                 ? $this->select . ', '. $select 
                 : $select;
             return $this;
-        }        
+        }                
+        
+        /**
+         * selectBuild
+         *
+         * @return string
+         */
         protected function selectBuild(){
             return $this->select ? $this->select : '*';
         }
@@ -177,19 +183,59 @@
          */
         protected function selectFunctions($field, $alias = null, $function = null){
             return $this->select($alias ? $function.'('.$field.') AS '.$alias : $function.'('.$field.')');
-        }
+        }        
+
+        /**
+         * count
+         *
+         * @param string $field
+         * @param string $alias
+         * @return $this
+         */
         public function count($field, $alias = null){
             return $this->selectFunctions($field, $alias, 'COUNT');
-        }
+        }       
+         
+        /**
+         * sum
+         *
+         * @param string $field
+         * @param string $alias
+         * @return $this
+         */
         public function sum($field, $alias = null){
             return $this->selectFunctions($field, $alias, 'SUM');
-        }
+        }        
+        
+        /**
+         * avg
+         *
+         * @param string $field
+         * @param string $alias
+         * @return $this
+         */
         public function avg($field, $alias = null){
             return $this->selectFunctions($field, $alias, 'AVG');
-        }
+        }        
+        
+        /**
+         * min
+         *
+         * @param string $field
+         * @param string $alias
+         * @return $this
+         */
         public function min($field, $alias = null){
             return $this->selectFunctions($field, $alias, 'MIN');
-        }
+        }      
+
+        /**
+         * max
+         *
+         * @param string $field
+         * @param string $alias
+         * @return $this
+         */
         public function max($field, $alias = null){
             return $this->selectFunctions($field, $alias, 'MAX');
         }
@@ -209,6 +255,12 @@
                 : $table;
             return $this;
         }
+        
+        /**
+         * tableBuild
+         *
+         * @return string
+         */
         protected function tableBuild(){
             if(!$this->table)
                 throw new Exception('Tablo seçilmeden devam edilemez.');
@@ -235,24 +287,87 @@
             $this->join = !is_null($this->join) ? $this->join . ' '. $join : $join;
             return $this;
         }
+
+        /**
+         * leftJoin
+         *
+         * @param string $from
+         * @param string $on
+         * @param string $params
+         * @return $this
+         */
         public function leftJoin($from, $on = null, $params = null){
             return $this->join($from, $on, $params, 'LEFT');
         }
+
+        /**
+         * leftOuterJoin
+         *
+         * @param string $from
+         * @param string $on
+         * @param string $params
+         * @return $this
+         */
         public function leftOuterJoin($from, $on = null, $params = null){
             return $this->join($from, $on, $params, 'LEFT OUTER');
         }
+
+        /**
+         * rightJoin
+         *
+         * @param string $from
+         * @param string $on
+         * @param string $params
+         * @return $this
+         */
         public function rightJoin($from, $on = null, $params = null){
             return $this->join($from, $on, $params, 'RIGHT');
         }
+
+        /**
+         * rightOuterJoin
+         *
+         * @param string $from
+         * @param string $on
+         * @param string $params
+         * @return $this
+         */
         public function rightOuterJoin($from, $on = null, $params = null){
             return $this->join($from, $on, $params, 'RIGHT OUTER');
         }
+
+        /**
+         * innerJoin
+         *
+         * @param string $from
+         * @param string $on
+         * @param string $params
+         * @return $this
+         */
         public function innerJoin($from, $on = null, $params = null){
             return $this->join($from, $on, $params, 'INNER');
         }
+
+        /**
+         * fullOuterJoin
+         *
+         * @param string $from
+         * @param string $on
+         * @param string $params
+         * @return $this
+         */
         public function fullOuterJoin($from, $on = null, $params = null){
             return $this->join($from, $on, $params, 'FULL OUTER');
         }
+
+        /**
+         * joinBuild
+         *
+         * @param string $from
+         * @param string $on
+         * @param string $params
+         * @return $this
+         */
         public function joinBuild(){
             return $this->join ? $this->join : null;
         }
@@ -274,6 +389,12 @@
             }
             return $this;
         }
+
+        /**
+         * orderBuild
+         *
+         * @return string
+         */
         public function orderBuild(){
             return $this->order ? 'ORDER BY ' . $this->order : null;
         }
@@ -304,17 +425,38 @@
             $this->offset = $offset;
             return $this;
         }
-        public function offset($offset){
+                
+        /**
+         * offset
+         *
+         * @param int $offset
+         * @return $this
+         */
+        public function offset(int $offset){
             $this->offset = $offset;
             return $this;
         }
-        public function pager($limit, $page = 1){
+                
+        /**
+         * pager
+         *
+         * @param int $limit
+         * @param int $page
+         * @return $this
+         */
+        public function pager(int $limit, int $page = 1){
             if($limit < 1) $limit = 1;
             if($page  < 1) $page  = 1;
             $this->limit  = $limit;
             $this->offset = ($limit * $page) - $limit;
             return $this;
         }
+                
+        /**
+         * limitOffsetBuild
+         *
+         * @return string
+         */
         public function limitOffsetBuild(){
             return ($this->limit ? 'LIMIT ' . (int)$this->limit : null).($this->offset ? ' OFFSET ' . (int)$this->offset : null);
         }
@@ -350,22 +492,58 @@
         public function orRawWhere($column, $group = null, $andOr = _OR){
             return $this->rawWhere($column, $group, $andOr);
         }
-
+    
         /**
-		* Genel koşul işlemleri
-		*/
+         * where
+         *
+         * @param string|array $column
+         * @param string|array $value
+         * @param string $andOr
+         * @return $this
+         */
         public function where($column, $value = null, $andOr = _AND){
             return $this->whereFactory($column, $value, $andOr);
         }
+                
+        /**
+         * orWhere
+         *
+         * @param string|array $column
+         * @param string|array $value
+         * @return $this
+         */
         public function orWhere($column, $value = null){
             return $this->where($column, $value, _OR);
         }
+                
+        /**
+         * notWhere
+         *
+         * @param string|array $column
+         * @param string|array $value
+         * @param string $andOr
+         * @return $this
+         */
         public function notWhere($column, $value = null, $andOr = _AND){
             return $this->whereFactory($column, $value, $andOr, "%s <> ?");
         }
+                
+        /**
+         * orNotWhere
+         *
+         * @param string|array $column
+         * @param string|array $value
+         * @return $this
+         */
         public function orNotWhere($column, $value = null){
             return $this->notWhere($column, $value, _OR);
         }
+                
+        /**
+         * whereBuild
+         *
+         * @return string
+         */
         protected function whereBuild(){
             return !is_null($this->where) ? 'WHERE ' . $this->where : null;
         }
