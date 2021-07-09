@@ -480,18 +480,6 @@
         public function havingBuild(){
             return $this->having ? 'HAVING ' . $this->having : null;
         }
-  
-        /**
-         * rawWhere
-         */
-        public function rawWhere($column, $group = null, $andOr = _AND){
-            if(($group !== _AND || $group !== _OR) && !is_array($column)) 
-                $group = null;
-            return $this->whereFactory($column, $group, $andOr);
-        }
-        public function orRawWhere($column, $group = null, $andOr = _OR){
-            return $this->rawWhere($column, $group, $andOr);
-        }
     
         /**
          * where
@@ -547,94 +535,242 @@
         protected function whereBuild(){
             return !is_null($this->where) ? 'WHERE ' . $this->where : null;
         }
-
+        
         /**
-        * null/orNull
-		*/
+         * isNull
+         *
+         * @param string|array $column
+         * @param string $group
+         * @param string $andOr
+         * @return $this
+         */
         public function isNull($column, $group = null, $andOr = _AND){
             return $this->whereFactory($column, $group, $andOr, "%s IS NULL", true);
         }
+
+        /**
+         * orIsNull
+         *
+         * @param string|array $column
+         * @param string $group
+         * @param string $andOr
+         * @return $this
+         */
         public function orIsNull($column, $group = null){
             return $this->isNull($column, $group, _OR);
         }
+
+        /**
+         * notNull
+         *
+         * @param string|array $column
+         * @param string $group
+         * @param string $andOr
+         * @return $this
+         */
         public function notNull($column, $group = null, $andOr = _AND){
             return $this->whereFactory($column, $group, $andOr, "%s IS NOT NULL", true);
         }
+
+        /**
+         * orNotNull
+         *
+         * @param string|array $column
+         * @param string $group
+         * @param string $andOr
+         * @return $this
+         */
         public function orNotNull($column, $group = null){
             return $this->notNull($column, $group, _OR);
         }
-
+        
         /**
-		* In/Not IN
-		*/
+         * in
+         *
+         * @param string $column
+         * @param array  $value
+         * @param string $andOr
+         * @return $this
+         */
         public function in($column, $value, $andOr = _AND){
             return $this->whereFactory($column, (array)$value, $andOr, "%s IN({$this->createMarker((array)$value)})");
         }
+
+        /**
+         * orIn
+         *
+         * @param string $column
+         * @param array  $value
+         * @return $this
+         */
         public function orIn($column, $value){
             return $this->in($column, $value, _OR);
         }
+
+        /**
+         * notIn
+         *
+         * @param string $column
+         * @param array  $value
+         * @return $this
+         */
         public function notIn($column, $value, $andOr = _AND){
             return $this->whereFactory($column, (array)$value, $andOr, "%s NOT IN({$this->createMarker((array)$value)})");
         }
+
+        /**
+         * orNotIn
+         *
+         * @param string $column
+         * @param array  $value
+         * @return $this
+         */
         public function orNotIn($column, $value){
             return $this->in($column, $value, _OR);
         }
-
+        
         /**
-		* Between
-		*/
-        public function between($column, $begin, $end, $andOr = _AND){
+         * between
+         *
+         * @param string $column
+         * @param int    $begin
+         * @param int    $end
+         * @param string $andOr
+         * @return $this
+         */
+        public function between($column, int $begin, int $end, $andOr = _AND){
             return $this->whereFactory($column, [$begin, $end], $andOr, "%s BETWEEN ? AND ?");
         }
-        public function orBetween($column, $begin, $end){
-            return $this->between($column, $begin, $end, _OR);
-        }
-        public function notBetween($column, $begin, $end, $andOr = _AND){
-            return $this->whereFactory($column, [$begin, $end], $andOr, "%s NOT BETWEEN ? AND ?");
-        }
-        public function orNotBetween($column, $begin, $end){
+
+        /**
+         * orBetween
+         *
+         * @param string $column
+         * @param int    $begin
+         * @param int    $end
+         * @return $this
+         */
+        public function orBetween($column, int $begin, int $end){
             return $this->between($column, $begin, $end, _OR);
         }
 
         /**
-		* FindInSet
-		*/
+         * notBetween
+         *
+         * @param string $column
+         * @param int    $begin
+         * @param int    $end
+         * @param string $andOr
+         * @return $this
+         */
+        public function notBetween($column, int $begin, int $end, $andOr = _AND){
+            return $this->whereFactory($column, [$begin, $end], $andOr, "%s NOT BETWEEN ? AND ?");
+        }
+
+        /**
+         * orNotBetween
+         *
+         * @param string $column
+         * @param int    $begin
+         * @param int    $end
+         * @return $this
+         */
+        public function orNotBetween($column, int $begin, int $end){
+            return $this->between($column, $begin, $end, _OR);
+        }
+        
+        /**
+         * findInSet
+         *
+         * @param string $column
+         * @param string $search
+         * @param string $andOr
+         * @return $this
+         */
         public function findInSet($column, $search, $andOr = _AND){
             return $this->whereFactory(null, $search, $andOr, "FIND_IN_SET(?, {$column})");
         }
+
+        /**
+         * orFindInSet
+         *
+         * @param string $column
+         * @param string $search
+         * @return $this
+         */
         public function orFindInSet($column, $search){
             return $this->findInSet($column, $search, _OR);
         }
 
         /**
-        * Like
-		*/
+         * like
+         *
+         * @param string $column
+         * @param string|array $search
+         * @param string $group
+         * @param string $andOr
+         * @param string $pattern
+         * @return $this
+         */
         public function like($column, $search, $group = null, $andOr = _AND, $pattern = '%s LIKE ?'){
             $params = [];
             $column = (array)$column;
             foreach($column as $val) $params[sprintf($pattern, $val)] = $search;
             return $this->whereFactory($params, $group, $andOr);
         }
+                
+        /**
+         * orLike
+         *
+         * @param string $column
+         * @param string|array $search
+         * @param string $group
+         * @return $this
+         */
         public function orLike($column, $search, $group = null){
             return $this->like($column, $search, $group, _OR);
         }
+
+        /**
+         * notLike
+         *
+         * @param string $column
+         * @param string|array $search
+         * @param string $group
+         * @return $this
+         */
         public function notLike($column, $search, $group = null){
             return $this->like($column, $search, $group, _AND, '%s NOT LIKE ?');
         }
+
+        /**
+         * orNotlike
+         *
+         * @param string $column
+         * @param string|array $search
+         * @param string $group
+         * @return $this
+         */
         public function orNotlike($column, $search, $group = null){
             return $this->like($column, $search, $group, _OR, '%s NOT LIKE ?');
         }
-
+        
         /**
-		* Veri içerisinde '?' karakteri geçiyor mu?
-		*/
+         * String içinde marker arar
+         *
+         * @param string $string
+         * @return bool
+         */
         public function findMarker($string){
             return strpos($string, '?') !== FALSE;
         }
-
+        
         /**
-        * Sorgu için parametre sayısı kadar question mark oluşturur
-		*/
+         * Sorgu için parametre sayısı kadar marker oluşturur
+         *
+         * @param mixed $params
+         * @return string
+         */
         public function createMarker($params){
             if(!is_array(reset($params))):
                 return rtrim(str_repeat('?,', sizeof($params)), ',');
@@ -645,6 +781,15 @@
                 return '('.implode('),(', $params).')';
             endif;
         }
+                
+        /**
+         * Sorgu için pattern oluşturur
+         *
+         * @param array  $params
+         * @param string $pattern
+         * @param mixed  $comma
+         * @return string
+         */
         public function createMarkerWithKey($params, $pattern = '%key=?', $comma = ','){
             $params = is_array(reset($params)) ? $params[0] : $params;
             if(is_array($params)){
@@ -656,10 +801,14 @@
                 return str_replace(['%val', '%key'], [$params, $params], $pattern);
             }
         }
-
+    
         /**
-        * Sorgu için parametre aktarır
-		*/
+         * addParams
+         *
+         * @param array $params
+         * @param string $type
+         * @return void
+         */
         protected function addParams($params, $type = 'whereParams'){
             if(is_array($params))
                 foreach($params as $p) $this->$type[] = $p;
@@ -667,79 +816,127 @@
                 if(!is_null($params))
                     $this->$type[] = $params;
         }
+                
+        /**
+         * delParams
+         *
+         * @param string $key
+         * @return void
+         */
         protected function delParams($key){
             if(isset($this->$key))
                 $this->$key = [];
         }
+                
+        /**
+         * addWhereParams
+         *
+         * @param array $params
+         * @return void
+         */
         public function addWhereParams($params){
             $this->addParams($params);
         }
+                
+        /**
+         * addJoinParams
+         *
+         * @param array $params
+         * @return void
+         */
         public function addJoinParams($params){
             $this->addParams($params, 'joinParams');
-        }
+        }    
+
+        /**
+         * addHavingParams
+         *
+         * @param array $params
+         * @return void
+         */
         public function addHavingParams($params){
             $this->delParams('havingParams');
             $this->addParams($params, 'havingParams');
-        }
+        }        
+
+        /**
+         * addRawParams
+         *
+         * @param array $params
+         * @return void
+         */
         public function addRawParams($params){
             $this->addParams($params, 'rawParams');
         }
-
+        
         /**
-		* Ham sorguyu ve varsa parametreleri kaydeder
-		*/
+         * raw
+         *
+         * @param string $query
+         * @param string|array $params
+         * @return $this
+         */
         public function raw($query, $params = null){
             if(!is_null($params))
                 $this->addRawParams($params);
             $this->rawQuery = $query;
             return $this;
         }
-
+    
         /**
-		* Ham sorguyu çalıştırır
-		*/
+         * exec
+         *
+         * @return int
+         */
         public function exec(){
             $runQuery = $this->pdo->prepare($this->rawQuery);
             $runQuery->execute($this->rawParams);
             $this->killQuery($this->rawQuery, $this->rawParams);
             return $runQuery->rowCount();
         }
-
+        
         /**
-        * Koşulları tanımlamak için kullanılır
-		*/
+         * whereFactory
+         *
+         * @param string|array $column
+         * @param string|array $value
+         * @param string $andOr
+         * @param string $pattern
+         * @param bool $withoutParam
+         * @return $this
+         */
         public function whereFactory($column, $value = null, $andOr = _AND, $pattern = "%s=?", $withoutParam = false){
 
             $where = [];
             $param = [];
 
             if(is_array($column)){
+
                 foreach($column as $key => $val){
 
-                    // Dizideki veriler key => val şeklinde geliyorsa
+                    // key => val
                     if(!is_numeric($key)){
 
-                        // Key içerisinde marker kontrolü
+                        // Key içinde marker var mı?
                         if($this->findMarker($key)){
                             $where[] = $key;
                             $param[] = $val;
 
-                        // Marker yoksa formatla
                         } else{
-                            $param[] = $val; // key => val geliyorsa
+                            $param[] = $val; // key => val
                             $where[] = sprintf($pattern, $key);
                         }
-                    
-                    // Dizi formatında gelmiyorsa key koşul olarak kaydedilir
+
                     } else{
 
-                        // Parametre gönderilmiyorsa değiştir; bkz: isNull
+                        // Parametre gönderilmiyorsa(bkz; isNull)
                         $where[] = $withoutParam 
                             ? sprintf($pattern, $val) 
                             : $val;
                     }
                 }
 
+                // Value grup bilgisi gönderdiyse
                 if(!is_null($value))
                     if($value === _AND || $value === _OR) 
                         $this->setGroup($value);
@@ -751,7 +948,6 @@
             
             } else{
 
-                // Koşul için bir değer belirtildiyse
                 if(!is_null($value)){
                     
                     $where[] = !$this->findMarker($column) 
@@ -762,13 +958,14 @@
                 
                 } else{
 
-                    // Parametre gönderilmiyorsa değiştir; bkz: isNull
+                    // Parametre gönderilmiyorsa(bkz; isNull)
                     $where[] = $withoutParam 
                             ? sprintf($pattern, $column) 
                             : $column;
                 }
             }
             
+            // Sorgu içi grup isteniyorsa grupla
             if($this->isGroupIn)
                 $where = '(' . implode(' ' . $this->isGroupIn . ' ', $where) . ')'; 
             else
@@ -784,21 +981,24 @@
 
             return $this;
         }
-
+        
         /**
-		* Okuma işlemleri için kullanılacak parametreleri döndürür
-		* @return self
-		*/
+         * getReadParams
+         *
+         * @return array
+         */
         public function getReadParams(){
             if($this->rawQuery)
                 return $this->rawParams;
             else
                 return array_merge($this->joinParams, $this->whereParams, $this->havingParams);
         }
-
+        
         /**
-		* Çalıştırılacak son sorguyu oluşturur
-		*/
+         * getReadQuery
+         *
+         * @return string
+         */
         public function getReadQuery(){
             
             if($this->rawQuery) return $this->rawQuery;
@@ -817,10 +1017,14 @@
             ];
             return implode(' ', array_filter($build));
         }
-
+    
         /**
-        * Sorgu çalışıyor
-		*/
+         * readQuery
+         *
+         * @param string $fetch
+         * @param int $cursor
+         * @return mixed
+         */
         public function readQuery($fetch = 'fetch', $cursor = PDO::FETCH_ASSOC){
 
             $query  = $this->getReadQuery();
@@ -865,7 +1069,7 @@
         }
 
         /**
-		* Rows
+		* Row
 		*/
         public function getRow(){
             return $this->readQuery('fetch', PDO::FETCH_ASSOC);
@@ -875,7 +1079,7 @@
         }
 
         /**
-		* Columns
+		* Col
 		*/
         public function getCol(){
             return $this->readQuery('fetchColumn', 0);
@@ -883,20 +1087,28 @@
         public function getCols(){
             return $this->readQuery('fetchAll', PDO::FETCH_COLUMN);
         }
-
+    
         /**
-		* Filter
-		*/
+         * filter
+         *
+         * @param bool $forceValid
+         * @return $this
+         */
         public function filter($forceValid = false){
             $this->isFilter = true;
             if($forceValid)
                 $this->isFilterValid = true;
             return $this;
         }
-
+     
         /**
-		* Tablodaki verileri doğrular
-		*/
+         * filterData
+         *
+         * @param string $table
+         * @param array $insertData
+         * @param bool $forceValid
+         * @return array
+         */
         public function filterData($table, $insertData, $forceValid = false){
 
             $filtered = [];
@@ -926,10 +1138,15 @@
             }
             return !$isBatchData ? reset($filtered) : array_values($filtered);
         }
-
+   
         /**
-		* Insert
-		*/
+         * insert
+         *
+         * @param array $insertData
+         * @param string $table
+         * @param string $type
+         * @return int|bool
+         */
         public function insert($insertData, $table = null, $type = 'INSERT'){
 
             $typeList = ['INSERT', 'REPLACE', 'DUPLICATE'];
@@ -972,17 +1189,35 @@
             $this->init();
         }
 
+        /**
+         * replaceInto
+         *
+         * @param array $insertData
+         * @param string $table
+         * @return int|bool
+         */
         public function replaceInto($insertData, $table = null){
             return $this->insert($insertData, $table, 'REPLACE');
         }
-
+        
+        /**
+         * onDuplicate
+         *
+         * @param array $insertData
+         * @param string $table
+         * @return int|bool
+         */
         public function onDuplicate($insertData, $table = null){
             return $this->insert($insertData, $table, 'DUPLICATE');
         }
-        
+           
         /**
-		* Update
-		*/
+         * update
+         *
+         * @param array $data
+         * @param string $table
+         * @return int|bool
+         */
         public function update($data, $table = null){
             
             if(!$data || !$this->whereParams)
@@ -1004,19 +1239,26 @@
             }
             return false;
         }
-
+        
         /**
-		* Touch
-		*/
+         * touch
+         *
+         * @param string $column
+         * @param string $table
+         * @return int|bool
+         */
         public function touch($column, $table = null){
             if(!is_null($table)) 
                 $this->table($table);
             return $this->raw("UPDATE {$this->tableBuild()} SET {$column} = !{$column} {$this->whereBuild()}", $this->whereParams)->exec();
         }
-
+        
         /**
-		* Delete
-		*/
+         * delete
+         *
+         * @param string $table
+         * @return int|bool
+         */
         public function delete($table = null){
 
             if(!$this->whereParams)
@@ -1074,10 +1316,13 @@
             }
             return false;
         }
-
+        
         /**
-		* Tablodaki sütunları listeler
-		*/
+         * showTable
+         *
+         * @param string $table
+         * @return array
+         */
         public function showTable($table){
             $query = $this->pdo->query("SHOW COLUMNS FROM {$table}");
             $table = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -1085,90 +1330,134 @@
             foreach($table as $col) $valid[$col['Field']] = $col;
             return $valid;
         }
-
+        
         /**
-		* Tablodaki keyleri listeler
-		*/
+         * showKeys
+         *
+         * @param string $table
+         * @return array
+         */
         public function showKeys($table){
             $query = $this->pdo->query("SHOW KEYS FROM {$table}");
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
-
+        
         /**
-		* Transaction
-		*/
+         * transactionStatus
+         *
+         * @return void
+         */
         public function transactionStatus(){
             return $this->pdo->inTransaction();
-        }
+        }   
+
+        /**
+         * transaction
+         *
+         * @return void
+         */
         public function transaction(){
             if(!$this->pdo->inTransaction())
                 $this->pdo->beginTransaction();
-        }
+        } 
+
+        /**
+         * commit
+         *
+         * @return void
+         */
         public function commit(){
             if($this->pdo->inTransaction())
                 $this->pdo->commit();
         }
+               
+        /**
+         * rollBack
+         *
+         * @return void
+         */
         public function rollBack(){
             if($this->pdo->inTransaction())
                 $this->pdo->rollBack();
         }
-
+        
         /**
-		* Son eklenen ID'yi döndürür
-		*/
+         * lastInsertId
+         *
+         * @return int
+         */
         public function lastInsertId(){
             return $this->lastInsertId;
         }
-
+        
         /**
-		* Etkilenen veya görüntülenen satır sayısını döndürür
-		*/
+         * rowCount
+         *
+         * @return int
+         */
         public function rowCount(){
             return $this->rowCount;
         }
-
+        
         /**
-		* Toplam sorgu sayısını getirir
-		*/
+         * queryCount
+         *
+         * @return int
+         */
         public function queryCount(){
             return sizeof($this->queryHistory);
         }
-
+        
         /**
-		* Geçmiş sorguları listeler
-		*/
+         * queryHistory
+         *
+         * @return array
+         */
         public function queryHistory(){
             return $this->queryHistory;
         }
-
+        
         /**
-		* Son sorguyu getirir
-		*/
+         * lastQuery
+         *
+         * @param bool $withParams
+         * @return string|array
+         */
         public function lastQuery($withParams = false){
             return $withParams ? end($this->queryHistory) : end($this->queryHistory)['query'];
         }
-
+        
         /**
-		* Sorguyu geçmişe kaydeder
-		*/
+         * addQueryHistory
+         *
+         * @param string $query
+         * @param string|array $params
+         * @return array
+         */
         public function addQueryHistory($query, $params = null){
             return $this->queryHistory[] = [
                 'query'  => $query,
                 'params' => $params
             ];
         }
-
+        
         /**
-		* Sorguyu geçmişe kaydeder ve yeniler
-		*/
+         * killQuery
+         *
+         * @param string $query
+         * @param string|array $params
+         * @return void
+         */
         public function killQuery($query, $params = null){
             $this->addQueryHistory($query, $params);
             $this->init();
         }
-
+        
         /**
-		* Bağlantıyı sonlandırır
-		*/
+         * close
+         *
+         * @return void
+         */
         public function close(){
             $this->pdo = null;
         }

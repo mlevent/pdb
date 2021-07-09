@@ -263,21 +263,21 @@ $db->like(['name', 'code'], '%Apple%', _OR)
 ## Order
 
 ```php
-$db->orderBy('id')
+$db->order('id')
 # OR #
-$db->orderBy('id desc, name asc')
+$db->order('id desc, name asc')
 # OR #
-$db->orderBy('id', 'desc')
+$db->order('id', 'desc')
 ```
 
 ## Group
 
 ```php
-$db->groupBy('id')
+$db->group('id')
 # OR #
-$db->groupBy('id, name')
+$db->group('id, name')
 # OR #
-$db->groupBy(['id', 'name'])
+$db->group(['id', 'name'])
 ```
 
 ## Having
