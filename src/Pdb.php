@@ -25,15 +25,15 @@
         private $table         = null;
         private $join          = null;
         private $where         = null;
-        private $orderBy       = null;
-        private $groupBy       = null;
+        private $order         = null;
+        private $group         = null;
         private $having        = null;
         private $limit         = null;
         private $offset        = null;
         private $rawQuery      = null;
 
-        private $isGroupIn     = false;
-        private $isGroup       = false;
+        private $isGrouped     = false;
+        private $isGroupIn       = false;
 
         private $isFilter      = false;
         private $isFilterValid = false;
@@ -42,7 +42,12 @@
         private $havingParams  = [];
         private $whereParams   = [];
         private $rawParams     = []; 
-
+        
+        /**
+         * __construct
+         *
+         * @param array $config
+         */
         public function __construct($config = null)
         {
             $this->config = [
@@ -63,7 +68,7 @@
                     : $config[$k];
 
             $options = [
-                #PDO::ATTR_PERSISTENT         => true, 
+                PDO::ATTR_PERSISTENT         => true, 
                 PDO::MYSQL_ATTR_FOUND_ROWS   => true,
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -76,24 +81,24 @@
 
             } catch(PDOException $e){ die($e->getMessage()); }
         }
-
+                     
         /**
-		* Grup işlemleri için kullanılır
-		*/
-        public function init(){
+         * init
+         */
+        protected function init(){
             
             $this->select        = null;
             $this->table         = null;
             $this->join          = null;
             $this->where         = null;
-            $this->orderBy       = null;
-            $this->groupBy       = null;
+            $this->order         = null;
+            $this->group         = null;
             $this->having        = null;
             $this->limit         = null;
             $this->offset        = null;
             $this->rawQuery      = null;
+            $this->isGrouped     = false;
             $this->isGroupIn     = false;
-            $this->isGroup       = false;
             $this->isFilter      = false;
             $this->isFilterValid = false;
             $this->joinParams    = [];
@@ -101,35 +106,55 @@
             $this->whereParams   = [];
             $this->rawParams     = [];
         }
-
+                
         /**
-		* Cache
-		*/
-        public function cache($timeout = null){
+         * cache
+         *
+         * @param int $timeout
+         * @return $this
+         */
+        public function cache(int $timeout = null){
             $this->cache = new Cache($this->config['cachePath'], is_null($timeout) ? $this->config['cacheTime'] : $timeout);
             return $this;
         }
+        
+        /**
+         * Verinin diskten okunup okunmadığını doğrular
+         *
+         * @return $this
+         */
         public function fromCache(){
             return $this->fromCache;
         }
-
+        
         /**
-		* Grup işlemleri için kullanılır
-		*/
-        public function group(Closure $object){
-            $this->isGroupIn = true;
+         * Closure and-or gruplama
+         *
+         * @param closure $object
+         * @return $this
+         */
+        public function grouped(Closure $object){
+            $this->isGrouped = true;
             call_user_func_array($object, [$this]);
             $this->where .= ')';
             return $this;
-        }
-        public function setGroup($andOr = false){
-            $this->isGroup = $andOr;
-        }
+        } 
 
         /**
-        * Select alanları eklemek için kullanılır
-        * $fields : string || array
-		*/
+         * Sorgu içi and-or gruplama
+         *
+         * @param bool $andOr
+         */
+        protected function setGroup($andOr = false){
+            $this->isGroupIn = $andOr;
+        }
+     
+        /**
+         * select
+         *
+         * @param string|array $fields
+         * @return $this
+         */
         public function select($fields){
             $select = is_array($fields) 
                 ? implode(', ', $fields) 
@@ -138,14 +163,18 @@
                 ? $this->select . ', '. $select 
                 : $select;
             return $this;
-        }
-        public function selectBuild(){
+        }        
+        protected function selectBuild(){
             return $this->select ? $this->select : '*';
         }
-
+        
         /**
-		* Select Functions
-		*/
+         * selectFunctions
+         *
+         * @param string $field
+         * @param string $alias
+         * @param string $function
+         */
         protected function selectFunctions($field, $alias = null, $function = null){
             return $this->select($alias ? $function.'('.$field.') AS '.$alias : $function.'('.$field.')');
         }
@@ -164,11 +193,13 @@
         public function max($field, $alias = null){
             return $this->selectFunctions($field, $alias, 'MAX');
         }
-
+        
         /**
-        * Tabloyu tanımlamak için kullanılır
-        * $table : string || array
-		*/
+         * table
+         *
+         * @param string|array $table
+         * @return $this
+         */
         public function table($table){
             $table = is_array($table) 
                 ? implode(', ', $table) 
@@ -178,15 +209,21 @@
                 : $table;
             return $this;
         }
-        public function tableBuild(){
+        protected function tableBuild(){
             if(!$this->table)
                 throw new Exception('Tablo seçilmeden devam edilemez.');
             return $this->table;
         }
-
+        
         /**
-        * JOIN İşlemleri
-		*/
+         * join
+         *
+         * @param string $from
+         * @param string $field
+         * @param string $params
+         * @param string $join
+         * @return $this
+         */
         protected function join($from, $field = null, $params = null, $join = 'INNER'){
             if(!is_null($field)){
                 if(!is_null($params))
@@ -219,39 +256,50 @@
         public function joinBuild(){
             return $this->join ? $this->join : null;
         }
-
+        
         /**
-        * Sıralama tanımlamak için kullanılır
-		*/
-        public function orderBy($orderBy, $dir = null){
+         * order
+         *
+         * @param string|array $order
+         * @param string $dir
+         * @return $this
+         */
+        public function order($order, $dir = null){
             if(!is_null($dir)){
-                $this->orderBy = $orderBy . ' ' . $dir;
+                $this->order = $order . ' ' . $dir;
             } else{
-                $this->orderBy = stristr($orderBy, ' ') || $orderBy == 'rand()'
-                    ? $orderBy
-                    : $orderBy . ' DESC';
+                $this->order = stristr($order, ' ') || $order == 'rand()'
+                    ? $order
+                    : $order . ' DESC';
             }
             return $this;
         }
-        public function orderByBuild(){
-            return $this->orderBy ? 'ORDER BY ' . $this->orderBy : null;
+        public function orderBuild(){
+            return $this->order ? 'ORDER BY ' . $this->order : null;
         }
-
+        
         /**
-        * Sıralama tanımlamak için kullanılır
-		*/
-        public function groupBy($groupBy){
-            $this->groupBy = is_array($groupBy) ? implode(', ', $groupBy) : $groupBy;
+         * group
+         *
+         * @param string|array $group
+         * @return $this
+         */
+        public function group($group){
+            $this->group = is_array($group) ? implode(', ', $group) : $group;
             return $this;
         }
-        public function groupByBuild(){
-            return $this->groupBy ? 'GROUP BY ' . $this->groupBy : null;
+        public function groupBuild(){
+            return $this->group ? 'GROUP BY ' . $this->group : null;
         }
-
+        
         /**
-        * Limit ve sayfalama işlemleri için kullanılır
-		*/
-        public function limit($limit, $offset = null){
+         * limit
+         *
+         * @param int $limit
+         * @param int $offset
+         * @return $this
+         */
+        public function limit(int $limit, int $offset = null){
             $this->limit  = $limit;
             $this->offset = $offset;
             return $this;
@@ -270,10 +318,14 @@
         public function limitOffsetBuild(){
             return ($this->limit ? 'LIMIT ' . (int)$this->limit : null).($this->offset ? ' OFFSET ' . (int)$this->offset : null);
         }
-
+        
         /**
-        * Having
-		*/
+         * having
+         *
+         * @param string|array $field
+         * @param string $value
+         * @return $this
+         */
         public function having($field, $value = null){
             if($this->findMarker($field)){
                 $this->having = $field;
@@ -286,15 +338,10 @@
         public function havingBuild(){
             return $this->having ? 'HAVING ' . $this->having : null;
         }
-
+  
         /**
-        * WHERE alanı içerisinde herhangi bir noktaya string eklemek için kullanılır!
-        * @column alanı tek başına sorgu çalıştırabilir, @value alanı string veya array formatında olabilir,
-        * ancak @value ile parametre gönderilecekse @column alanında "?"" ile parametrelerin geleceği yerlerin tanımlanması gerekir.
-        *
-        * $column : string or array
-        * $value  : string or array
-		*/
+         * rawWhere
+         */
         public function rawWhere($column, $group = null, $andOr = _AND){
             if(($group !== _AND || $group !== _OR) && !is_array($column)) 
                 $group = null;
@@ -544,14 +591,14 @@
                 }
             }
             
-            if($this->isGroup)
-                $where = '(' . implode(' ' . $this->isGroup . ' ', $where) . ')'; 
+            if($this->isGroupIn)
+                $where = '(' . implode(' ' . $this->isGroupIn . ' ', $where) . ')'; 
             else
                 $where = implode(' ' . $andOr . ' ', $where);
             $this->setGroup();
 
-            if($this->isGroupIn)
-                $where = '(' . $where; $this->isGroupIn = false;
+            if($this->isGrouped)
+                $where = '(' . $where; $this->isGrouped = false;
             
             $this->where = is_null($this->where)
                 ? $where
@@ -585,9 +632,9 @@
                 $this->tableBuild(),
                 $this->joinBuild(),
                 $this->whereBuild(),
-                $this->groupByBuild(),
+                $this->groupBuild(),
                 $this->havingBuild(),
-                $this->orderByBuild(),
+                $this->orderBuild(),
                 $this->limitOffsetBuild(),
             ];
             return implode(' ', array_filter($build));
