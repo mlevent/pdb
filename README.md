@@ -2,10 +2,10 @@
 
 PHP için PDO sınıfı
 
-[![Total Downloads](https://poser.pugx.org/mlevent/url-builder/d/total.svg)](https://packagist.org/packages/mlevent/pdb)
-[![Latest Stable Version](https://poser.pugx.org/mlevent/url-builder/v/stable.svg)](https://packagist.org/packages/mlevent/pdb)
-[![Latest Unstable Version](https://poser.pugx.org/mlevent/url-builder/v/unstable.svg)](https://packagist.org/packages/mlevent/pdb)
-[![License](https://poser.pugx.org/mlevent/url-builder/license.svg)](https://packagist.org/packages/mlevent/pdb)
+[![Total Downloads](https://poser.pugx.org/mlevent/pdb/d/total.svg)](https://packagist.org/packages/mlevent/pdb)
+[![Latest Stable Version](https://poser.pugx.org/mlevent/pdb/v/stable.svg)](https://packagist.org/packages/mlevent/pdb)
+[![Latest Unstable Version](https://poser.pugx.org/mlevent/pdb/v/unstable.svg)](https://packagist.org/packages/mlevent/pdb)
+[![License](https://poser.pugx.org/mlevent/pdb/license.svg)](https://packagist.org/packages/mlevent/pdb)
 
 ## Kurulum
 
