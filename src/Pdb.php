@@ -1279,9 +1279,27 @@
             return false;
         }
 
+                
         /**
-		* Structure Tools
-		*/
+         * runStructureTool
+         *
+         * @param  string $type
+         * @param  string $table
+         * @return string|bool
+         */
+        protected function runStructureTool($type, $table = null){
+
+            if(!is_null($table)) 
+                $this->table($table);
+
+            $query = "{$type} TABLE {$this->tableBuild()}";
+
+            if($runQuery = $this->pdo->query($query)){
+                $this->killQuery($query);
+                return $query;
+            }
+            return false;
+        }
         public function truncate($table = null){
             return $this->runStructureTool('TRUNCATE', $table);
         }
@@ -1302,19 +1320,6 @@
         }
         public function repair($table = null){
             return $this->runStructureTool('REPAIR', $table);
-        }
-        protected function runStructureTool($type, $table = null){
-
-            if(!is_null($table)) 
-                $this->table($table);
-
-            $query = "{$type} TABLE {$this->tableBuild()}";
-
-            if($runQuery = $this->pdo->query($query)){
-                $this->killQuery($query);
-                return $query;
-            }
-            return false;
         }
         
         /**
