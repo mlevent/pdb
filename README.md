@@ -322,6 +322,36 @@ $db->limit(100)->offset(0)
 $db->pager(100, 2)
 ```
 
+## History
+
+```php
+$db->queryHistory();
+/* OUTPUT
+Array
+(
+    [0] => Array
+        (
+            [query] => SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc
+            [params] => Array
+                (
+                    [0] => 34066
+                    [1] => 1
+                )
+
+            [from] => redis
+        )
+)
+*/
+
+$db->lastQuery();
+/* OUTPUT
+SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc
+*/
+
+var_dump($db->queryCount());
+/*OUTPUT 1*/
+```
+
 ## Contributors
 
 -   [mlevent](https://github.com/mlevent) Mert Levent - creator, maintainer
