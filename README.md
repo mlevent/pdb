@@ -158,11 +158,19 @@ $db->leftJoin('images AS i ON p.id = i.pid')
 -   $db->innerJoin(...)
 -   $db->fullOuterJoin(...)
 
-## Cache
+## Disk Cache
 
 ```php
 $db->table('products')->cache(30)->get();
-var_dump($db->fromCache());
+var_dump($db->fromDisk());
+# bool(true)
+```
+
+## Redis Cache
+
+```php
+$db->table('products')->redis(30)->get();
+var_dump($db->fromRedis());
 # bool(true)
 ```
 
