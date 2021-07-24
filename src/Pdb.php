@@ -5,6 +5,7 @@
     use PDOException;
     use PDO;
     use Closure;
+    use RedisException;
 
     if(!defined('_AND')) define('_AND', 'AND');
     if(!defined('_OR'))  define('_OR',  'OR');
@@ -14,8 +15,11 @@
         private $pdo;
         private $config;
         private $cache;
+        private $redis;
+        private $redisActive;
         
-        private $fromCache = false;
+        private $fromDisk      = false;
+        private $fromRedis     = false;
 
         private $queryHistory  = [];
         private $rowCount      = 0;
@@ -33,7 +37,7 @@
         private $rawQuery      = null;
 
         private $isGrouped     = false;
-        private $isGroupIn       = false;
+        private $isGroupIn     = false;
 
         private $isFilter      = false;
         private $isFilterValid = false;
@@ -51,22 +55,28 @@
         public function __construct($config = null)
         {
             $this->config = [
-                'database'  => '',
-                'username'  => '',
-                'password'  => null,
-                'host'      => 'localhost',
-                'charset'   => 'utf8',
-                'collation' => 'utf8_unicode_ci',
-                'debug'     => false,
-                'cacheTime' => 60,
-                'cachePath' => __DIR__ . '/Cache'
+                'host'          => 'localhost',
+                'database'      => '',
+                'username'      => 'root',
+                'password'      => '',
+                'charset'       => 'utf8',
+                'collation'     => 'utf8_unicode_ci',
+                'debug'         => false,
+                'cacheTime'     => 60,
+                'cachePath'     => __DIR__ . '/Cache',
+                'useRedis'      => false,
+                'redisHost'     => '127.0.0.1',
+                'redisPort'     => 6379,
+                'redisUsername' => 'default',
+                'redisPassword' => '',
+                'redisDatabase' => 0,
             ];
 
             foreach($this->config as $k => $v) 
                 $this->config[$k] = !isset($config[$k]) 
                     ? $this->config[$k] 
                     : $config[$k];
-
+            
             $options = [
                 PDO::ATTR_PERSISTENT         => true, 
                 PDO::MYSQL_ATTR_FOUND_ROWS   => true,
@@ -80,6 +90,17 @@
                 $this->pdo = new PDO("mysql:dbname={$this->config['database']};host={$this->config['host']}", $this->config['username'], $this->config['password'], $options);
 
             } catch(PDOException $e){ die($e->getMessage()); }
+
+            if($this->config['useRedis'])
+            {
+                try{
+                    $this->redis = new \Redis(); 
+                    $this->redis->connect($this->config['redisHost'], $this->config['redisPort']);
+                    $this->redis->auth([$this->config['redisUsername'], $this->config['redisPassword']]);
+                    $this->redis->select($this->config['redisDatabase']);
+
+                } catch(RedisException $e){ die($e->getMessage()); }
+            }
         }
                      
         /**
@@ -87,6 +108,11 @@
          */
         protected function init(){
             
+            $this->rowCount      = 0;
+            $this->cache         = null;
+            $this->redisActive   = false;
+            $this->fromDisk      = false;
+            $this->fromRedis     = false;
             $this->select        = null;
             $this->table         = null;
             $this->join          = null;
@@ -117,14 +143,34 @@
             $this->cache = new Cache($this->config['cachePath'], is_null($timeout) ? $this->config['cacheTime'] : $timeout);
             return $this;
         }
+
+        /**
+         * redis
+         *
+         * @param int $timeout
+         * @return $this
+         */
+        public function redis(int $timeout = null){
+            $this->redisActive = $this->redis ? $timeout : false;
+            return $this;
+        }
         
         /**
          * Verinin diskten okunup okunmadığını doğrular
          *
          * @return $this
          */
-        public function fromCache(){
-            return $this->fromCache;
+        public function fromDisk(){
+            return $this->fromDisk;
+        }
+
+        /**
+         * Verinin redisten okunup okunmadığını doğrular
+         *
+         * @return $this
+         */
+        public function fromRedis(){
+            return $this->fromRedis;
         }
         
         /**
@@ -1017,6 +1063,15 @@
             ];
             return implode(' ', array_filter($build));
         }
+
+        /**
+         * getReadHash
+         *
+         * @return string
+         */
+        public function getReadHash(){
+            return md5(implode(func_get_args()));
+        }
     
         /**
          * readQuery
@@ -1029,32 +1084,49 @@
 
             $query  = $this->getReadQuery();
             $params = $this->getReadParams();
+            $hash   = $this->getReadHash($query, join((array)$params), $fetch, $cursor);
 
-            $this->init();
-            $this->killQuery($query, $params);
-
-            if($this->cache)
-                $this->cache->hash($query, join((array)$params), $fetch, $cursor);
-
-            if(!$this->cache || !$cached = $this->cache->get())
+            // Redis Cache
+            if($this->redisActive)
             {
-                $runQuery = $this->pdo->prepare($query);
-                if($runQuery->execute($params)){
-                    
-                    $this->rowCount = $runQuery->rowCount();
-
-                    $results = call_user_func_array([$runQuery, $fetch], [$cursor]);
-
-                    if($results)
-                        if($this->cache)
-                            $this->cache->set($results);
-                        return $results;
+                if($this->redis->exists($hash))
+                {
+                    $data = unserialize($this->redis->get($hash));
+                    $this->killQuery($query, $params, 'redis');
+                    $this->fromRedis = true;
+                    $this->rowCount = sizeof($data);
+                    return $data;
                 }
-                
-            } else{
-                $this->fromCache = true;
+            }
+
+            // Disk Cache
+            if($this->cache)
+                $this->cache->setFile($hash);
+
+            if($this->cache && $cached = $this->cache->get())
+            {
+                $this->killQuery($query, $params, 'disk');
+                $this->fromDisk = true;
                 $this->rowCount = $cached['rows'];
                 return $cached['data'];
+            }
+
+            // SQL Query
+            $runQuery = $this->pdo->prepare($query);
+            if($runQuery->execute($params))
+            {
+                if($results = call_user_func_array([$runQuery, $fetch], [$cursor]))
+                {
+                    if($this->redisActive)
+                        $this->redis->set($hash, serialize($results), $this->redisActive);
+                        
+                    if($this->cache)
+                        $this->cache->set($results);
+
+                    $this->killQuery($query, $params, 'mysql');
+                    $this->rowCount = $runQuery->rowCount();
+                    return $results;
+                }
             }
         }
 
@@ -1439,10 +1511,11 @@
          * @param string|array $params
          * @return array
          */
-        public function addQueryHistory($query, $params = null){
+        public function addQueryHistory($query, $params = null, $from = false){
             return $this->queryHistory[] = [
                 'query'  => $query,
-                'params' => $params
+                'params' => $params,
+                'from'   => $from,
             ];
         }
         
@@ -1453,8 +1526,8 @@
          * @param string|array $params
          * @return void
          */
-        public function killQuery($query, $params = null){
-            $this->addQueryHistory($query, $params);
+        public function killQuery($query, $params = null, $from = null){
+            $this->addQueryHistory($query, $params, $from);
             $this->init();
         }
         
