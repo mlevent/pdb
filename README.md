@@ -324,4 +324,4 @@ $db->pager(100, 2)
 
 ## Contributors
 
--   [mlevent](https://github.com/mlevent) Mert Levent - creator, maintainer
+-   [mlevent](https://github.com/mlevent) Mert Levent
