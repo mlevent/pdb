@@ -22,7 +22,9 @@ $db = new \Mlevent\Pdb([
     'database' => 'ecommerce',
     'username' => 'root'
     'password' => 'test',
-    'charset'  => 'utf8'
+    'charset'  => 'utf8',
+    'useRedis' => true,
+    ...
 ]);
 ```
 
