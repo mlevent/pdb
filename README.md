@@ -325,7 +325,7 @@ $db->pager(100, 2)
 ## History
 
 ```php
-$db->queryHistory();
+var_dump($db->queryHistory());
 /* OUTPUT
 Array
 (
@@ -343,13 +343,25 @@ Array
 )
 */
 
-$db->lastQuery();
+echo $db->lastQuery();
 /* OUTPUT
 SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc
 */
 
-var_dump($db->queryCount());
+echo $db->queryCount();
 /*OUTPUT 1*/
+```
+
+## Structure
+
+```php
+$db->truncate('table');
+$db->drop('table');
+$db->optimize('table');
+$db->analyze('table');
+$db->check('table');
+$db->checksum('table');
+$db->repair('table');
 ```
 
 ## Contributors
