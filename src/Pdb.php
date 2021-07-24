@@ -1094,7 +1094,7 @@
                     $data = unserialize($this->redis->get($hash));
                     $this->killQuery($query, $params, 'redis');
                     $this->fromRedis = true;
-                    $this->rowCount = sizeof($data);
+                    $this->rowCount = sizeof((array)$data);
                     return $data;
                 }
             }

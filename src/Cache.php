@@ -29,7 +29,7 @@ class Cache
         if(!file_exists($this->cacheFile)){
             $saveData = serialize([
                 'data' => $data, 
-                'rows' => sizeof($data), 
+                'rows' => sizeof((array)$data), 
                 'time' => time() + $this->cacheTime
             ]);
             file_put_contents($this->cacheFile, $saveData);
