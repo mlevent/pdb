@@ -114,7 +114,7 @@ $db->table('products')->insertIgnore([
 ## Update
 
 ```php
-$db->isNull('slug')->update(['slug' => rand(), 'update' => now()]);
+$db->table('article')->isNull('slug')->update(['slug' => 'about-us', 'update' => now()]);
 ```
 
 ## Delete
