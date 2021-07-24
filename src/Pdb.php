@@ -1221,7 +1221,7 @@
          */
         public function insert($insertData, $table = null, $type = 'INSERT'){
 
-            $typeList = ['INSERT', 'REPLACE', 'DUPLICATE'];
+            $typeList = ['INSERT', 'INSERT IGNORE', 'REPLACE', 'DUPLICATE'];
             
             if(!is_null($table)) 
                 $this->table($table);
@@ -1270,6 +1270,17 @@
          */
         public function replaceInto($insertData, $table = null){
             return $this->insert($insertData, $table, 'REPLACE');
+        }
+
+        /**
+         * insertIgnore
+         *
+         * @param array $insertData
+         * @param string $table
+         * @return int|bool
+         */
+        public function insertIgnore($insertData, $table = null){
+            return $this->insert($insertData, $table, 'INSERT IGNORE');
         }
         
         /**

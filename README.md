@@ -101,6 +101,16 @@ $db->table('products')->replaceInto([
 ]);
 ```
 
+## Insert Ignore [Single or Batch]
+
+```php
+$db->table('products')->insertIgnore([
+    ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
+    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9'],
+    ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
+]);
+```
+
 ## Update
 
 ```php
