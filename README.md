@@ -84,7 +84,7 @@ $db->table('products')->insert([
 ]);
 ```
 
-Son kaydedilen satırın id'sine ulaşmak için `lastInsertId()` fonksiyonunu, toplam etkilenen satır sayısı için `rowCount()` fonksiyonunu kullanabilirsiniz.
+Son kaydedilen satırın id'si için `lastInsertId()` fonksiyonunu, toplam etkilenen satır sayısı için `rowCount()` fonksiyonunu kullanabilirsiniz.
 
 ### Insert Ignore
 
