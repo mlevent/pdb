@@ -180,13 +180,17 @@ $results = $db->cache(30)->get('products');
 
 `$db->fromDisk()` fonksiyonu; son sorgu diskten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
 
-## Redis Cache
+### Redis Cache
+
+`products` tablosundaki verileri mysql'den okur ve redis veritabanuna kayder. Sonuçlar 30 saniye boyunca redis üzerinden okunur.
 
 ```php
-$db->table('products')->redis(30)->get();
-var_dump($db->fromRedis());
-# bool(true)
+$results = $db->redis(30)->get('products');
 ```
+
+`$db->fromRedis()` fonksiyonu; son sorgu diskten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
+
+> Not: Redis ile önbellekleme işlemi yapabilmek için sunucunuzda Redis yüklü olması gerekir.
 
 ## Select
 
