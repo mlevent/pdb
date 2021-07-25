@@ -72,7 +72,7 @@ Sonuçları önbelleğe almak için kullanılır. Çok sık değişmesi gerekmey
 $results = $db->cache(30)->get('comments');
 ```
 
-`fromDisk()` fonksiyonu; son sorgu diskten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
+`fromDisk()` metodu; son sorgu diskten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
 
 ### Redis Cache
 
@@ -82,7 +82,7 @@ $results = $db->cache(30)->get('comments');
 $results = $db->redis(30)->get('comments');
 ```
 
-`fromRedis()` fonksiyonu; son sorgu Redisten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
+`fromRedis()` metodu; son sorgu Redisten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
 
 > Not: Redis ile önbellekleme işlemi yapabilmek için sunucunuzda Redis yüklü olması gerekir.
 
