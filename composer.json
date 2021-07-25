@@ -24,5 +24,6 @@
         "psr-4": {
             "Mlevent\\": "src"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
