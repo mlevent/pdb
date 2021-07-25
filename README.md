@@ -155,6 +155,12 @@ $db->table('users')->filter()->insert([
 -   Tabloda `price` sütunu olmamasına rağmen hatasız bir şekilde kayıt oluşturulur.
 
 ```php
+$db->table('users')->filter()->insert($_POST);
+```
+
+-  `$_POST` ile gelen veriyi süzer ve hatasız bir şekilde kayıt oluşturulur.
+
+```php
 $db->table('users')->filter(true)->insert([
     'name' => 'Walter Bishop',
     'age'  => 'walter@bishop.com'
