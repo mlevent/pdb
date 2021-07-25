@@ -1,6 +1,14 @@
 {
     "name": "mlevent/pdb",
     "description": "PHP için özelleştirilmiş PDO sınıfı",
+    "keywords": [
+        "php",
+        "pdo",
+        "veritabanı",
+        "database",
+        "redis",
+        "cache"
+    ],
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -10,12 +18,11 @@
         }
     ],
     "require": {
-        "php": ">=5.5"
+        "php": ">=7.2.5"
     },
     "autoload": {
         "psr-4": {
             "Mlevent\\": "src"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
