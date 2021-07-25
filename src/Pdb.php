@@ -1139,30 +1139,42 @@
         /**
 		* Fetch
 		*/
-        public function get(){
+        public function get($table = null){
+            if(!is_null($table)) 
+                $this->table($table);
             return $this->readQuery('fetchAll', PDO::FETCH_ASSOC);
         }
-        public function getObj(){
+        public function getObj($table = null){
+            if(!is_null($table)) 
+                $this->table($table);
             return $this->readQuery('fetchAll', PDO::FETCH_OBJ);
         }
 
         /**
 		* Row
 		*/
-        public function getRow(){
+        public function getRow($table = null){
+            if(!is_null($table)) 
+                $this->table($table);
             return $this->readQuery('fetch', PDO::FETCH_ASSOC);
         }
-        public function getRowObj(){
+        public function getRowObj($table = null){
+            if(!is_null($table)) 
+                $this->table($table);
             return $this->readQuery('fetch', PDO::FETCH_OBJ);
         }
 
         /**
 		* Col
 		*/
-        public function getCol(){
+        public function getCol($table = null){
+            if(!is_null($table)) 
+                $this->table($table);
             return $this->readQuery('fetchColumn', 0);
         }
-        public function getCols(){
+        public function getCols($table = null){
+            if(!is_null($table)) 
+                $this->table($table);
             return $this->readQuery('fetchAll', PDO::FETCH_COLUMN);
         }
     

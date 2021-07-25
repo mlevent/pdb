@@ -170,13 +170,15 @@ $db->leftJoin('images AS i ON p.id = i.pid')
 -   $db->innerJoin(...)
 -   $db->fullOuterJoin(...)
 
-## Disk Cache
+### Disk Cache
+
+`products` tablosundaki verileri mysql'den okur ve diske kaydeder. Sonuçlar 30 saniye boyunca diskten okunur.
 
 ```php
-$db->table('products')->cache(30)->get();
-var_dump($db->fromDisk());
-# bool(true)
+$results = $db->cache(30)->get('products');
 ```
+
+`$db->fromDisk()` fonksiyonu; son sorgu diskten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
 
 ## Redis Cache
 
