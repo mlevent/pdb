@@ -82,10 +82,10 @@ $db->table('products')->insert([
 
 Son kaydedilen satırın id'sine ulaşmak için `$db->lastInsertId()` fonksiyonunu, toplam etkilenen satır sayısı için `$db->rowCount()` fonksiyonunu kullanabilirsiniz.
 
-### On Duplicate
+### Insert Ignore
 
 ```php
-$db->table('products')->onDuplicate([
+$db->table('products')->insertIgnore([
     ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
     ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9']
 ]);
@@ -100,10 +100,10 @@ $db->table('products')->replaceInto([
 ]);
 ```
 
-### Insert Ignore
+### On Duplicate
 
 ```php
-$db->table('products')->insertIgnore([
+$db->table('products')->onDuplicate([
     ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
     ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9']
 ]);
@@ -111,15 +111,23 @@ $db->table('products')->insertIgnore([
 
 ## Update
 
+Bir veya birden fazla kaydı güncellemek için kullanılır.
+
 ```php
-$db->table('article')->isNull('slug')->update(['slug' => 'about-us', 'update' => now()]);
+$update = $db->table('products')->where('active', 0)->update(['active' => 1]);
 ```
+
+-   Etkilenen satır sayısı döner.
 
 ## Delete
 
+Bir veya birden fazla kaydı silmek için kullanılır.
+
 ```php
-$db->where('active', 0)->delete('products');
+$db->isNull('slug')->delete('products');
 ```
+
+-   Etkilenen satır sayısı döner.
 
 ## Filter
 
