@@ -84,7 +84,7 @@ $db->table('products')->insert([
 ]);
 ```
 
-Son kaydedilen satırın id'si için `lastInsertId()` fonksiyonunu, toplam etkilenen satır sayısı için `rowCount()` fonksiyonunu kullanabilirsiniz.
+Son kaydedilen satırın id'sine ulaşmak için `lastInsertId()` metodunu, toplam etkilenen satır sayısı için `rowCount()` metodunu kullanabilirsiniz.
 
 ### Insert Ignore
 
@@ -135,7 +135,7 @@ $delete = db->isNull('slug')->delete('products');
 
 ## Filter
 
-### Insert / On Duplicate/ Replace Into / Update
+Gönderilen veriyi tablodaki sütunlarla karşılaştırır ve gönderilen yanlış veriyi otomatik olarak temizler. `insert()`, `insertIgnore()`, `replaceInto()`, `onDuplicate()`, `update()` metodlarıyla birlikte kullanılabilir.
 
 | Primary | Not Null |     Not Null | Null |
 | ------- | :------: | -----------: | ---- |
@@ -144,7 +144,7 @@ $delete = db->isNull('slug')->delete('products');
 | 2       | Jane Doe | jane@doe.com | 19   |
 
 ```php
-$db->filter()->table('users')->insert([
+$db->table('users')->filter()->insert([
     'name'  => 'Walter Bishop',
     'email' => 'walter@bishop.com',
     'age'   => 39,
@@ -152,16 +152,16 @@ $db->filter()->table('users')->insert([
 ]);
 ```
 
--   New record added
+-   Tabloda `price` sütunu olmamasına rağmen hatasız bir şekilde kayıt oluşturulur.
 
 ```php
-$db->filter(true)->table('users')->insert([
+$db->table('users')->filter(true)->insert([
     'name' => 'Walter Bishop',
     'age'  => 'walter@bishop.com'
 ]);
 ```
 
--   Column 'email' cannot be null
+-  `email` sütunu `notnull` olarak tanımlandığı için kayıt eklenmez.
 
 ## Join
 
