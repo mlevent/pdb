@@ -172,6 +172,8 @@ $db->leftJoin('images AS i ON p.id = i.pid')
 
 ### Disk Cache
 
+---
+
 `products` tablosundaki verileri mysql'den okur ve diske kaydeder. Sonuçlar 30 saniye boyunca diskten okunur.
 
 ```php
@@ -182,13 +184,15 @@ $results = $db->cache(30)->get('products');
 
 ### Redis Cache
 
+---
+
 `products` tablosundaki verileri mysql'den okur ve redis veritabanuna kayder. Sonuçlar 30 saniye boyunca redis üzerinden okunur.
 
 ```php
 $results = $db->redis(30)->get('products');
 ```
 
-`$db->fromRedis()` fonksiyonu; son sorgu diskten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
+`$db->fromRedis()` fonksiyonu; son sorgu Redisten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
 
 > Not: Redis ile önbellekleme işlemi yapabilmek için sunucunuzda Redis yüklü olması gerekir.
 
