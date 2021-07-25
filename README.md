@@ -2,10 +2,10 @@
 
 PHP için PDO sınıfı
 
-[![Total Downloads](https://poser.pugx.org/mlevent/pdb/d/total.svg)](https://packagist.org/packages/mlevent/pdb)
 [![Latest Stable Version](https://poser.pugx.org/mlevent/pdb/v/stable.svg)](https://packagist.org/packages/mlevent/pdb)
 [![Latest Unstable Version](https://poser.pugx.org/mlevent/pdb/v/unstable.svg)](https://packagist.org/packages/mlevent/pdb)
 [![License](https://poser.pugx.org/mlevent/pdb/license.svg)](https://packagist.org/packages/mlevent/pdb)
+[![Total Downloads](https://poser.pugx.org/mlevent/pdb/d/total.svg)](https://packagist.org/packages/mlevent/pdb)
 
 ## Kurulum
 
@@ -30,11 +30,13 @@ $db = new \Mlevent\Pdb([
 
 ## Fetch
 
+Sonuçlar `Array` formatında döner. `Object` olarak ulaşmak için `getObj()` metodunu kullanabilirsiniz.
+
 ```php
-$results = $db->select('id, name, code, slug, price, stock, active, created')
+$results = $db->select('id, name, code, slug, price, stock')
               ->table('products')
               ->where(['categoryId = ?', 'price > ?'], [1237, 50])
-              ->orderBy('id')
+              ->order('id')
               ->get();
 ```
 
