@@ -36,18 +36,9 @@ $results = $db->select('id, name, code, slug, price, stock, active, created')
               ->where(['categoryId = ?', 'price > ?'], [1237, 50])
               ->orderBy('id')
               ->get();
-
-var_dump($results);
 ```
 
-## Fetch Types
-
--   ->get();
--   ->getObj();
--   ->getRow();
--   ->getRowObj();
--   ->getCol();
--   ->getCols();
+Kullanılabilecek metotlar: `get()`, `getObj()`, `getRow()`, `getRowObj()`, `getCol()`, `getCols()`
 
 ## Raw Fetch
 
@@ -182,7 +173,7 @@ $results = $db->cache(30)->get('products');
 
 ## Redis Cache
 
-`products` tablosundaki verileri mysql'den okur ve redis veritabanuna kayder. Sonuçlar 30 saniye boyunca redis üzerinden okunur.
+`products` tablosundaki verileri mysql'den okur ve redis veritabanuna kayder. Sonuçlar 30 saniye boyunca Redis üzerinden okunur.
 
 ```php
 $results = $db->redis(30)->get('products');
