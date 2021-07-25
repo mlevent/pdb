@@ -35,7 +35,7 @@ Sonuçlar `Array` formatında döner. `Object` olarak ulaşmak için `getObj()` 
 ```php
 $results = $db->select('id, name, code, slug, price, stock')
               ->table('products')
-              ->where(['categoryId = ?', 'price > ?'], [1237, 50])
+              ->where('price > ?', 50)
               ->order('id')
               ->get();
 ```
@@ -45,34 +45,41 @@ Kullanılabilecek metotlar: `get()`, `getObj()`, `getRow()`, `getRowObj()`, `get
 ## Raw Fetch
 
 ```php
-$db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
-   ->getCols()
+$results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
+              ->getCols();
 ```
 
 ## Raw Exec
 
 ```php
-$db->raw('UPDATE payments SET active = !active WHERE status = ? AND id > ?', ['paid', 1])
-   ->exec()
+$update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['paid'])
+             ->exec();
 ```
 
-## Insert [Single or Batch]
+## Insert
+
+### Tekli Kayıt
 
 ```php
-$db->table('products')->insert([
+$insert = $db->table('products')->insert([
     'name'  => 'Apple Iphone X 128 Gb',
     'code'  => 'APPLEX128',
     'price' => '999.9'
 ]);
+```
 
-$batchData = [
+### Çoklu Kayıt
+
+```php
+$db->table('products')->insert([
     ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
     ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9'],
     ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
-];
-
-$db->insert($batchData, 'products');
+]);
 ```
+
+Son kaydedilen satırın id'si için `$db->lastInsertId()` fonksiyonunu, etkilenen satır sayısı için `$db->rowCount()` fonksiyonunu kullanabilirsiniz.
+
 
 ## On Duplicate [Single or Batch]
 
