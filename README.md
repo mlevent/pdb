@@ -66,7 +66,7 @@ Sonuçları önbelleğe almak için kullanılır. Çok sık değişmesi gerekmey
 
 ### Disk Cache
 
-`products` tablosundaki verileri mysql'den okur ve diske kaydeder. Sonuçlar 30 saniye boyunca diskten okunur.
+`comments` tablosundaki verileri mysql'den okur ve diske kaydeder. Sonuçlar 30 saniye boyunca diskten okunur.
 
 ```php
 $results = $db->cache(30)->get('comments');
@@ -76,7 +76,7 @@ $results = $db->cache(30)->get('comments');
 
 ### Redis Cache
 
-`products` tablosundaki verileri mysql'den okur ve redis veritabanuna kayder. Sonuçlar 30 saniye boyunca Redis üzerinden okunur.
+`comments` tablosundaki verileri mysql'den okur ve redis veritabanuna kayder. Sonuçlar 30 saniye boyunca Redis üzerinden okunur.
 
 ```php
 $results = $db->redis(30)->get('comments');
