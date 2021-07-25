@@ -522,7 +522,13 @@
             }
             $this->addHavingParams($value);
             return $this;
-        }
+        }        
+        
+        /**
+         * havingBuild
+         *
+         * @return void
+         */
         public function havingBuild(){
             return $this->having ? 'HAVING ' . $this->having : null;
         }
