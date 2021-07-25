@@ -135,7 +135,7 @@ $delete = db->isNull('slug')->delete('products');
 
 ## Filter
 
-Gönderilen veriyi tablodaki sütunlarla karşılaştırır ve gönderilen yanlış veriyi otomatik olarak temizler. `insert()`, `insertIgnore()`, `replaceInto()`, `onDuplicate()`, `update()` metodlarıyla birlikte kullanılabilir.
+Gönderilen veriyi tablodaki sütunlarla karşılaştırır ve yanlış/fazla veriyi otomatik olarak temizler. `insert()`, `insertIgnore()`, `replaceInto()`, `onDuplicate()`, `update()` metodlarıyla birlikte kullanılabilir.
 
 | Primary | Not Null |     Not Null | Null |
 | ------- | :------: | -----------: | ---- |
@@ -158,7 +158,7 @@ $db->table('users')->filter()->insert([
 $db->table('users')->filter()->insert($_POST);
 ```
 
--  `$_POST` ile gelen veriyi süzer ve hatasız bir şekilde kayıt oluşturulur.
+-  `$_POST` ile gelen veriyi temizler ve hatasız bir şekilde kayıt oluşturulur.
 
 ```php
 $db->table('users')->filter(true)->insert([
