@@ -58,10 +58,12 @@ $update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['pa
 
 ## Insert
 
+Tabloya yeni bir satır eklemek için kullanılır. `insert()` metoduyla tek veya birden fazla kayıt eklenebilir.
+
 ### Tekli Kayıt
 
 ```php
-$insert = $db->table('products')->insert([
+$db->table('products')->insert([
     'name'  => 'Apple Iphone X 128 Gb',
     'code'  => 'APPLEX128',
     'price' => '999.9'
@@ -71,43 +73,39 @@ $insert = $db->table('products')->insert([
 ### Çoklu Kayıt
 
 ```php
-$insert = $db->table('products')->insert([
+$db->table('products')->insert([
     ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
     ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9'],
-    ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
+    ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9']
 ]);
 ```
 
-Son kaydedilen satırın id'si için `$db->lastInsertId()` fonksiyonunu, etkilenen satır sayısı için `$db->rowCount()` fonksiyonunu kullanabilirsiniz.
+Son kaydedilen satırın id'sine ulaşmak için `$db->lastInsertId()` fonksiyonunu, toplam etkilenen satır sayısı için `$db->rowCount()` fonksiyonunu kullanabilirsiniz.
 
-
-## On Duplicate [Single or Batch]
+### On Duplicate
 
 ```php
 $db->table('products')->onDuplicate([
     ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
-    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9'],
-    ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
+    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9']
 ]);
 ```
 
-## Replace Into [Single or Batch]
+### Replace Into
 
 ```php
 $db->table('products')->replaceInto([
     ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
-    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9'],
-    ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
+    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9']
 ]);
 ```
 
-## Insert Ignore [Single or Batch]
+### Insert Ignore
 
 ```php
 $db->table('products')->insertIgnore([
     ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
-    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9'],
-    ['name' => 'Apple Iphone X 512 Gb', 'code' => 'APPLEX512', 'price' => '1349.9'],
+    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9']
 ]);
 ```
 
