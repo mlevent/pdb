@@ -84,7 +84,7 @@ $db->table('products')->insert([
 ]);
 ```
 
-Son kaydedilen satırın id'sine ulaşmak için `$db->lastInsertId()` fonksiyonunu, toplam etkilenen satır sayısı için `$db->rowCount()` fonksiyonunu kullanabilirsiniz.
+Son kaydedilen satırın id'sine ulaşmak için `lastInsertId()` fonksiyonunu, toplam etkilenen satır sayısı için `rowCount()` fonksiyonunu kullanabilirsiniz.
 
 ### Insert Ignore
 
@@ -188,7 +188,7 @@ $db->leftJoin('images AS i ON p.id = i.pid')
 $results = $db->cache(30)->get('products');
 ```
 
-`$db->fromDisk()` fonksiyonu; son sorgu diskten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
+`fromDisk()` fonksiyonu; son sorgu diskten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
 
 ## Redis Cache
 
@@ -198,7 +198,7 @@ $results = $db->cache(30)->get('products');
 $results = $db->redis(30)->get('products');
 ```
 
-`$db->fromRedis()` fonksiyonu; son sorgu Redisten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
+`fromRedis()` fonksiyonu; son sorgu Redisten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
 
 > Not: Redis ile önbellekleme işlemi yapabilmek için sunucunuzda Redis yüklü olması gerekir.
 
