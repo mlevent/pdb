@@ -76,7 +76,7 @@ $results = $db->cache(30)->get('comments');
 
 ### Redis Cache
 
-`comments` tablosundaki verileri mysql'den okur ve redis veritabanuna kayder. Sonuçlar 30 saniye boyunca Redis üzerinden okunur.
+`comments` tablosundaki verileri mysql'den okur ve redis veritabanına kayder. Sonuçlar 30 saniye boyunca Redis üzerinden okunur.
 
 ```php
 $results = $db->redis(30)->get('comments');
