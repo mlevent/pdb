@@ -60,6 +60,32 @@ $update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['pa
              ->exec();
 ```
 
+## Cache
+
+Sonuçları önbelleğe almak için kullanılır. Çok sık değişmesi gerekmeyen ve performans sorunu oluşturabilecek sorgular için kullanılabilir. 
+
+### Disk Cache
+
+`products` tablosundaki verileri mysql'den okur ve diske kaydeder. Sonuçlar 30 saniye boyunca diskten okunur.
+
+```php
+$results = $db->cache(30)->get('products');
+```
+
+`fromDisk()` fonksiyonu; son sorgu diskten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
+
+### Redis Cache
+
+`products` tablosundaki verileri mysql'den okur ve redis veritabanuna kayder. Sonuçlar 30 saniye boyunca Redis üzerinden okunur.
+
+```php
+$results = $db->redis(30)->get('products');
+```
+
+`fromRedis()` fonksiyonu; son sorgu Redisten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
+
+> Not: Redis ile önbellekleme işlemi yapabilmek için sunucunuzda Redis yüklü olması gerekir.
+
 ## Insert
 
 Tabloya yeni bir satır eklemek için kullanılır. `insert()` metoduyla tek veya birden fazla kayıt eklenebilir.
@@ -169,6 +195,22 @@ $db->table('users')->filter(true)->insert([
 
 -  `email` sütunu `notnull` olarak tanımlandığı için kayıt eklenmez.
 
+## Select
+
+```php
+$db->select('id, name, price, tax')
+# OR #
+$db->select(['id', 'name', 'price', 'tax'])
+```
+
+## Table
+
+```php
+$db->table('products')
+# OR #
+$db->table(['products as p', 'variants as v'])
+```
+
 ## Join
 
 ```php
@@ -185,44 +227,6 @@ $db->leftJoin('images AS i ON p.id = i.pid')
 -   $db->rightOuterJoin(...)
 -   $db->innerJoin(...)
 -   $db->fullOuterJoin(...)
-
-## Disk Cache
-
-`products` tablosundaki verileri mysql'den okur ve diske kaydeder. Sonuçlar 30 saniye boyunca diskten okunur.
-
-```php
-$results = $db->cache(30)->get('products');
-```
-
-`fromDisk()` fonksiyonu; son sorgu diskten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
-
-## Redis Cache
-
-`products` tablosundaki verileri mysql'den okur ve redis veritabanuna kayder. Sonuçlar 30 saniye boyunca Redis üzerinden okunur.
-
-```php
-$results = $db->redis(30)->get('products');
-```
-
-`fromRedis()` fonksiyonu; son sorgu Redisten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
-
-> Not: Redis ile önbellekleme işlemi yapabilmek için sunucunuzda Redis yüklü olması gerekir.
-
-## Select
-
-```php
-$db->select('id, name, price, tax')
-# OR #
-$db->select(['id', 'name', 'price', 'tax'])
-```
-
-## Table
-
-```php
-$db->table('products')
-# OR #
-$db->table(['products as p', 'variants as v'])
-```
 
 ## Where
 
