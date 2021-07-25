@@ -42,14 +42,18 @@ $results = $db->select('id, name, code, slug, price, stock')
 
 Kullanılabilecek metotlar: `get()`, `getObj()`, `getRow()`, `getRowObj()`, `getCol()`, `getCols()`
 
-## Raw Fetch
+## Raw Query
+
+Salt sql sorgusu çalıştırmak için kullanılır.
+
+### Raw Fecth
 
 ```php
 $results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
               ->getCols();
 ```
 
-## Raw Exec
+### Raw Exec
 
 ```php
 $update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['paid'])
@@ -124,7 +128,7 @@ $update = $db->table('products')->where('active', 0)->update(['active' => 1]);
 Bir veya birden fazla kaydı silmek için kullanılır.
 
 ```php
-$db->isNull('slug')->delete('products');
+$delete = db->isNull('slug')->delete('products');
 ```
 
 -   Etkilenen satır sayısı döner.
