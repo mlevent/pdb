@@ -154,7 +154,7 @@ $update = $db->table('products')->where('active', 0)->update(['active' => 1]);
 Bir veya birden fazla kaydı silmek için kullanılır.
 
 ```php
-$delete = db->isNull('slug')->delete('products');
+$delete = $db->isNull('slug')->delete('products');
 ```
 
 -   Etkilenen satır sayısı döner.
