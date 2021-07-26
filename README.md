@@ -371,7 +371,7 @@ $db->pager(100, 1)
 
 ## History
 
-## queryHistory()
+### queryHistory()
 
 Sorgu listesine ulaşmak için kullanılır.
 
@@ -396,7 +396,7 @@ Array
 )
 ```
 
-## lastQuery()
+### lastQuery()
 
 Son sorguyu görüntülemek için kullanılır.
 
@@ -406,7 +406,7 @@ echo $db->lastQuery();
 
 -   `SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc`
 
-## lastParams()
+### lastParams()
 
 Son sorguyu ait parametreleri görmek için kullanılır.
 
@@ -422,7 +422,7 @@ Array
 )
 ```
 
-## queryCount()
+### queryCount()
 
 Toplam sorgu sayısına ulaşmak için kullanılır.
 
