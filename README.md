@@ -200,7 +200,8 @@ $db->table('users')->filter(true)->insert([
 ```php
 $db->select('id, name, code, price')
 ```
--  `select('id, name')`, `select(['id', 'name', ...])`
+-  `select('id, name')`
+-  `select(['id', 'name', ...])`
 
 > Metod kullanılmazsa varsayılan olarak `*` ile tüm sütunlar seçilir.
 
@@ -209,7 +210,8 @@ $db->select('id, name, code, price')
 ```php
 $db->table('products')
 ```
--  `table('products')`, `table(['products as p', 'images as i'])`
+-  `table('products')`
+-  `table(['products as p', 'images as i'])`
 
 ## Join
 
