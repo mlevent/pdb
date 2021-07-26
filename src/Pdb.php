@@ -1121,18 +1121,17 @@
             $runQuery = $this->pdo->prepare($query);
             if($runQuery->execute($params))
             {
-                if($results = call_user_func_array([$runQuery, $fetch], [$cursor]))
-                {
-                    if($this->redisActive)
-                        $this->redis->set($hash, serialize($results), $this->redisActive);
-                        
-                    if($this->cache)
-                        $this->cache->set($results);
+                $results = call_user_func_array([$runQuery, $fetch], [$cursor]);
 
-                    $this->killQuery($query, $params, 'mysql');
-                    $this->rowCount = $runQuery->rowCount();
-                    return $results;
-                }
+                if($this->redisActive)
+                    $this->redis->set($hash, serialize($results), $this->redisActive);
+                    
+                if($this->cache)
+                    $this->cache->set($results);
+
+                $this->killQuery($query, $params, 'mysql');
+                $this->rowCount = $runQuery->rowCount();
+                return $results;
             }
         }
 
@@ -1531,6 +1530,15 @@
          */
         public function lastQuery($withParams = false){
             return $withParams ? end($this->queryHistory) : end($this->queryHistory)['query'];
+        }
+
+        /**
+         * lastParams
+         *
+         * @return array
+         */
+        public function lastParams(){
+            return $this->queryCount() ? end($this->queryHistory)['params'] : false;
         }
         
         /**
