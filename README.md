@@ -215,20 +215,16 @@ $db->table('products')
 
 ## Join
 
-```php
-$db->leftJoin('images AS i', 'p.id', 'i.pid')
-# OR #
-$db->leftJoin('images AS i', 'p.id = i.pid')
-# OR #
-$db->leftJoin('images AS i ON p.id = i.pid')
-```
+Join metodları: `leftJoin()`, `rightJoin()`, `innerJoin()`, `leftOuterJoin()`, `rightOuterJoin()`, `fullOuterJoin()`
 
--   $db->leftJoin(...)
--   $db->leftOuterJoin(...)
--   $db->rightJoin(...)
--   $db->rightOuterJoin(...)
--   $db->innerJoin(...)
--   $db->fullOuterJoin(...)
+```php
+$db->table('products as p')
+   ->leftJoin('images as i', 'p.id', 'i.productId')
+   ->get();
+```
+-  `leftJoin('images', 'products.id', 'images.productId')`
+-  `leftJoin('images', 'products.id = images.productId')`
+-  `leftJoin('images ON products.id = images.productId')`
 
 ## Where
 
