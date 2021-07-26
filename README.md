@@ -53,6 +53,12 @@ Varsayılan yapılandırma ayarları.
 Sonuçlar `Array` formatında döner. `Object` olarak ulaşmak için `getObj()` metodunu kullanabilirsiniz.
 
 ```php
+$results = $db->get('products');
+```
+
+-   `products` tablosundaki tüm sütun ve satırlar okunur.
+
+```php
 $results = $db->select('id, name, code, slug, price, stock')
               ->table('products')
               ->where('price > ?', 50)
