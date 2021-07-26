@@ -32,17 +32,17 @@ Varsayılan yapılandırma ayarları.
 -   `database` : `''`
 -   `username` : `root`
 -   `password` : `''`
--   `charset`: 'utf8'
--   `collation`: 'utf8_unicode_ci'
--   `debug`: false
--   `cacheTime`: 60
--   `cachePath`: `__DIR__ . '/Cache'`
--   `useRedis`: false
--   `redisHost`: '127.0.0.1'
--   `redisPort`: 6379
--   `redisUsername`: 'default'
--   `redisPassword`: ''
--   `redisDatabase`: 0
+-   `charset` : `'utf8'`
+-   `collation` : `'utf8_unicode_ci'`
+-   `debug` : `false`
+-   `cacheTime` : `60`
+-   `cachePath` : `__DIR__ . '/Cache'`
+-   `useRedis` : `false`
+-   `redisHost` : `'127.0.0.1'`
+-   `redisPort` : `6379`
+-   `redisUsername` : `'default'`
+-   `redisPassword` : `''`
+-   `redisDatabase` : `0`
 
 ## Fetch
 
