@@ -62,7 +62,7 @@ $update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['pa
 
 ## Cache
 
-Sonuçları önbelleğe almak için kullanılır. Çok sık değişmesi gerekmeyen ve yoğun kullanımda performans sorunu oluşturabilecek sorgular için kullanılabilir. 
+Sonuçları önbelleğe almak için kullanılır. Çok sık değişmesi gerekmeyen ve yoğun kullanımda performans sorunu oluşturabilecek sorgular için kullanılabilir.
 
 ### Disk Cache
 
@@ -184,7 +184,7 @@ $db->table('users')->filter()->insert([
 $db->table('users')->filter()->insert($_POST);
 ```
 
--  `$_POST` ile gelen veriyi temizler ve hatasız bir şekilde kayıt oluşturulur.
+-   `$_POST` ile gelen veriyi temizler ve hatasız bir şekilde kayıt oluşturulur.
 
 ```php
 $db->table('users')->filter(true)->insert([
@@ -193,7 +193,7 @@ $db->table('users')->filter(true)->insert([
 ]);
 ```
 
--  `email` sütunu `notnull` olarak tanımlandığı için kayıt eklenmez.
+-   `email` sütunu `notnull` olarak tanımlandığı için kayıt eklenmez.
 
 ## Transaction
 
@@ -203,7 +203,7 @@ Metodlar: `inTransaction()`, `beginTransaction()`, `commit()`, `rollBack()`
 try {
 
     $db->beginTransaction();
-    
+
     $db->table('products')->insert([
         'name'  => 'Apple Iphone X 128 Gb',
         'code'  => 'APPLEX128',
@@ -218,7 +218,7 @@ try {
     $db->commit();
 
 } catch(Exception $e) {
-    
+
     $db->rollBack();
 }
 ```
@@ -228,8 +228,9 @@ try {
 ```php
 $db->select('id, name, code, price')
 ```
--  `select('id, name')`
--  `select(['id', 'name', ...])`
+
+-   `select('id, name')`
+-   `select(['id', 'name', ...])`
 
 > Metod kullanılmazsa varsayılan olarak `*` ile tüm sütunlar seçilir.
 
@@ -238,8 +239,9 @@ $db->select('id, name, code, price')
 ```php
 $db->table('products')
 ```
--  `table('products')`
--  `table(['products as p', 'images as i'])`
+
+-   `table('products')`
+-   `table(['products as p', 'images as i'])`
 
 ## Join
 
@@ -250,9 +252,10 @@ $db->table('products as p')
    ->leftJoin('images as i', 'p.id', 'i.productId')
    ->get();
 ```
--  `leftJoin('images', 'products.id', 'images.productId')`
--  `leftJoin('images', 'products.id = images.productId')`
--  `leftJoin('images ON products.id = images.productId')`
+
+-   `leftJoin('images', 'products.id', 'images.productId')`
+-   `leftJoin('images', 'products.id = images.productId')`
+-   `leftJoin('images ON products.id = images.productId')`
 
 ## Where
 
@@ -261,11 +264,12 @@ Metodlar: `where()`, `orWhere()`, `notWhere()`, `orNotWhere()`
 ```php
 $db->where('id', 32886)
 ```
--  `where('active', 1)`
--  `where('stock >= ? AND active = ?', [2, 1])`
--  `where(['stock > ?', 'active > ?'], [2, 1])`
--  `where(['stock' => 2, 'active' => 1])`
--  `where('stock >= 2 AND active = 1 AND MONTH(updated) = MONTH(NOW())')`
+
+-   `where('active', 1)`
+-   `where('stock >= ? AND active = ?', [2, 1])`
+-   `where(['stock > ?', 'active > ?'], [2, 1])`
+-   `where(['stock' => 2, 'active' => 1])`
+-   `where('stock >= 2 AND active = 1 AND MONTH(updated) = MONTH(NOW())')`
 
 ## Group Where
 
@@ -276,7 +280,8 @@ $db->table('products')
         $q->in('brandId', [1, 2, 3])->orIn('categoryId', [1, 2, 3]);
    })->get();
 ```
-- `SELECT * FROM products WHERE name LIKE ? AND (brandId IN(?,?,?) OR categoryId IN(?,?,?))`
+
+-   `SELECT * FROM products WHERE name LIKE ? AND (brandId IN(?,?,?) OR categoryId IN(?,?,?))`
 
 ## Between
 
@@ -293,8 +298,9 @@ Metodlar: `isNull()`, `orIsNull()`, `notNull()`, `orNotNull()`
 ```php
 $db->isNull('code')
 ```
--  `isNull('slug')`
--  `isNull(['slug', ...])`
+
+-   `isNull('slug')`
+-   `isNull(['slug', ...])`
 
 ## In - Not In
 
@@ -327,27 +333,30 @@ Varsayılan olarak `desc` seçilir.
 ```php
 $db->order('id')
 ```
--  `order('id')`
--  `order('id', 'asc')`
--  `order('id desc, name asc')`
--  `order('rand()')`
+
+-   `order('id')`
+-   `order('id', 'asc')`
+-   `order('id desc, name asc')`
+-   `order('rand()')`
 
 ## Group
 
 ```php
 $db->group('id')
 ```
--  `group('id')`
--  `group(['id', 'name'])`
+
+-   `group('id')`
+-   `group(['id', 'name'])`
 
 ## Having
 
 ```php
 $db->having('stock', 5)
 ```
--  `having('stock', 5)`
--  `having('stock > 5')`
--  `having('stock > ?', 5)`
+
+-   `having('stock', 5)`
+-   `having('stock > 5')`
+-   `having('stock > ?', 5)`
 
 ## Limit - Offset - Pager
 
@@ -362,11 +371,14 @@ $db->pager(100, 1)
 
 ## History
 
+## queryHistory()
+
 Sorgu listesine ulaşmak için kullanılır.
 
 ```php
 var_dump($db->queryHistory());
 ```
+
 ```
 Array
 (
@@ -384,18 +396,24 @@ Array
 )
 ```
 
+## lastQuery()
+
 Son sorguyu görüntülemek için kullanılır.
 
 ```php
 echo $db->lastQuery();
 ```
-- `SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc`
+
+-   `SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc`
+
+## lastParams()
 
 Son sorguyu ait parametreleri görmek için kullanılır.
 
 ```php
 var_dump($db->lastParams());
 ```
+
 ```
 Array
 (
@@ -404,12 +422,15 @@ Array
 )
 ```
 
+## queryCount()
+
 Toplam sorgu sayısına ulaşmak için kullanılır.
 
 ```php
 echo $db->queryCount();
 ```
-- `1`
+
+-   `1`
 
 ## Structure
 
