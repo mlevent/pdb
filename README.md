@@ -248,7 +248,7 @@ $db->table('products')
         $q->in('brandId', [1, 2, 3])->orIn('categoryId', [1, 2, 3]);
    })->get();
 ```
-`SELECT * FROM products WHERE name LIKE ? AND (brandId IN(?,?,?) OR categoryId IN(?,?,?))`
+- `SELECT * FROM products WHERE name LIKE ? AND (brandId IN(?,?,?) OR categoryId IN(?,?,?))`
 
 ## Between
 
@@ -323,19 +323,18 @@ $db->having('stock', 5)
 
 ## Limit - Offset - Pager
 
+Limit, Offset ve Sayfalama işlemleri için kullanılır.
+
 ```php
 $db->limit(100)
-# OR #
 $db->limit(100, 10)
-# OR #
 $db->limit(100)->offset(0)
-# OR #
-$db->pager(100, 2)
+$db->pager(100, 1)
 ```
 
 ## History
 
-Sorgu listesini ulaşmak için kullanılır.
+Sorgu listesine ulaşmak için kullanılır.
 
 ```php
 var_dump($db->queryHistory());
@@ -357,10 +356,14 @@ Array
 )
 ```
 
+Son sorguyu görüntülemek için kullanılır.
+
 ```php
 echo $db->lastQuery();
 ```
 - `SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc`
+
+Toplam sorgu sayısına ulaşmak için kullanılır.
 
 ```php
 echo $db->queryCount();
