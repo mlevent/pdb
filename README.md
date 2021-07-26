@@ -16,17 +16,33 @@ $ composer require mlevent/pdb
 ## Örnek Kullanım
 
 ```php
-require '/vendor/autoload.php';
-
 $db = new \Mlevent\Pdb([
     'database' => 'ecommerce',
     'username' => 'root'
     'password' => 'test',
-    'charset'  => 'utf8',
-    'useRedis' => true,
-    ...
+    'charset'  => 'utf8'
 ]);
 ```
+
+## Yapılandırma
+
+Varsayılan yapılandırma ayarları.
+
+-   `host`: localhost
+-   `database`: ''
+-   `username`: root
+-   `password`: ''
+-   `charset`: 'utf8'
+-   `collation`: 'utf8_unicode_ci'
+-   `debug`: false
+-   `cacheTime`: 60
+-   `cachePath`: `__DIR__ . '/Cache'`
+-   `useRedis`: false
+-   `redisHost`: '127.0.0.1'
+-   `redisPort`: 6379
+-   `redisUsername`: 'default'
+-   `redisPassword`: ''
+-   `redisDatabase`: 0
 
 ## Fetch
 
