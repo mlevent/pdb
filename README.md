@@ -215,7 +215,7 @@ $db->table('products')
 
 ## Join
 
-Join metodları: `leftJoin()`, `rightJoin()`, `innerJoin()`, `leftOuterJoin()`, `rightOuterJoin()`, `fullOuterJoin()`
+Metodlar: `leftJoin()`, `rightJoin()`, `innerJoin()`, `leftOuterJoin()`, `rightOuterJoin()`, `fullOuterJoin()`
 
 ```php
 $db->table('products as p')
@@ -228,48 +228,45 @@ $db->table('products as p')
 
 ## Where
 
+Metodlar: `where()`, `orWhere()`, `notWhere()`, `orNotWhere()`
+
 ```php
 $db->where('id', 32886)
-# OR #
-$db->where('stock >= ? AND active = ?', [2, 1])
-# OR #
-$db->where(['stock > ?', 'active > ?'], [2, 1])
-# OR #
-$db->where(['stock' => 2, 'active' => 1])
-# OR #
-$db->where('stock >= 2 AND active = 1 AND MONTH(updated) = MONTH(NOW())')
 ```
+-  `where('active', 1)`
+-  `where('stock >= ? AND active = ?', [2, 1])`
+-  `where(['stock > ?', 'active > ?'], [2, 1])`
+-  `where(['stock' => 2, 'active' => 1])`
+-  `where('stock >= 2 AND active = 1 AND MONTH(updated) = MONTH(NOW())')`
 
--   $db->where(...)
--   $db->orWhere(...)
--   $db->notWhere(...)
--   $db->orNotWhere(...)
+## Group Where
+
+```php
+$db->table('products')
+   ->like('name', '%iphone%')
+   ->grouped(function($q){
+        $q->in('brandId', [1, 2, 3])->orIn('categoryId', [1, 2, 3]);
+   })->get();
+```
+-  SQL: `SELECT * FROM products WHERE name LIKE ? AND (brandId IN(?,?,?) OR categoryId IN(?,?,?))`
 
 ## Between
+
+Metodlar: `between()`, `orBetween()`, `notBetween()`, `orNotBetween()`
 
 ```php
 $db->between('price', 50, 250)
 ```
 
--   $db->between(...)
--   $db->orBetween(...)
--   $db->notBetween(...)
--   $db->orNotBetween(...)
-
 ## Is Null / Not Null
+
+Metodlar: `isNull()`, `orIsNull()`, `notNull()`, `orNotNull()`
 
 ```php
 $db->isNull('code')
-# OR #
-$db->isNull(['code', 'price'])
-# OR #
-$db->isNull(['code', 'price'], _OR)
 ```
-
--   $db->isNull(...)
--   $db->orIsNull(...)
--   $db->notNull(...)
--   $db->orNotNull(...)
+-  `isNull('slug')`
+-  `isNull(['slug', ...])`
 
 ## In / Not In
 
