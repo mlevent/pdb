@@ -221,6 +221,16 @@
         }
         
         /**
+         * total
+         *
+         * @param  mixed $table
+         * @return void
+         */
+        public function total($table){
+            return $this->pdo->query("select count(*) from {$table}")->fetchColumn();
+        }   
+        
+        /**
          * selectFunctions
          *
          * @param string $field
@@ -490,11 +500,14 @@
          * @param int $page
          * @return $this
          */
-        public function pager(int $limit, int $page = 1){
+        public function pager(int $limit, $page = 1){
+
             if($limit < 1) $limit = 1;
             if($page  < 1) $page  = 1;
+
             $this->limit  = $limit;
             $this->offset = ($limit * $page) - $limit;
+            
             return $this;
         }
                 
