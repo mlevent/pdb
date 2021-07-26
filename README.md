@@ -327,7 +327,7 @@ Limit, Offset ve Sayfalama işlemleri için kullanılır.
 
 ```php
 $db->limit(100)
-$db->limit(100, 10)
+$db->limit(100, 0)
 $db->limit(100)->offset(0)
 $db->pager(100, 1)
 ```
