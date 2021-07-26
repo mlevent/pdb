@@ -79,6 +79,13 @@ $results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created)
               ->getCols();
 ```
 
+### Raw Exec
+
+```php
+$update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['paid'])
+             ->exec();
+```
+
 ## Total
 
 Tablodaki toplam satır sayısına ulaşmak için kullanılır.
@@ -87,12 +94,7 @@ Tablodaki toplam satır sayısına ulaşmak için kullanılır.
 $total = $db->total('products');
 ```
 
-### Raw Exec
-
-```php
-$update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['paid'])
-             ->exec();
-```
+---
 
 ## Cache
 
