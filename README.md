@@ -198,10 +198,9 @@ $db->table('users')->filter(true)->insert([
 ## Select
 
 ```php
-$db->select('id, name, price, tax')
-$db->select(['id', 'name', 'price', 'tax'])
+$db->select('id, name, code, price')
 ```
--  `select(...)`, `select([..., ...])`
+-  `select('id, name')`, `select(['id', 'name', ...])`
 
 > Metod kullanılmazsa varsayılan olarak `*` ile tüm sütunlar seçilir.
 
@@ -209,9 +208,8 @@ $db->select(['id', 'name', 'price', 'tax'])
 
 ```php
 $db->table('products')
-# OR #
-$db->table(['products as p', 'variants as v'])
 ```
+-  `table('products')`, `table(['products as p', 'images as i'])`
 
 ## Join
 
