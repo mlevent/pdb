@@ -360,20 +360,22 @@ Array
 ```php
 echo $db->lastQuery();
 ```
-`SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc`
+- `SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc`
 
 ```php
 echo $db->queryCount();
 ```
-`1`
+- `1`
 
 ## Structure
 
 Yapısal sorgular için kullanılır.
-Metodlar: `truncate()`, `drop()`, `optimize()`, `analyze()`, `check()`, `checksum()`, `repair()`
+
 ```php
 $db->repair('sessions');
 ```
+
+Metodlar: `truncate()`, `drop()`, `optimize()`, `analyze()`, `check()`, `checksum()`, `repair()`
 
 ## Contributors
 
