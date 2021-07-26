@@ -28,10 +28,10 @@ $db = new \Mlevent\Pdb([
 
 Varsayılan yapılandırma ayarları.
 
--   `host` `localhost`
--   `database` `''`
--   `username` : root
--   `password`: ''
+-   `host` : `localhost`
+-   `database` : `''`
+-   `username` : `root`
+-   `password` : `''`
 -   `charset`: 'utf8'
 -   `collation`: 'utf8_unicode_ci'
 -   `debug`: false
