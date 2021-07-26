@@ -79,6 +79,14 @@ $results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created)
               ->getCols();
 ```
 
+## Total
+
+Tablodaki toplam satır sayısına ulaşmak için kullanılır.
+
+```php
+$total = $db->total('products');
+```
+
 ### Raw Exec
 
 ```php
