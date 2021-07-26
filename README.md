@@ -175,6 +175,14 @@ $update = $db->table('products')->where('active', 0)->update(['active' => 1]);
 
 -   Etkilenen satır sayısı döner.
 
+### Touch
+
+`active` sütunu `1` ise `0`, `0` ise `1` değerini alır.
+
+```php
+$touch = $db->touch('active', 'products');
+```
+
 ## Delete
 
 Bir veya birden fazla kaydı silmek için kullanılır.
