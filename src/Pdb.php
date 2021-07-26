@@ -1449,20 +1449,20 @@
         }
         
         /**
-         * transactionStatus
+         * inTransaction
          *
          * @return void
          */
-        public function transactionStatus(){
+        public function inTransaction(){
             return $this->pdo->inTransaction();
         }   
 
         /**
-         * transaction
+         * beginTransaction
          *
          * @return void
          */
-        public function transaction(){
+        public function beginTransaction(){
             if(!$this->pdo->inTransaction())
                 $this->pdo->beginTransaction();
         } 
