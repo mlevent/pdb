@@ -48,6 +48,8 @@ Varsayılan yapılandırma ayarları.
 ]
 ```
 
+---
+
 ## Fetch
 
 Sonuçlar `Array` formatında döner. `Object` olarak ulaşmak için `getObj()` metodunu kullanabilirsiniz.
@@ -122,6 +124,8 @@ $results = $db->redis(30)->get('comments');
 
 > Not: Redis ile önbellekleme işlemi yapabilmek için sunucunuzda Redis yüklü olması gerekir.
 
+---
+
 ## Insert
 
 Tabloya yeni bir satır eklemek için kullanılır. `insert()` metoduyla tek veya birden fazla kayıt eklenebilir.
@@ -175,6 +179,8 @@ $db->table('products')->onDuplicate([
 ]);
 ```
 
+---
+
 ## Update
 
 Bir veya birden fazla kaydı güncellemek için kullanılır.
@@ -193,6 +199,8 @@ $update = $db->table('products')->where('active', 0)->update(['active' => 1]);
 $touch = $db->touch('active', 'products');
 ```
 
+---
+
 ## Delete
 
 Bir veya birden fazla kaydı silmek için kullanılır.
@@ -202,6 +210,8 @@ $delete = $db->isNull('slug')->delete('products');
 ```
 
 -   Etkilenen satır sayısı döner.
+
+---
 
 ## Filter
 
@@ -239,6 +249,8 @@ $db->table('users')->filter(true)->insert([
 
 -   `email` sütunu `notnull` olarak tanımlandığı için kayıt eklenmez.
 
+---
+
 ## Transaction
 
 Metodlar: `inTransaction()`, `beginTransaction()`, `commit()`, `rollBack()`
@@ -266,6 +278,8 @@ try {
     $db->rollBack();
 }
 ```
+
+---
 
 ## Select
 
@@ -413,6 +427,8 @@ $db->limit(100)->offset(0)
 $db->pager(100, 1)
 ```
 
+---
+
 ## History
 
 ### queryHistory()
@@ -475,6 +491,8 @@ echo $db->queryCount();
 ```
 
 -   `1`
+
+---
 
 ## Structure
 
