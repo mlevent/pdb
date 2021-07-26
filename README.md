@@ -258,7 +258,7 @@ Metodlar: `between()`, `orBetween()`, `notBetween()`, `orNotBetween()`
 $db->between('price', 50, 250)
 ```
 
-## Is Null / Not Null
+## Is Null - Not Null
 
 Metodlar: `isNull()`, `orIsNull()`, `notNull()`, `orNotNull()`
 
@@ -268,48 +268,41 @@ $db->isNull('code')
 -  `isNull('slug')`
 -  `isNull(['slug', ...])`
 
-## In / Not In
+## In - Not In
+
+Metodlar: `in()`, `orIn()`, `notIn()`, `orNotIn()`
 
 ```php
 $db->in('id', [33922, 31221, 45344, 35444])
 ```
 
--   $db->in(...)
--   $db->orIn(...)
--   $db->notIn(...)
--   $db->orNotIn(...)
+## Find In Set
 
-## Find_In_Set
+Metodlar: `findInSet()`, `orFindInSet()`
 
 ```php
 $db->findInSet('categoryId', 139)
 ```
 
--   $db->findInSet(...)
--   $db->orFindInSet(...)
+## Like - Not Like
 
-## Like
+Metodlar: `like()`, `orLike()`, `notLike()`, `orNotlike()`
 
 ```php
 $db->like('name', '%Apple%')
-# OR #
-$db->like(['name', 'code'], '%Apple%', _OR)
 ```
-
--   $db->like(...)
--   $db->orLike(...)
--   $db->notLike(...)
--   $db->orNotlike(...)
 
 ## Order
 
 ```php
 $db->order('id')
-# OR #
-$db->order('id desc, name asc')
-# OR #
-$db->order('id', 'desc')
 ```
+-  `order('id')`
+-  `order('id', 'desc')`
+-  `order('id desc, name asc')`
+-  `order('rand()')`
+
+> Varsayılan olarak `desc` seçilir.
 
 ## Group
 
