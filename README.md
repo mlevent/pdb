@@ -199,9 +199,11 @@ $db->table('users')->filter(true)->insert([
 
 ```php
 $db->select('id, name, price, tax')
-# OR #
 $db->select(['id', 'name', 'price', 'tax'])
 ```
+-  `select(...)`, `select([..., ...])`
+
+> Metod kullanılmazsa varsayılan olarak `*` ile tüm sütunlar seçilir.
 
 ## Table
 
