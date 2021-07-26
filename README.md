@@ -110,7 +110,7 @@ $db->table('products')->insert([
 ]);
 ```
 
-Son kaydedilen satırın id'sine ulaşmak için `lastInsertId()` metodunu, toplam etkilenen satır sayısı için `rowCount()` metodunu kullanabilirsiniz.
+Son kaydedilen satırın birincil anahtarına ulaşmak için `lastInsertId()` metodunu, toplam etkilenen satır sayısı için `rowCount()` metodunu kullanabilirsiniz.
 
 ### Insert Ignore
 
@@ -194,6 +194,34 @@ $db->table('users')->filter(true)->insert([
 ```
 
 -  `email` sütunu `notnull` olarak tanımlandığı için kayıt eklenmez.
+
+## Transaction
+
+Metodlar: `inTransaction()`, `beginTransaction()`, `commit()`, `rollBack()`
+
+```php
+try {
+
+    $db->beginTransaction();
+    
+    $db->table('products')->insert([
+        'name'  => 'Apple Iphone X 128 Gb',
+        'code'  => 'APPLEX128',
+        'price' => '999.9'
+    ]);
+
+    $db->table('images')->insert([
+        'productId' => $db->lastInsertId(),
+        'imageName' => 'foo.jpg'
+    ]);
+
+    $db->commit();
+
+} catch(Exception $e) {
+    
+    $db->rollBack();
+}
+```
 
 ## Select
 
@@ -362,6 +390,19 @@ Son sorguyu görüntülemek için kullanılır.
 echo $db->lastQuery();
 ```
 - `SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc`
+
+Son sorguyu ait parametreleri görmek için kullanılır.
+
+```php
+var_dump($db->lastParams());
+```
+```
+Array
+(
+    [0] => 'APPLEX128',
+    [1] => 1
+)
+```
 
 Toplam sorgu sayısına ulaşmak için kullanılır.
 
