@@ -1446,6 +1446,17 @@
             $query = $this->pdo->query("SHOW KEYS FROM {$table}");
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
+
+        /**
+         * getPrimary
+         *
+         * @param string $table
+         * @return void
+         */
+        public function getPrimary($table){
+            $query = $this->pdo->query("SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_NAME = '{$table}' AND CONSTRAINT_NAME = 'PRIMARY'");
+            return $query->fetchColumn();
+        }
         
         /**
          * inTransaction
