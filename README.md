@@ -294,37 +294,34 @@ $db->like('name', '%Apple%')
 
 ## Order
 
+Varsayılan olarak `desc` seçilir.
+
 ```php
 $db->order('id')
 ```
 -  `order('id')`
--  `order('id', 'desc')`
+-  `order('id', 'asc')`
 -  `order('id desc, name asc')`
 -  `order('rand()')`
-
-> Varsayılan olarak `desc` seçilir.
 
 ## Group
 
 ```php
 $db->group('id')
-# OR #
-$db->group('id, name')
-# OR #
-$db->group(['id', 'name'])
 ```
+-  `group('id')`
+-  `group(['id', 'name'])`
 
 ## Having
 
 ```php
 $db->having('stock', 5)
-# OR #
-$db->having('stock > 5')
-# OR #
-$db->having('stock > ?', 5)
 ```
+-  `having('stock', 5)`
+-  `having('stock > 5')`
+-  `having('stock > ?', 5)`
 
-## Limit / Offset / Pager
+## Limit - Offset - Pager
 
 ```php
 $db->limit(100)
@@ -340,7 +337,8 @@ $db->pager(100, 2)
 
 ```php
 var_dump($db->queryHistory());
-/* OUTPUT
+```
+```
 Array
 (
     [0] => Array
@@ -355,8 +353,9 @@ Array
             [from] => redis
         )
 )
-*/
+```
 
+```
 echo $db->lastQuery();
 /* OUTPUT
 SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc
