@@ -248,7 +248,7 @@ $db->table('products')
         $q->in('brandId', [1, 2, 3])->orIn('categoryId', [1, 2, 3]);
    })->get();
 ```
--  SQL: `SELECT * FROM products WHERE name LIKE ? AND (brandId IN(?,?,?) OR categoryId IN(?,?,?))`
+`SELECT * FROM products WHERE name LIKE ? AND (brandId IN(?,?,?) OR categoryId IN(?,?,?))`
 
 ## Between
 
@@ -335,6 +335,8 @@ $db->pager(100, 2)
 
 ## History
 
+Sorgu listesini ulaşmak için kullanılır.
+
 ```php
 var_dump($db->queryHistory());
 ```
@@ -355,26 +357,22 @@ Array
 )
 ```
 
-```
+```php
 echo $db->lastQuery();
-/* OUTPUT
-SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc
-*/
-
-echo $db->queryCount();
-/*OUTPUT 1*/
 ```
+`SELECT id, name FROM products WHERE code = ? AND active = ? ORDER BY id desc`
+
+```php
+echo $db->queryCount();
+```
+`1`
 
 ## Structure
 
+Yapısal sorgular için kullanılır.
+Metodlar: `truncate()`, `drop()`, `optimize()`, `analyze()`, `check()`, `checksum()`, `repair()`
 ```php
-$db->truncate('table');
-$db->drop('table');
-$db->optimize('table');
-$db->analyze('table');
-$db->check('table');
-$db->checksum('table');
-$db->repair('table');
+$db->repair('sessions');
 ```
 
 ## Contributors
