@@ -499,7 +499,7 @@ var_dump($db->lastParams());
 ```
 Array
 (
-    [0] => 'APPLEX128',
+    [0] => '34066',
     [1] => 1
 )
 ```
