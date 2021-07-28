@@ -46,7 +46,7 @@
         private $havingParams  = [];
         private $whereParams   = [];
         private $rawParams     = []; 
-        
+
         /**
          * __construct
          *
@@ -193,6 +193,21 @@
          */
         protected function setGroup($andOr = false){
             $this->isGroupIn = $andOr;
+        }
+        
+        /**
+         * find
+         *
+         * @param mixed $value
+         * @return void
+         */
+        public function find($value, $table = null)
+        {
+            if(!is_null($table)) 
+                $this->table($table);
+            
+            return $this->where($this->getPrimary($table), $value)
+                        ->getRowObj();
         }
      
         /**
@@ -1466,7 +1481,9 @@
          * @param string $table
          * @return void
          */
-        public function getPrimary($table){
+        public function getPrimary($table = null){
+            if(is_null($table) && $this->table) 
+                $table = $this->table;
             $query = $this->pdo->query("SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_NAME = '{$table}' AND CONSTRAINT_NAME = 'PRIMARY'");
             return $query->fetchColumn();
         }

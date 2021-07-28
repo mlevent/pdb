@@ -88,6 +88,16 @@ $update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['pa
              ->exec();
 ```
 
+## Find
+
+Birincil anahtarla eşleşen satırı `Object` formatında döndürür.
+
+```php
+$find = $db->table('products')->find(15);
+```
+
+-   `$db->find(15, 'products')`
+
 ## Total
 
 Tablodaki toplam satır sayısına ulaşmak için kullanılır.
