@@ -70,24 +70,6 @@ $results = $db->select('id, name, code, slug, price, stock')
 
 Kullanılabilecek metotlar: `get()`, `getObj()`, `getRow()`, `getRowObj()`, `getCol()`, `getCols()`
 
-## Raw Query
-
-Salt sql sorgusu çalıştırmak için kullanılır.
-
-### Raw Fecth
-
-```php
-$results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
-              ->getCols();
-```
-
-### Raw Exec
-
-```php
-$update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['paid'])
-             ->exec();
-```
-
 ## Find
 
 Birincil anahtarla eşleşen satırı `Object` formatında döndürür.
@@ -104,6 +86,24 @@ Tablodaki toplam satır sayısına ulaşmak için kullanılır.
 
 ```php
 $total = $db->total('products');
+```
+
+## Raw Query
+
+Salt sql sorgusu çalıştırmak için kullanılır.
+
+### Raw Fecth
+
+```php
+$results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
+              ->getCols();
+```
+
+### Raw Exec
+
+```php
+$update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['paid'])
+             ->exec();
 ```
 
 ---
