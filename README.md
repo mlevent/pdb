@@ -78,7 +78,8 @@ Birincil anahtarla eşleşen satırı `Object` formatında döndürür.
 $find = $db->table('products')->find(15);
 ```
 
--   `$db->find(15, 'products')`
+-   `find(15)`
+-   `find(15, 'products')`
 
 ## Total
 
@@ -301,6 +302,17 @@ $db->select('id, name, code, price')
 -   `select(['id', 'name', ...])`
 
 > Metod kullanılmazsa varsayılan olarak `*` ile tüm sütunlar seçilir.
+
+### Select Functions
+
+Metodlar: `count()`, `sum()`, `avg()`, `min()`, `max()`
+
+```php
+$db->table('products')->sum('amount');
+```
+
+-   `sum('amount')`
+-   `sum('amount', 'totalAmount')`
 
 ## Table
 
