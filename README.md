@@ -464,7 +464,7 @@ Parametre olarak sayfa başına listelenecek kayıt sayısı gönderilmelidir.
 $posts = $db->table('posts')->pager(100)->get();
 ```
 
-Linklerin çıktısını almak için `getLinks()` methodu kullanılmalıdır.
+Linklerin çıktısını almak için `getLinks()` metodu kullanılmalıdır.
 
 ```php
 echo $db->getLinks();
