@@ -75,7 +75,7 @@ Kullanılabilecek metotlar: `get()`, `getObj()`, `getRow()`, `getRowObj()`, `get
 Birincil anahtarla eşleşen satırı `Object` formatında döndürür.
 
 ```php
-$find = $db->table('products')->find(15);
+$find = $db->table('products')->find(15)->getRow();
 ```
 
 -   `find(15)`
@@ -197,7 +197,13 @@ $db->table('products')->onDuplicate([
 Bir veya birden fazla kaydı güncellemek için kullanılır.
 
 ```php
-$update = $db->table('products')->where('active', 0)->update(['active' => 1]);
+$update = $db->table('products')->where('id', 11255)->update(['active' => 1]);
+```
+
+veya
+
+```php
+$update = $db->table('products')->find(11255)->update(['active' => 1]);
 ```
 
 -   Etkilenen satır sayısı döner.
@@ -448,8 +454,23 @@ Limit, Offset ve Sayfalama işlemleri için kullanılır.
 $db->limit(100)...
 $db->limit(100, 0)...
 $db->limit(100)->offset(0)...
-$db->pager(100, 1)...
 ```
+
+### Pager
+
+Parametre olarak sayfa başına listelenecek kayıt sayısı gönderilmelidir.
+
+```php
+$db->table('posts')->pager(100)->get();
+```
+
+Linklerin çıktısını almak için `getLinks()` methodu kullanılmalıdır.
+
+```php
+$db->getLinks();
+```
+
+-   ` 1``2``3``4``5``6``... `
 
 ---
 

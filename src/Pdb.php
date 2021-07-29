@@ -35,8 +35,11 @@
         private $having        = null;
         private $limit         = null;
         private $offset        = null;
-        private $pager         = null;
+
+        private $pager;
         private $pagerData     = [];
+        private $pagerTemplate = '<li class="{active}"><a href="{url}">{text}</a></li>';
+        private $pagerHtml;
 
         private $isGrouped     = false;
         private $isGroupIn     = false;
@@ -204,13 +207,11 @@
          * @param mixed $value
          * @return void
          */
-        public function find($value, $table = null)
-        {
+        public function find($value, $table = null){
             if(!is_null($table)) 
                 $this->table($table);
-            
-            return $this->where($this->getPrimary($table), $value)
-                        ->getRowObj();
+            $this->where($this->getPrimary($table), $value);
+            return $this;
         }
      
         /**
@@ -518,7 +519,11 @@
          * @param int $page
          * @return $this
          */
-        public function pager(int $limit, $page = 1){
+        public function pager(int $limit, $pageParamName = 'page'){
+            
+            $page = isset($_GET[$pageParamName]) && is_numeric($_GET[$pageParamName]) 
+                ? $_GET[$pageParamName] 
+                : 1;
 
             if($limit < 1) $limit = 1;
             if($page  < 1) $page  = 1;
@@ -529,13 +534,15 @@
             
             return $this;
         }
-        
+                
         /**
          * getLinks
          *
+         * @param mixed $url
+         * @param mixed $class
          * @return void
          */
-        public function getLinks(){
+        public function getLinks($url = '?page={page}', $class = 'active'){
             $totalPage = ceil($this->pagerData['count'] / $this->pagerData['limit']);
             if($totalPage <= 10){
                 $min = 1;
@@ -549,11 +556,14 @@
                     $min = ($totalPage - 9);
                 }
             }
-            $links = '';
             for($i = $min; $i <= $max; $i++){
-                $links .= '<li'.($i == $this->pagerData['current'] ? ' class="active"' : '').'><a href="?page='.$i.'">'.$i.'</a></li>';
+                $this->pagerHtml .= str_replace(
+                    ['{active}', '{text}', '{url}'],
+                    [($i == $this->pagerData['current'] ? $class : null), $i, str_replace('{page}', $i, $url)],
+                    $this->pagerTemplate
+                );
             }
-            return $links;
+            return $this->pagerHtml;
         }
                 
         /**
