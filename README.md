@@ -200,7 +200,7 @@ Bir veya birden fazla kaydı güncellemek için kullanılır.
 $update = $db->table('products')->where('id', 11255)->update(['active' => 1]);
 ```
 
-veya
+-   `find()` methodu ile update işlemi
 
 ```php
 $update = $db->table('products')->find(11255)->update(['active' => 1]);
