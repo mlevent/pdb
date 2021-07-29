@@ -135,6 +135,18 @@ $results = $db->redis(30)->get('comments');
 
 > Not: Redis ile önbellekleme işlemi yapabilmek için sunucunuzda Redis yüklü olması gerekir.
 
+`setRedis()` metodu ile Redis sınıfı dışarıdan da dahil edilebilir.
+
+```php
+$redisConnect = (function(){
+    $redis = new \Redis();
+    $redis->connect('127.0.0.1', 6379, 1, NULL, 0, 0, ['auth' => ['default', '']]);
+    return $redis;
+});
+
+$db->setRedis($redisConnect());
+```
+
 ---
 
 ## Insert

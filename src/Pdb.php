@@ -151,6 +151,25 @@
         }
 
         /**
+         * Verinin diskten okunup okunmadığını doğrular
+         *
+         * @return $this
+         */
+        public function fromDisk(){
+            return $this->fromDisk;
+        }
+        
+        /**
+         * setRedis
+         *
+         * @param mixed $redis
+         * @return void
+         */
+        public function setRedis($redis){
+            $this->redis = $redis;
+        }
+
+        /**
          * redis
          *
          * @param int $timeout
@@ -159,15 +178,6 @@
         public function redis(int $timeout = null){
             $this->redisActive = $this->redis ? $timeout : false;
             return $this;
-        }
-        
-        /**
-         * Verinin diskten okunup okunmadığını doğrular
-         *
-         * @return $this
-         */
-        public function fromDisk(){
-            return $this->fromDisk;
         }
 
         /**
