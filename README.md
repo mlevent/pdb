@@ -133,10 +133,6 @@ $results = $db->redis(30)->get('comments');
 
 `fromRedis()` metodu; son sorgu Redisten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
 
-> Not: Redis ile önbellekleme işlemi yapabilmek için sunucunuzda Redis yüklü olması gerekir.
-
-`setRedis()` metodu ile Redis sınıfı dışarıdan da dahil edilebilir.
-
 ```php
 $redisConnect = (function(){
     $redis = new \Redis();
@@ -146,6 +142,10 @@ $redisConnect = (function(){
 
 $db->setRedis($redisConnect());
 ```
+
+`setRedis()` metodu ile Redis sınıfı dışarıdan da dahil edilebilir.
+
+> Not: Redis ile önbellekleme işlemi yapabilmek için sunucunuzda Redis yüklü olması gerekir.
 
 ---
 
