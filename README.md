@@ -461,13 +461,13 @@ $db->limit(100)->offset(0)...
 Parametre olarak sayfa başına listelenecek kayıt sayısı gönderilmelidir.
 
 ```php
-$db->table('posts')->pager(100)->get();
+$posts = $db->table('posts')->pager(100)->get();
 ```
 
 Linklerin çıktısını almak için `getLinks()` methodu kullanılmalıdır.
 
 ```php
-$db->getLinks();
+echo $db->getLinks();
 ```
 
 -   `1` `2` `3` `4` `5` `6` `...`
