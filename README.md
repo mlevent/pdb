@@ -207,8 +207,10 @@ $update = $db->table('products')->where('active', 0)->update(['active' => 1]);
 `active` sütunu `1` ise `0`, `0` ise `1` değerini alır.
 
 ```php
-$touch = $db->touch('active', 'products');
+$touch = $db->table('products')->touch('active');
 ```
+
+-   `touch('active', 'products')`
 
 ---
 
@@ -295,7 +297,7 @@ try {
 ## Select
 
 ```php
-$db->select('id, name, code, price')
+$db->select('id, name, code, price')...
 ```
 
 -   `select('id, name')`
@@ -308,7 +310,7 @@ $db->select('id, name, code, price')
 Metodlar: `count()`, `sum()`, `avg()`, `min()`, `max()`
 
 ```php
-$db->table('products')->sum('amount');
+$db->sum('amount')...
 ```
 
 -   `sum('amount')`
@@ -317,7 +319,7 @@ $db->table('products')->sum('amount');
 ## Table
 
 ```php
-$db->table('products')
+$db->table('products')...
 ```
 
 -   `table('products')`
@@ -342,7 +344,7 @@ $db->table('products as p')
 Metodlar: `where()`, `orWhere()`, `notWhere()`, `orNotWhere()`
 
 ```php
-$db->where('id', 32886)
+$db->where('id', 32886)...
 ```
 
 -   `where('active', 1)`
@@ -368,7 +370,7 @@ $db->table('products')
 Metodlar: `between()`, `orBetween()`, `notBetween()`, `orNotBetween()`
 
 ```php
-$db->between('price', 50, 250)
+$db->between('price', 50, 250)...
 ```
 
 ## Is Null - Not Null
@@ -376,7 +378,7 @@ $db->between('price', 50, 250)
 Metodlar: `isNull()`, `orIsNull()`, `notNull()`, `orNotNull()`
 
 ```php
-$db->isNull('code')
+$db->isNull('code')...
 ```
 
 -   `isNull('slug')`
@@ -387,7 +389,7 @@ $db->isNull('code')
 Metodlar: `in()`, `orIn()`, `notIn()`, `orNotIn()`
 
 ```php
-$db->in('id', [33922, 31221, 45344, 35444])
+$db->in('id', [33922, 31221, 45344, 35444])...
 ```
 
 ## Find In Set
@@ -395,7 +397,7 @@ $db->in('id', [33922, 31221, 45344, 35444])
 Metodlar: `findInSet()`, `orFindInSet()`
 
 ```php
-$db->findInSet('categoryId', 139)
+$db->findInSet('categoryId', 139)...
 ```
 
 ## Like - Not Like
@@ -403,7 +405,7 @@ $db->findInSet('categoryId', 139)
 Metodlar: `like()`, `orLike()`, `notLike()`, `orNotlike()`
 
 ```php
-$db->like('name', '%Apple%')
+$db->like('name', '%Apple%')...
 ```
 
 ## Order
@@ -411,7 +413,7 @@ $db->like('name', '%Apple%')
 Varsayılan olarak `desc` seçilir.
 
 ```php
-$db->order('id')
+$db->order('id')...
 ```
 
 -   `order('id')`
@@ -422,7 +424,7 @@ $db->order('id')
 ## Group
 
 ```php
-$db->group('id')
+$db->group('id')...
 ```
 
 -   `group('id')`
@@ -431,7 +433,7 @@ $db->group('id')
 ## Having
 
 ```php
-$db->having('stock', 5)
+$db->having('stock', 5)...
 ```
 
 -   `having('stock', 5)`
@@ -443,10 +445,10 @@ $db->having('stock', 5)
 Limit, Offset ve Sayfalama işlemleri için kullanılır.
 
 ```php
-$db->limit(100)
-$db->limit(100, 0)
-$db->limit(100)->offset(0)
-$db->pager(100, 1)
+$db->limit(100)...
+$db->limit(100, 0)...
+$db->limit(100)->offset(0)...
+$db->pager(100, 1)...
 ```
 
 ---

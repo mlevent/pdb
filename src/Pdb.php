@@ -23,7 +23,8 @@
 
         private $queryHistory  = [];
         private $rowCount      = 0;
-        private $lastInsertId  = 0;
+
+        private $rawQuery      = null;
 
         private $select        = null;
         private $table         = null;
@@ -34,7 +35,8 @@
         private $having        = null;
         private $limit         = null;
         private $offset        = null;
-        private $rawQuery      = null;
+        private $pager         = null;
+        private $pagerData     = [];
 
         private $isGrouped     = false;
         private $isGroupIn     = false;
@@ -113,6 +115,7 @@
             $this->redisActive   = false;
             $this->fromDisk      = false;
             $this->fromRedis     = false;
+            $this->rawQuery      = null;
             $this->select        = null;
             $this->table         = null;
             $this->join          = null;
@@ -122,7 +125,7 @@
             $this->having        = null;
             $this->limit         = null;
             $this->offset        = null;
-            $this->rawQuery      = null;
+            $this->pager         = null;
             $this->isGrouped     = false;
             $this->isGroupIn     = false;
             $this->isFilter      = false;
@@ -522,8 +525,35 @@
 
             $this->limit  = $limit;
             $this->offset = ($limit * $page) - $limit;
+            $this->pager  = $page;
             
             return $this;
+        }
+        
+        /**
+         * getLinks
+         *
+         * @return void
+         */
+        public function getLinks(){
+            $totalPage = ceil($this->pagerData['count'] / $this->pagerData['limit']);
+            if($totalPage <= 10){
+                $min = 1;
+                $max = $totalPage;
+            } else {
+                $min = max(1, ($this->pagerData['current'] - 5));
+                $max = min($totalPage, ($this->pagerData['current'] + 5));
+                if($min === 1){
+                    $max = 10;
+                } elseif($max === $totalPage) {
+                    $min = ($totalPage - 9);
+                }
+            }
+            $links = '';
+            for($i = $min; $i <= $max; $i++){
+                $links .= '<li'.($i == $this->pagerData['current'] ? ' class="active"' : '').'><a href="?page='.$i.'">'.$i.'</a></li>';
+            }
+            return $links;
         }
                 
         /**
@@ -1116,6 +1146,16 @@
          */
         public function readQuery($fetch = 'fetch', $cursor = PDO::FETCH_ASSOC){
 
+            if($this->pager)
+            {
+                $this->pagerData = [
+                    'count'   => $this->total($this->table),
+                    'limit'   => $this->limit,
+                    'offset'  => $this->offset,
+                    'current' => $this->pager
+                ];
+            }
+                
             $query  = $this->getReadQuery();
             $params = $this->getReadParams();
             $hash   = $this->getReadHash($query, join((array)$params), $fetch, $cursor);
@@ -1299,9 +1339,8 @@
 
                 if($runQuery->execute($valuesList))
                     $this->killQuery($query, $insertData);
-                    $this->rowCount     = $runQuery->rowCount();
-                    $this->lastInsertId = $this->pdo->lastInsertId();
-                    return $this->lastInsertId;
+                    $this->rowCount = $runQuery->rowCount();
+                    return $this->pdo->lastInsertId();
             }
             $this->init();
         }
@@ -1533,7 +1572,7 @@
          * @return int
          */
         public function lastInsertId(){
-            return $this->lastInsertId;
+            return $this->pdo->lastInsertId();
         }
         
         /**
