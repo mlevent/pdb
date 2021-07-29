@@ -536,13 +536,13 @@
         }
                 
         /**
-         * getLinks
+         * pagerLinks
          *
          * @param mixed $url
          * @param mixed $class
          * @return void
          */
-        public function getLinks($url = '?page={page}', $class = 'active'){
+        public function pagerLinks($url = '?page={page}', $class = 'active'){
             $totalPage = ceil($this->pagerData['count'] / $this->pagerData['limit']);
             if($totalPage <= 10){
                 $min = 1;

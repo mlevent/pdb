@@ -467,7 +467,7 @@ $posts = $db->table('posts')->pager(100)->get();
 Linklerin çıktısını almak için `getLinks()` metodu kullanılmalıdır.
 
 ```php
-echo $db->getLinks();
+echo $db->pagerLinks();
 ```
 
 -   `1` `2` `3` `4` `5` `6` `...`
