@@ -1224,43 +1224,83 @@
                 return $results;
             }
         }
-
+        
         /**
-		* Fetch
-		*/
+         * get
+         *
+         * @param mixed $table
+         * @return void
+         */
         public function get($table = null){
-            if(!is_null($table)) 
-                $this->table($table);
-            return $this->readQuery('fetchAll', PDO::FETCH_ASSOC);
-        }
-        public function getObj($table = null){
             if(!is_null($table)) 
                 $this->table($table);
             return $this->readQuery('fetchAll', PDO::FETCH_OBJ);
         }
-
+        
         /**
-		* Row
-		*/
-        public function getRow($table = null){
+         * getObj
+         *
+         * @param mixed $table
+         * @return void
+         */
+        public function getArr($table = null){
             if(!is_null($table)) 
                 $this->table($table);
-            return $this->readQuery('fetch', PDO::FETCH_ASSOC);
+            return $this->readQuery('fetchAll', PDO::FETCH_ASSOC);
         }
-        public function getRowObj($table = null){
+
+        /**
+         * first
+         *
+         * @param mixed $table
+         * @return void
+         */
+        public function first($table = null){
+            return $this->getRow($table);
+        }
+        
+        /**
+         * getRow
+         *
+         * @param mixed $table
+         * @return void
+         */
+        public function getRow($table = null){
             if(!is_null($table)) 
                 $this->table($table);
             return $this->readQuery('fetch', PDO::FETCH_OBJ);
         }
+                
+        /**
+         * getRowObj
+         *
+         * @param mixed $table
+         * @return void
+         */
+        public function getRowArr($table = null){
+            if(!is_null($table)) 
+                $this->table($table);
+            return $this->readQuery('fetch', PDO::FETCH_ASSOC);
+        }
 
         /**
-		* Col
-		*/
+         * getCol
+         *
+         * @param mixed $table
+         * @return void
+         */
         public function getCol($table = null){
             if(!is_null($table)) 
                 $this->table($table);
             return $this->readQuery('fetchColumn', 0);
         }
+                
+        /**
+         * getCols
+         *
+         * @param mixed $table
+         * @return void
+         */
         public function getCols($table = null){
             if(!is_null($table)) 
                 $this->table($table);
