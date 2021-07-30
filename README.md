@@ -52,7 +52,7 @@ Varsayılan yapılandırma ayarları.
 
 ## Fetch
 
-Sonuçlar `Object` formatında döner. `Arrau` olarak ulaşmak için `getArr()` metodunu kullanabilirsiniz.
+Sonuçlar `Object` formatında döner. `Array` olarak ulaşmak için `getArr()` metodunu kullanabilirsiniz.
 
 ```php
 $results = $db->get('products');
@@ -68,7 +68,7 @@ $results = $db->select('id, name, code, slug, price, stock')
               ->get();
 ```
 
-Kullanılabilecek metotlar: `get()`, `getArr()`, `first()`, `getRow()`, `getRowArr()`, `getCol()`, `getCols()`
+Kullanılabilecek metotlar: `get()`, `getArr()`, `getRow()` = `first()`, `getRowArr()`, `getCol()`, `getCols()`
 
 ## Find
 
