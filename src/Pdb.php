@@ -334,11 +334,8 @@
          * @return $this
          */
         public function table($table){
-            $table = is_array($table) 
+            $this->table = is_array($table) 
                 ? implode(', ', $table) 
-                : $table;
-            $this->table = !is_null($this->table) 
-                ? $this->table . ', '. $table 
                 : $table;
             return $this;
         }
