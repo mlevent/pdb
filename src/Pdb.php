@@ -255,8 +255,10 @@
          * @param  mixed $table
          * @return void
          */
-        public function total($table){
-            return $this->pdo->query("select count(*) from {$table}")->fetchColumn();
+        public function total($table = null){
+            if(!is_null($table)) 
+                $this->table($table);
+            return $this->count()->getCol();
         }   
         
         /**
@@ -277,7 +279,7 @@
          * @param string $alias
          * @return $this
          */
-        public function count($field, $alias = null){
+        public function count($field = '*', $alias = null){
             return $this->selectFunctions($field, $alias, 'COUNT');
         }       
          
@@ -1169,7 +1171,7 @@
             if($this->pager)
             {
                 $this->pagerData = [
-                    'count'   => $this->total($this->table),
+                    'count'   => $this->pdo->query("select count(*) from {$this->table}")->fetchColumn(),
                     'limit'   => $this->limit,
                     'offset'  => $this->offset,
                     'current' => $this->pager
