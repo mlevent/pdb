@@ -68,7 +68,7 @@ $results = $db->select('id, name, code, slug, price, stock')
               ->get();
 ```
 
-Kullanılabilecek metotlar: `get()`, `getArr()`, `getRow()` = `first()`, `getRowArr()`, `getCol()`, `getCols()`
+Kullanılabilecek metotlar: `get()`, `getArr()`, `getRow() or first()`, `getRowArr()`, `getCol()`, `getCols()`
 
 ## Find
 
