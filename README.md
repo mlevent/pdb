@@ -458,7 +458,7 @@ $db->having('stock', 5)...
 -   `having('stock > 5')`
 -   `having('stock > ?', 5)`
 
-## Limit - Offset - Pager
+## Limit - Offset 
 
 Limit, Offset ve Sayfalama işlemleri için kullanılır.
 
@@ -468,13 +468,15 @@ $db->limit(100, 0)...
 $db->limit(100)->offset(0)...
 ```
 
-### Pager
+## Pager
 
 Parametre olarak sayfa başına listelenecek kayıt sayısı gönderilmelidir.
 
 ```php
 $posts = $db->table('posts')->pager(100)->get();
 ```
+
+## pagerLinks
 
 Linklerin çıktısını almak için `getLinks()` metodu kullanılmalıdır.
 
@@ -484,6 +486,23 @@ echo $db->pagerLinks();
 
 -   `1` `2` `3` `4` `5` `6` `...`
 
+## pagerData
+
+Toplam sonuç, sayfa sayısı, limit, ofset ve aktif sayfa gibi bilgilere ulaşmak için kullanılır.
+
+```php
+var_dump($db->pager());
+```
+
+```
+Array
+(
+    [count] => 255
+    [limit] => 10
+    [offset] => 0
+    [total] => 26
+    [current] => 1
+)
 ---
 
 ## History

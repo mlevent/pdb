@@ -552,7 +552,7 @@
          * @return void
          */
         public function pagerLinks($url = '?page={page}', $class = 'active'){
-            $totalPage = ceil($this->pagerData['count'] / $this->pagerData['limit']);
+            $totalPage = $this->pagerData['total'];
             if($totalPage <= 10){
                 $min = 1;
                 $max = $totalPage;
@@ -573,6 +573,15 @@
                 );
             }
             return $this->pagerHtml;
+        }
+        
+        /**
+         * pagerData
+         *
+         * @return void
+         */
+        public function pagerData(){
+            return $this->pagerData;
         }
                 
         /**
@@ -663,6 +672,15 @@
          */
         protected function whereBuild(){
             return !is_null($this->where) ? 'WHERE ' . $this->where : null;
+        }
+
+        /**
+         * whereBuildRaw
+         *
+         * @return string
+         */
+        protected function whereBuildRaw(){
+            return !is_null($this->where) ? vsprintf(str_replace('?', '%s', $this->whereBuild()), $this->whereParams) : null;
         }
         
         /**
@@ -1167,12 +1185,16 @@
 
             if($this->pager)
             {
-                $this->pagerData = [
-                    'count'   => $this->pdo->query("select count(*) from {$this->table}")->fetchColumn(),
-                    'limit'   => $this->limit,
-                    'offset'  => $this->offset,
-                    'current' => $this->pager
-                ];
+                if($totalRecord = $this->pdo->query("SELECT count(*) FROM {$this->table} {$this->whereBuildRaw()}")->fetchColumn())
+                {
+                    $this->pagerData = [
+                        'count'   => $this->pdo->query("SELECT count(*) FROM {$this->table} {$this->whereBuildRaw()}")->fetchColumn(),
+                        'limit'   => $this->limit,
+                        'offset'  => $this->offset,
+                        'total'   => ceil($totalRecord / $this->limit),
+                        'current' => $this->pager
+                    ];
+                }
             }
                 
             $query  = $this->getReadQuery();
