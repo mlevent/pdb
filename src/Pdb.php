@@ -583,6 +583,16 @@
         public function pagerData(){
             return $this->pagerData;
         }
+        
+        /**
+         * pagerData
+         *
+         * @param mixed $template
+         * @return void
+         */
+        public function setPagerTemplate($template){
+            $this->pagerTemplate = $template;
+        }
                 
         /**
          * limitOffsetBuild
