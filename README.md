@@ -509,7 +509,7 @@ Array
 
 Link çıktısına ait HTML şablonu düzenlemek için kullanılır.
 
-```
+```php
 $db->setPagerTemplate('<li>
         <a class="{active}" href="{url}">
             {text}
