@@ -68,13 +68,7 @@
                 'collation'     => 'utf8_unicode_ci',
                 'debug'         => false,
                 'cacheTime'     => 60,
-                'cachePath'     => __DIR__ . '/Cache',
-                'useRedis'      => false,
-                'redisHost'     => '127.0.0.1',
-                'redisPort'     => 6379,
-                'redisUsername' => 'default',
-                'redisPassword' => '',
-                'redisDatabase' => 0,
+                'cachePath'     => __DIR__ . '/Cache'
             ];
 
             foreach($this->config as $k => $v) 
@@ -95,17 +89,6 @@
                 $this->pdo = new PDO("mysql:dbname={$this->config['database']};host={$this->config['host']}", $this->config['username'], $this->config['password'], $options);
 
             } catch(PDOException $e){ die($e->getMessage()); }
-
-            if($this->config['useRedis'])
-            {
-                try{
-                    $this->redis = new \Redis(); 
-                    $this->redis->connect($this->config['redisHost'], $this->config['redisPort']);
-                    $this->redis->auth([$this->config['redisUsername'], $this->config['redisPassword']]);
-                    $this->redis->select($this->config['redisDatabase']);
-
-                } catch(RedisException $e){ die($e->getMessage()); }
-            }
         }
                      
         /**
@@ -1195,7 +1178,7 @@
 
             if($this->pager)
             {
-                if($totalRecord = $this->pdo->query("SELECT count(*) FROM {$this->table} {$this->whereBuildRaw()}")->fetchColumn())
+                if($totalRecord = $this->pdo->query(preg_replace('/\s+/', ' ', "SELECT count(*) FROM {$this->table} {$this->joinBuild()} {$this->whereBuildRaw()}"))->fetchColumn())
                 {
                     $this->pagerData = [
                         'count'   => $this->pdo->query("SELECT count(*) FROM {$this->table} {$this->whereBuildRaw()}")->fetchColumn(),

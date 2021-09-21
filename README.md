@@ -38,13 +38,7 @@ Varsayılan yapılandırma ayarları.
     'collation'     => 'utf8_unicode_ci',
     'debug'         => false,
     'cacheTime'     => 60,
-    'cachePath'     => __DIR__ . '/Cache',
-    'useRedis'      => false,
-    'redisHost'     => '127.0.0.1',
-    'redisPort'     => 6379,
-    'redisUsername' => 'default',
-    'redisPassword' => '',
-    'redisDatabase' => 0,
+    'cachePath'     => __DIR__ . '/Cache'
 ]
 ```
 
@@ -143,7 +137,7 @@ $redisConnect = (function(){
 $db->setRedis($redisConnect());
 ```
 
-`setRedis()` metodu ile Redis sınıfı dışarıdan da dahil edilebilir.
+`setRedis()` metodu ile Redis sınıfı dışarıdan dahil edilebilir.
 
 > Not: Redis ile önbellekleme işlemi yapabilmek için sunucunuzda Redis yüklü olması gerekir.
 
