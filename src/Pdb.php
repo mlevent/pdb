@@ -60,15 +60,15 @@
         public function __construct($config = null)
         {
             $this->config = [
-                'host'          => 'localhost',
-                'database'      => '',
-                'username'      => 'root',
-                'password'      => '',
-                'charset'       => 'utf8',
-                'collation'     => 'utf8_unicode_ci',
-                'debug'         => false,
-                'cacheTime'     => 60,
-                'cachePath'     => __DIR__ . '/Cache'
+                'host'      => 'localhost',
+                'database'  => '',
+                'username'  => 'root',
+                'password'  => '',
+                'charset'   => 'utf8',
+                'collation' => 'utf8_unicode_ci',
+                'debug'     => false,
+                'cacheTime' => 60,
+                'cachePath' => __DIR__ . '/Cache'
             ];
 
             foreach($this->config as $k => $v) 
