@@ -66,7 +66,7 @@ Kullanılabilecek metotlar: `get()`, `getArr()`, `getRow() or first()`, `getRowA
 
 ## Find
 
-Birincil anahtarla eşleşen satırı döndürür.
+Birincil anahtarla eşleşen kaydı döndürür.
 
 ```php
 $find = $db->table('products')->find(15)->first();
