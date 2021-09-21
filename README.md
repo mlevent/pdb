@@ -64,6 +64,28 @@ $results = $db->select('id, name, code, slug, price, stock')
 
 Kullanılabilecek metotlar: `get()`, `getArr()`, `getRow() or first()`, `getRowArr()`, `getCol()`, `getCols()`
 
+---
+
+## Raw Query
+
+Salt sql sorgusu çalıştırmak için kullanılır.
+
+### Raw Fecth
+
+```php
+$results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
+              ->getCols();
+```
+
+### Raw Exec
+
+```php
+$update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['paid'])
+             ->exec();
+```
+
+---
+
 ## Find
 
 Birincil anahtarla eşleşen kaydı döndürür.
@@ -83,22 +105,61 @@ Tablodaki toplam satır sayısına ulaşmak için kullanılır.
 $total = $db->total('products');
 ```
 
-## Raw Query
+---
 
-Salt sql sorgusu çalıştırmak için kullanılır.
+## Pager
 
-### Raw Fecth
+Parametre olarak sayfa başına listelenecek kayıt sayısı gönderilmelidir.
 
 ```php
-$results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
-              ->getCols();
+$posts = $db->table('posts')->pager(100)->get();
 ```
 
-### Raw Exec
+`pager` fonksiyonu 2 parametre alır. İlk parametre sayfa başına listelenecek kayıt sayısı, İkinci parametre sayfa bilgisinin aktarılacağı $\_GET parametresidir. Örneğin link yapısı `?sayfa=3` şeklinde kurgulanacaksa, örnek kullanım şu şekilde olmalıdır;
 
 ```php
-$update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['paid'])
-             ->exec();
+$db->pager(25, 'sayfa');
+```
+
+## pagerLinks()
+
+Linklerin çıktısını almak için kullanılır.
+
+```php
+echo $db->pagerLinks();
+```
+
+-   `1` `2` `3` `4` `5` `6` `...`
+
+## pagerData()
+
+Toplam sonuç, sayfa sayısı, limit, ofset ve aktif sayfa gibi bilgilere ulaşmak için kullanılır.
+
+```php
+var_dump($db->pagerData());
+```
+
+```
+Array
+(
+    [count] => 255
+    [limit] => 10
+    [offset] => 0
+    [total] => 26
+    [current] => 1
+)
+```
+
+## setPagerTemplate()
+
+Link çıktısına ait HTML şablonu düzenlemek için kullanılır.
+
+```php
+$db->setPagerTemplate('<li>
+        <a class="{active}" href="{url}">
+            {text}
+        </a>
+    </li>');
 ```
 
 ---
@@ -460,61 +521,6 @@ Limit, Offset ve Sayfalama işlemleri için kullanılır.
 $db->limit(100)...
 $db->limit(100, 0)...
 $db->limit(100)->offset(0)...
-```
-
-## Pager
-
-Parametre olarak sayfa başına listelenecek kayıt sayısı gönderilmelidir.
-
-```php
-$posts = $db->table('posts')->pager(100)->get();
-```
-
-`pager` fonksiyonu 2 parametre alır. İlk parametre sayfa başına listelenecek kayıt sayısı, İkinci parametre sayfa bilgisinin aktarılacağı $\_GET parametresidir. Örneğin link yapısı `?sayfa=3` şeklinde kurgulanacaksa, örnek kullanım şu şekilde olmalıdır;
-
-```php
-$db->pager(25, 'sayfa');
-```
-
-## pagerLinks()
-
-Linklerin çıktısını almak için kullanılır.
-
-```php
-echo $db->pagerLinks();
-```
-
--   `1` `2` `3` `4` `5` `6` `...`
-
-## pagerData()
-
-Toplam sonuç, sayfa sayısı, limit, ofset ve aktif sayfa gibi bilgilere ulaşmak için kullanılır.
-
-```php
-var_dump($db->pagerData());
-```
-
-```
-Array
-(
-    [count] => 255
-    [limit] => 10
-    [offset] => 0
-    [total] => 26
-    [current] => 1
-)
-```
-
-## setPagerTemplate()
-
-Link çıktısına ait HTML şablonu düzenlemek için kullanılır.
-
-```php
-$db->setPagerTemplate('<li>
-        <a class="{active}" href="{url}">
-            {text}
-        </a>
-    </li>');
 ```
 
 ## History
