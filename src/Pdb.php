@@ -1181,7 +1181,7 @@
                 if($totalRecord = $this->pdo->query(preg_replace('/\s+/', ' ', "SELECT count(*) FROM {$this->table} {$this->joinBuild()} {$this->whereBuildRaw()}"))->fetchColumn())
                 {
                     $this->pagerData = [
-                        'count'   => $this->pdo->query("SELECT count(*) FROM {$this->table} {$this->whereBuildRaw()}")->fetchColumn(),
+                        'count'   => $totalRecord,
                         'limit'   => $this->limit,
                         'offset'  => $this->offset,
                         'total'   => ceil($totalRecord / $this->limit),

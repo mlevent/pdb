@@ -470,6 +470,12 @@ Parametre olarak sayfa başına listelenecek kayıt sayısı gönderilmelidir.
 $posts = $db->table('posts')->pager(100)->get();
 ```
 
+`pager` fonksiyonu 2 parametre alır. İlk parametre sayfa başına listelenecek kayıt sayısı, İkinci parametre sayfa bilgisinin aktarılacağı $\_GET parametresidir. Örneğin link yapısı `?sayfa=3` şeklinde kurgulanacaksa, örnek kullanım şu şekilde olmalıdır;
+
+```php
+$db->pager(25, 'sayfa');
+```
+
 ## pagerLinks()
 
 Linklerin çıktısını almak için kullanılır.
@@ -485,7 +491,7 @@ echo $db->pagerLinks();
 Toplam sonuç, sayfa sayısı, limit, ofset ve aktif sayfa gibi bilgilere ulaşmak için kullanılır.
 
 ```php
-var_dump($db->pager());
+var_dump($db->pagerData());
 ```
 
 ```
