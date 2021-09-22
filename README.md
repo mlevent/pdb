@@ -111,13 +111,26 @@ $total = $db->total('products');
 Parametre olarak sayfa başına listelenecek kayıt sayısı gönderilmelidir.
 
 ```php
-$posts = $db->table('posts')->pager(100)->get();
+$posts = $db->table('posts')->pager(25)->get();
 ```
 
-`pager` fonksiyonu 2 parametre alır. İlk parametre sayfa başına listelenecek kayıt sayısı, İkinci parametre sayfa bilgisinin aktarılacağı $\_GET parametresidir. Örneğin link yapısı `?sayfa=3` şeklinde kurgulanacaksa, örnek kullanım şu şekilde olmalıdır;
+`pager` fonksiyonu 2 parametre alır. İlk parametre sayfa başına listelenecek kayıt sayısı, İkinci parametre sayfa bilgisinin aktarılacağı `$\_GET` parametresidir. Örneğin link yapısı `?sayfa=3` şeklinde kurgulanacaksa, örnek kullanım şu şekilde olmalıdır;
 
 ```php
 $db->pager(25, 'sayfa');
+```
+
+## pagerTotal()
+
+Bazı karmaşık sorgularda toplam kayıt sayısını dışarıdan eklemeniz gerekebilir. `pagerTotal()` fonksiyonu ile toplam kayıt sayısını şu şekilde gönderebilirsiniz;
+
+```php
+$total = $db->total('posts');
+
+$posts = $db->table('posts')
+            ->pager(25)
+            ->pagerTotal($total)
+            ->get();
 ```
 
 ## pagerLinks()

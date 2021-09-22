@@ -37,6 +37,7 @@
         private $offset        = null;
 
         private $pager;
+        private $pagerTotal;
         private $pagerData     = [];
         private $pagerTemplate = '<li class="{active}"><a href="{url}">{text}</a></li>';
         private $pagerHtml;
@@ -501,12 +502,12 @@
             $this->offset = $offset;
             return $this;
         }
-                
+                        
         /**
          * pager
          *
-         * @param int $limit
-         * @param int $page
+         * @param mixed $limit
+         * @param mixed $pageParamName
          * @return $this
          */
         public function pager(int $limit, $pageParamName = 'page'){
@@ -522,6 +523,17 @@
             $this->offset = ($limit * $page) - $limit;
             $this->pager  = $page;
             
+            return $this;
+        }
+
+        /**
+         * pagerTotal
+         *
+         * @param  mixed $total
+         * @return $this
+         */
+        public function pagerTotal(int $total){
+            $this->pagerTotal = $total;
             return $this;
         }
                 
@@ -1159,6 +1171,15 @@
         }
 
         /**
+         * getReadQueryRaw
+         *
+         * @return string
+         */
+        public function getReadQueryRaw(){
+            return vsprintf(str_replace('?', '%s', $this->getReadQuery()), $this->getReadParams());
+        }
+
+        /**
          * getReadHash
          *
          * @return string
@@ -1176,8 +1197,8 @@
          */
         public function readQuery($fetch = 'fetch', $cursor = PDO::FETCH_ASSOC){
 
-            if($this->pager && is_null($this->rawQuery)){
-                if($totalRecord = $this->pdo->query(preg_replace('/\s+/', ' ', "SELECT count(*) FROM {$this->table} {$this->joinBuild()} {$this->whereBuildRaw()}"))->fetchColumn()){
+            if($this->pager){
+                if($totalRecord = $this->pagerTotal ? $this->pagerTotal : $this->pdo->query(preg_replace('/\s+/', ' ', "SELECT count(*) FROM {$this->table} {$this->joinBuild()} {$this->whereBuildRaw()}"))->fetchColumn()){
                     $this->pagerData = [
                         'count'   => $totalRecord,
                         'limit'   => $this->limit,
