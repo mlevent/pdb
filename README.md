@@ -328,7 +328,7 @@ $db->table('users')->filter()->insert($_POST);
 
 ## Validate
 
-Bu metot şu an için yalnızca; gönderilen veriyi filtreler, boş gönderilen alanları varsayılan değerleriyle dolduru, not null ve enum kontrolleri yapar.
+Bu metot şu an için yalnızca; gönderilen veriyi filtreler, boş gönderilen alanları varsayılan değerleriyle doldurur, not null ve enum kontrolleri yapar.
 
 ```php
 try{
