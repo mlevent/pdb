@@ -88,7 +88,7 @@
             
                 $this->pdo = new PDO("mysql:dbname={$this->config['database']};host={$this->config['host']}", $this->config['username'], $this->config['password'], $options);
 
-            } catch(PDOException $e){ die($e->getMessage()); }
+            } catch(PDOException $e){ throw new Exception($e->getMessage()); }
         }
                      
         /**
@@ -320,6 +320,17 @@
             $this->table = is_array($table) 
                 ? implode(', ', $table) 
                 : $table;
+            return $this;
+        }
+        
+        /**
+         * from alias table
+         *
+         * @param string|array $table
+         * @return $this
+         */
+        public function from($table){
+            $this->table($table);
             return $this;
         }
         
@@ -1318,6 +1329,16 @@
                 $this->table($table);
             return $this->readQuery('fetchAll', PDO::FETCH_COLUMN);
         }
+
+        /**
+         * validate
+         *
+         * @return $this
+         */
+        public function validate(){
+            $this->filter(true);
+            return $this;
+        }
     
         /**
          * filter
@@ -1355,13 +1376,24 @@
                 else:
                     foreach($tableStructure as $structure){
                         
-                        if(!is_null($structure['Default']) && (!isset($data[$structure['Field']]) || is_null($data[$structure['Field']])))
+                        // fill default
+                        if((!is_null($structure['Default']) && $structure['Default'] != 'current_timestamp()') && (!isset($data[$structure['Field']]) || is_null($data[$structure['Field']]) || empty($data[$structure['Field']])))
                             $data[$structure['Field']] = $structure['Default'];
+                        
+                        // not null
+                        if(!$structure['Extra'] && $structure['Null'] == 'NO' && (!isset($data[$structure['Field']]) || is_null($data[$structure['Field']]) || empty($data[$structure['Field']]))):
+                            throw new Exception($structure['Field'] . ' Not Null olarak tanımlanmış.');
+                        endif;
 
-                        if(!$structure['Extra'] && $structure['Null'] == 'NO' && (!isset($data[$structure['Field']]) || is_null($data[$structure['Field']]) || $data[$structure['Field']] == '')):
-                            unset($insertData[$key]); unset($filtered[$key]); break;
+                        // enum
+                        if(strpos($structure['Type'], 'enum') !== false):
+                            preg_match_all("/'(.*?)'/", $structure['Type'], $enumArray);
+                            if(!in_array($data[$structure['Field']], $enumArray[1])):
+                                throw new Exception($structure['Field'] . ' için geçerli bir veri girilmedi.');
+                            endif;
                         endif;
                         
+                        // trim
                         if(isset($data[$structure['Field']]))
                             $filtered[$key][$structure['Field']] = $data[$structure['Field']];
                     }

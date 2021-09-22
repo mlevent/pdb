@@ -302,28 +302,29 @@ $delete = $db->isNull('slug')->delete('products');
 
 Gönderilen veriyi tablodaki sütunlarla karşılaştırır ve yanlış/fazla veriyi otomatik olarak temizler. `insert()`, `insertIgnore()`, `replaceInto()`, `onDuplicate()`, `update()` metodlarıyla birlikte kullanılabilir.
 
-| Primary | Not Null |     Not Null | Null |
-| ------- | :------: | -----------: | ---- |
-| id      |   name   |        email | age  |
-| 1       | John Doe | john@doe.com | 32   |
-| 2       | Jane Doe | jane@doe.com | 19   |
+`users` tablomuzun aşağıdaki gibi olduğunu varsayalım.
+
+| Primary | Not Null | Not Null | Not Null |
+| ------- | :------: | -------: | -------- |
+| id      |   name   |    email | password |
 
 ```php
 $db->table('users')->filter()->insert([
-    'name'  => 'Walter Bishop',
-    'email' => 'walter@bishop.com',
-    'age'   => 39,
-    'price' => 3994
+    'username' => 'walterbishop',
+    'email'    => 'walter@bishop.com',
+    'password' => 'U7!hsjlIus',
+    'fistname' => 'Walter',
+    'lastname' => 'Bishop'
 ]);
 ```
 
--   Tabloda `price` sütunu olmamasına rağmen hatasız bir şekilde kayıt oluşturulur.
+-   `filter()` metodu users tablosunda `firstname` ve `lastname` sütunlarını bulamadığı için bu verileri otomatik temizleyip hatasız bir şekilde kayıt oluşturulmasını sağlar.
+
+`$_POST` ile gönderilen formlar için örnek kullanım şekli aşağıdaki gibidir.
 
 ```php
 $db->table('users')->filter()->insert($_POST);
 ```
-
--   `$_POST` ile gelen veriyi temizler ve hatasız bir şekilde kayıt oluşturulur.
 
 ```php
 $db->table('users')->filter(true)->insert([
