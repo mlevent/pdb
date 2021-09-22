@@ -302,11 +302,11 @@ $delete = $db->isNull('slug')->delete('products');
 
 Gönderilen veriyi tablodaki sütunlarla karşılaştırır ve yanlış/fazla veriyi otomatik olarak temizler. `insert()`, `insertIgnore()`, `replaceInto()`, `onDuplicate()`, `update()` metodlarıyla birlikte kullanılabilir.
 
-`users` tablomuzun aşağıdaki gibi olduğunu varsayalım.
-
 | Primary | Not Null | Not Null | Not Null |
 | ------- | :------: | -------: | -------- |
 | id      |   name   |    email | password |
+
+-   `users` adında bir tablomuz olduğunu ve yukarıdaki sütunlardan oluştuğunu varsayalım.
 
 ```php
 $db->table('users')->filter()->insert([
@@ -320,11 +320,11 @@ $db->table('users')->filter()->insert([
 
 -   `filter()` metodu users tablosunda `firstname` ve `lastname` sütunlarını bulamadığı için bu verileri otomatik temizleyip hatasız bir şekilde kayıt oluşturulmasını sağlar.
 
-`$_POST` ile gönderilen formlar için örnek kullanım şekli aşağıdaki gibidir.
-
 ```php
 $db->table('users')->filter()->insert($_POST);
 ```
+
+-   `$_POST` ile gönderilen formlar için örnek kullanım şekli yukarıdaki gibidir.
 
 ```php
 $db->table('users')->filter(true)->insert([
