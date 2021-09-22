@@ -302,17 +302,18 @@ $delete = $db->isNull('slug')->delete('products');
 
 Gönderilen veriyi tablodaki sütunlarla karşılaştırır ve yanlış/fazla veriyi otomatik olarak temizler. `insert()`, `insertIgnore()`, `replaceInto()`, `onDuplicate()`, `update()` metodlarıyla birlikte kullanılabilir.
 
-| Primary | Not Null | Not Null | Not Null |
-| ------- | :------: | -------: | -------- |
-| id      |   name   |    email | password |
+| Primary | Not Null | Not Null | Not Null | enum('Male', 'Female') |
+| ------- | :------: | -------: | -------- | ---------------------- |
+| id      |   name   |    email | password | gender                 |
 
--   `users` adında bir tablomuz olduğunu ve yukarıdaki sütunlardan oluştuğunu varsayalım.
+`users` adında bir tablomuz olduğunu ve yukarıdaki sütunlardan oluştuğunu varsayalım.
 
 ```php
 $db->table('users')->filter()->insert([
     'username' => 'walterbishop',
     'email'    => 'walter@bishop.com',
     'password' => 'U7!hsjlIus',
+    'gender'   => 'Male',
     'fistname' => 'Walter',
     'lastname' => 'Bishop'
 ]);
@@ -326,8 +327,10 @@ $db->table('users')->filter()->insert($_POST);
 
 -   `$_POST` ile gönderilen formlar için örnek kullanım şekli yukarıdaki gibidir.
 
+## Validate
+
 ```php
-$db->table('users')->filter(true)->insert([
+$db->table('users')->validate()->insert([
     'name' => 'Walter Bishop',
     'age'  => 'walter@bishop.com'
 ]);
