@@ -193,19 +193,6 @@
         protected function setGroup($andOr = false){
             $this->isGroupIn = $andOr;
         }
-        
-        /**
-         * find
-         *
-         * @param mixed $value
-         * @return void
-         */
-        public function find($value, $table = null){
-            if(!is_null($table)) 
-                $this->table($table);
-            $this->where($this->getPrimary($table), $value);
-            return $this;
-        }
      
         /**
          * select
@@ -546,27 +533,29 @@
          * @return void
          */
         public function pagerLinks($url = '?page={page}', $class = 'active'){
-            $totalPage = $this->pagerData['total'];
-            if($totalPage <= 10){
-                $min = 1;
-                $max = $totalPage;
-            } else {
-                $min = max(1, ($this->pagerData['current'] - 5));
-                $max = min($totalPage, ($this->pagerData['current'] + 5));
-                if($min === 1){
-                    $max = 10;
-                } elseif($max === $totalPage) {
-                    $min = ($totalPage - 9);
+            if(isset($this->pagerData['total'])){
+                $totalPage = $this->pagerData['total'];
+                if($totalPage <= 10){
+                    $min = 1;
+                    $max = $totalPage;
+                } else {
+                    $min = max(1, ($this->pagerData['current'] - 5));
+                    $max = min($totalPage, ($this->pagerData['current'] + 5));
+                    if($min === 1){
+                        $max = 10;
+                    } elseif($max === $totalPage) {
+                        $min = ($totalPage - 9);
+                    }
                 }
+                for($i = $min; $i <= $max; $i++){
+                    $this->pagerHtml .= str_replace(
+                        ['{active}', '{text}', '{url}'],
+                        [($i == $this->pagerData['current'] ? $class : null), $i, str_replace('{page}', $i, $url)],
+                        $this->pagerTemplate
+                    );
+                }
+                return $this->pagerHtml;
             }
-            for($i = $min; $i <= $max; $i++){
-                $this->pagerHtml .= str_replace(
-                    ['{active}', '{text}', '{url}'],
-                    [($i == $this->pagerData['current'] ? $class : null), $i, str_replace('{page}', $i, $url)],
-                    $this->pagerTemplate
-                );
-            }
-            return $this->pagerHtml;
         }
         
         /**
@@ -1187,10 +1176,8 @@
          */
         public function readQuery($fetch = 'fetch', $cursor = PDO::FETCH_ASSOC){
 
-            if($this->pager)
-            {
-                if($totalRecord = $this->pdo->query(preg_replace('/\s+/', ' ', "SELECT count(*) FROM {$this->table} {$this->joinBuild()} {$this->whereBuildRaw()}"))->fetchColumn())
-                {
+            if($this->pager && is_null($this->rawQuery)){
+                if($totalRecord = $this->pdo->query(preg_replace('/\s+/', ' ', "SELECT count(*) FROM {$this->table} {$this->joinBuild()} {$this->whereBuildRaw()}"))->fetchColumn()){
                     $this->pagerData = [
                         'count'   => $totalRecord,
                         'limit'   => $this->limit,
@@ -1206,10 +1193,8 @@
             $hash   = $this->getReadHash($query, join((array)$params), $fetch, $cursor);
 
             // Redis Cache
-            if($this->redisActive)
-            {
-                if($this->redis->exists($hash))
-                {
+            if($this->redisActive){
+                if($this->redis->exists($hash)){
                     $data = unserialize($this->redis->get($hash));
                     $this->killQuery($query, $params, 'redis');
                     $this->fromRedis = true;
@@ -1222,8 +1207,7 @@
             if($this->cache)
                 $this->cache->setFile($hash);
 
-            if($this->cache && $cached = $this->cache->get())
-            {
+            if($this->cache && $cached = $this->cache->get()){
                 $this->killQuery($query, $params, 'disk');
                 $this->fromDisk = true;
                 $this->rowCount = $cached['rows'];
@@ -1232,16 +1216,12 @@
 
             // SQL Query
             $runQuery = $this->pdo->prepare($query);
-            if($runQuery->execute($params))
-            {
+            if($runQuery->execute($params)){
                 $results = call_user_func_array([$runQuery, $fetch], [$cursor]);
-
                 if($this->redisActive)
                     $this->redis->set($hash, serialize($results), $this->redisActive);
-                    
                 if($this->cache)
                     $this->cache->set($results);
-
                 $this->killQuery($query, $params, 'mysql');
                 $this->rowCount = $runQuery->rowCount();
                 return $results;
@@ -1270,16 +1250,6 @@
             if(!is_null($table)) 
                 $this->table($table);
             return $this->readQuery('fetchAll', PDO::FETCH_ASSOC);
-        }
-
-        /**
-         * first
-         *
-         * @param mixed $table
-         * @return void
-         */
-        public function first($table = null){
-            return $this->getRow($table);
         }
         
         /**
@@ -1328,6 +1298,29 @@
             if(!is_null($table)) 
                 $this->table($table);
             return $this->readQuery('fetchAll', PDO::FETCH_COLUMN);
+        }
+
+        /**
+         * first
+         *
+         * @param mixed $table
+         * @return void
+         */
+        public function first($table = null){
+            return $this->getRow($table);
+        }
+
+        /**
+         * find
+         *
+         * @param mixed $value
+         * @return void
+         */
+        public function find($value, $table = null){
+            if(!is_null($table)) 
+                $this->table($table);
+            $this->where($this->getPrimary($table), $value);
+            return $this;
         }
 
         /**
