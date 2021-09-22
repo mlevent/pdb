@@ -343,7 +343,7 @@ try{
 }
 ```
 
--   `gender` sütununda tanımlı enum değerleri arasında `Elephant` olmadığı için hata dönecek ve kayıt eklenmeyecektir.
+-   `gender` sütununda tanımlı enum değerleri arasında `Elephant` olmadığı için hata döner ve kayıt eklenmez.
 
 ---
 
