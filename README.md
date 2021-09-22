@@ -194,8 +194,7 @@ Sonuçları önbelleğe almak için kullanılır. Çok sık değişmesi gerekmey
 `comments` tablosundaki verileri mysql'den okur ve diske kaydeder. Sonuçlar 30 saniye boyunca diskten okunur.
 
 ```php
-$results = $db->cache(30)
-              ->get('comments');
+$results = $db->cache(30)->get('comments');
 ```
 
 `fromDisk()` metodu; son sorgu diskten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
@@ -205,8 +204,7 @@ $results = $db->cache(30)
 `comments` tablosundaki verileri mysql'den okur ve redis veritabanına kayder. Sonuçlar 30 saniye boyunca Redis üzerinden okunur.
 
 ```php
-$results = $db->redis(30)
-              ->get('comments');
+$results = $db->redis(30)->get('comments');
 ```
 
 `fromRedis()` metodu; son sorgu Redisten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
