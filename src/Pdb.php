@@ -37,7 +37,7 @@
         private $offset        = null;
 
         private $pager;
-        private $pagerTotal;
+        private $pagerRows;
         private $pagerData     = [];
         private $pagerTemplate = '<li class="{active}"><a href="{url}">{text}</a></li>';
         private $pagerHtml;
@@ -221,14 +221,21 @@
         }
         
         /**
+         * selectInit
+         */
+        protected function selectFlush(){
+            $this->select = null;
+        }
+        
+        /**
          * total
          *
-         * @param  mixed $table
-         * @return void
+         * @param mixed $table
          */
         public function total($table = null){
             if(!is_null($table)) 
                 $this->table($table);
+            $this->selectFlush();
             return $this->count()->getCol();
         }   
         
@@ -527,13 +534,13 @@
         }
 
         /**
-         * pagerTotal
+         * pagerRows
          *
          * @param  mixed $total
          * @return $this
          */
-        public function pagerTotal(int $total){
-            $this->pagerTotal = $total;
+        public function pagerRows(int $total){
+            $this->pagerRows = $total;
             return $this;
         }
                 
@@ -1151,22 +1158,26 @@
          *
          * @return string
          */
-        public function getReadQuery(){
+        public function getReadQuery($deny = []){
             
             if($this->rawQuery) return $this->rawQuery;
 
             $build = [
-                'SELECT',
-                $this->selectBuild(),
-                'FROM',
-                $this->tableBuild(),
-                $this->joinBuild(),
-                $this->whereBuild(),
-                $this->groupBuild(),
-                $this->havingBuild(),
-                $this->orderBuild(),
-                $this->limitOffsetBuild(),
+                'selectPrefix' => 'SELECT',
+                'select'       => $this->selectBuild(),
+                'tablePrefix'  => 'FROM',
+                'table'        => $this->tableBuild(),
+                'join'         => $this->joinBuild(),
+                'where'        => $this->whereBuild(),
+                'group'        => $this->groupBuild(),
+                'having'       => $this->havingBuild(),
+                'order'        => $this->orderBuild(),
+                'limitOffset'  => $this->limitOffsetBuild(),
             ];
+
+            if(sizeof($deny))
+                $build = array_diff_key($build, array_flip($deny));
+
             return implode(' ', array_filter($build));
         }
 
@@ -1175,8 +1186,8 @@
          *
          * @return string
          */
-        public function getReadQueryRaw(){
-            return vsprintf(str_replace('?', '%s', $this->getReadQuery()), $this->getReadParams());
+        public function getReadQueryRaw($deny = []){
+            return vsprintf(str_replace('?', '%s', $this->getReadQuery($deny)), $this->getReadParams());
         }
 
         /**
@@ -1198,7 +1209,7 @@
         public function readQuery($fetch = 'fetch', $cursor = PDO::FETCH_ASSOC){
 
             if($this->pager){
-                if($totalRecord = $this->pagerTotal ? $this->pagerTotal : $this->pdo->query(preg_replace('/\s+/', ' ', "SELECT count(*) FROM {$this->table} {$this->joinBuild()} {$this->whereBuildRaw()}"))->fetchColumn()){
+                if($totalRecord = $this->pagerRows ? $this->pagerRows : $this->pdo->query($this->getReadQueryRaw(['limitOffset', 'order']))->rowCount()){
                     $this->pagerData = [
                         'count'   => $totalRecord,
                         'limit'   => $this->limit,

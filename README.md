@@ -56,7 +56,8 @@ $results = $db->get('products');
 ```php
 $results = $db->select('id, name, code, slug, price, stock')
               ->table('products')
-              ->where('price > ?', 50)
+              ->where('stock > ?', 5)
+              ->where('MONTH(created) = MONTH(NOW())')
               ->order('id')
               ->get();
 ```
@@ -90,7 +91,9 @@ $update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['pa
 Birincil anahtarla eşleşen kaydı döndürür.
 
 ```php
-$find = $db->table('products')->find(15)->first();
+$find = $db->table('products')
+           ->find(15)
+           ->first();
 ```
 
 -   `find(15)`
@@ -98,39 +101,45 @@ $find = $db->table('products')->find(15)->first();
 
 ## Total
 
-Tablodaki toplam satır sayısına ulaşmak için kullanılır.
+Toplam satır sayısına ulaşmak için kullanılır.
 
 ```php
-$total = $db->total('products');
+$total = $db->where('userGroup', 'Admin')
+            ->total('users');
+```
+
+## rowCount()
+
+Etkilenen satır sayısı veya okunan satır sayısına ulaşmak için kullanılır.
+
+```php
+$db->rowCount();
+```
+
+## lastInsertId()
+
+Insert işlemlerinde kaydedilen son satırın birincil anahtarını döndürür.
+
+```php
+$db->lastInsertId();
 ```
 
 ---
 
 ## Pager
 
-Parametre olarak sayfa başına listelenecek kayıt sayısı gönderilmelidir.
+Parametre olarak sayfa başına listelenecek kayıt sayısı gönderilmelidir. `pager()` metodu salt sorgularda çalışmaz.
 
 ```php
-$posts = $db->table('posts')->pager(25)->get();
+$posts = $db->table('posts')
+            ->pager(25)
+            ->get();
 ```
 
-`pager` fonksiyonu 2 parametre alır. İlk parametre sayfa başına listelenecek kayıt sayısı, İkinci parametre sayfa bilgisinin aktarılacağı `$_GET` parametresidir. Örneğin link yapısı `?sayfa=3` şeklinde kurgulanacaksa, örnek kullanım şu şekilde olmalıdır;
+`pager()` fonksiyonu 2 parametre alır. İlk parametre sayfa başına listelenecek kayıt sayısı, İkinci parametre sayfa bilgisinin aktarılacağı `$_GET` parametresidir. Örneğin link yapısı `?sayfa=3` şeklinde kurgulanacaksa, örnek kullanım şu şekilde olmalıdır;
 
 ```php
 $db->pager(25, 'sayfa');
-```
-
-## pagerTotal()
-
-Bazı karmaşık sorgularda toplam kayıt sayısını dışarıdan eklemeniz gerekebilir. `pagerTotal()` fonksiyonu ile toplam kayıt sayısını şu şekilde gönderebilirsiniz;
-
-```php
-$total = $db->total('posts');
-
-$posts = $db->table('posts')
-            ->pager(25)
-            ->pagerTotal($total)
-            ->get();
 ```
 
 ## pagerLinks()
@@ -185,7 +194,8 @@ Sonuçları önbelleğe almak için kullanılır. Çok sık değişmesi gerekmey
 `comments` tablosundaki verileri mysql'den okur ve diske kaydeder. Sonuçlar 30 saniye boyunca diskten okunur.
 
 ```php
-$results = $db->cache(30)->get('comments');
+$results = $db->cache(30)
+              ->get('comments');
 ```
 
 `fromDisk()` metodu; son sorgu diskten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
@@ -195,7 +205,8 @@ $results = $db->cache(30)->get('comments');
 `comments` tablosundaki verileri mysql'den okur ve redis veritabanına kayder. Sonuçlar 30 saniye boyunca Redis üzerinden okunur.
 
 ```php
-$results = $db->redis(30)->get('comments');
+$results = $db->redis(30)
+              ->get('comments');
 ```
 
 `fromRedis()` metodu; son sorgu Redisten okunuyorsa `true`, mysql'den okunuyorsa `false` döner.
@@ -276,13 +287,17 @@ $db->table('products')->onDuplicate([
 Bir veya birden fazla kaydı güncellemek için kullanılır.
 
 ```php
-$update = $db->table('products')->where('id', 11255)->update(['active' => 1]);
+$update = $db->table('products')
+             ->where('id', 11255)
+             ->update(['active' => 1]);
 ```
 
 -   `find()` metodu ile
 
 ```php
-$update = $db->table('products')->find(11255)->update(['active' => 1]);
+$update = $db->table('products')
+             ->find(11255)
+             ->update(['active' => 1]);
 ```
 
 -   Etkilenen satır sayısı döner.
@@ -292,7 +307,8 @@ $update = $db->table('products')->find(11255)->update(['active' => 1]);
 `active` sütunu `1` ise `0`, `0` ise `1` değerini alır.
 
 ```php
-$touch = $db->table('products')->touch('active');
+$touch = $db->table('products')
+            ->touch('active');
 ```
 
 -   `touch('active', 'products')`
@@ -301,10 +317,11 @@ $touch = $db->table('products')->touch('active');
 
 ## Delete
 
-Bir veya birden fazla kaydı silmek için kullanılır.
+Bir veya birden fazla kaydı silmek için kullanılır. Örnekte `products` tablosundaki `slug` sütunu boş olan tüm satırlar silinir.
 
 ```php
-$delete = $db->isNull('slug')->delete('products');
+$delete = $db->isNull('slug')
+             ->delete('products');
 ```
 
 -   Etkilenen satır sayısı döner.
@@ -413,6 +430,8 @@ $db->sum('amount')...
 -   `sum('amount', 'totalAmount')`
 
 ## Table
+
+`table()` ve `from()` metodu aynı işlevi görür.
 
 ```php
 $db->table('products')...
