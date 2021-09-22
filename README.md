@@ -314,29 +314,36 @@ $db->table('users')->filter()->insert([
     'email'    => 'walter@bishop.com',
     'password' => 'U7!hsjlIus',
     'gender'   => 'Male',
-    'fistname' => 'Walter',
-    'lastname' => 'Bishop'
+    'fullname' => 'Walter Bishop'
 ]);
 ```
 
--   `filter()` metodu users tablosunda `firstname` ve `lastname` sütunlarını bulamadığı için bu verileri otomatik temizleyip hatasız bir şekilde kayıt oluşturulmasını sağlar.
+-   `filter()` metodu users tablosunda `fullname` sütununu bulamadığı için bu veriyi otomatik temizleyip hatasız bir şekilde kayıt oluşturulmasını sağlar.
 
 ```php
 $db->table('users')->filter()->insert($_POST);
 ```
 
--   `$_POST` ile gönderilen formlar için örnek kullanım şekli yukarıdaki gibidir.
+-   `$_POST` ile gönderilen formlar için örnek bir kullanım şekli.
 
 ## Validate
 
+Bu metot şu an için yalnızca; gönderilen veriyi filtreler, boş gönderilen alanları varsayılan değerleriyle dolduru, not null ve enum kontrolleri yapar.
+
 ```php
-$db->table('users')->validate()->insert([
-    'name' => 'Walter Bishop',
-    'age'  => 'walter@bishop.com'
-]);
+try{
+    $db->table('users')->validate()->insert([
+        'username' => 'walterbishop',
+        'email'    => 'walter@bishop.com',
+        'password' => 'U7!hsjlIus',
+        'gender'   => 'Elephant'
+    ]);
+} catch(Exception $e){
+    echo $e->getMessage();
+}
 ```
 
--   `email` sütunu `notnull` olarak tanımlandığı için kayıt eklenmez.
+-   `gender` sütununda tanımlı enum değerleri arasında `Elephant` olmadığı için hata dönecek ve kayıt eklenmeyecektir.
 
 ---
 

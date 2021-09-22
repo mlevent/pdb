@@ -1387,9 +1387,11 @@
 
                         // enum
                         if(strpos($structure['Type'], 'enum') !== false):
-                            preg_match_all("/'(.*?)'/", $structure['Type'], $enumArray);
-                            if(!in_array($data[$structure['Field']], $enumArray[1])):
-                                throw new Exception($structure['Field'] . ' için geçerli bir veri girilmedi.');
+                            if(isset($data[$structure['Field']])):
+                                preg_match_all("/'(.*?)'/", $structure['Type'], $enumArray);
+                                if(!in_array($data[$structure['Field']], $enumArray[1])):
+                                    throw new Exception($structure['Field'] . ' için geçerli bir veri girilmedi.');
+                                endif;
                             endif;
                         endif;
                         
