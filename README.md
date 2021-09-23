@@ -91,9 +91,8 @@ $update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['pa
 Birincil anahtarla eşleşen kaydı döndürür.
 
 ```php
-$find = $db->table('products')
-           ->find(15)
-           ->first();
+$find = $db->find(15)
+           ->first('products');
 ```
 
 -   `find(15)`
@@ -113,7 +112,7 @@ $total = $db->where('userGroup', 'Admin')
 Etkilenen satır sayısı veya okunan satır sayısına ulaşmak için kullanılır.
 
 ```php
-$db->rowCount();
+echo $db->rowCount();
 ```
 
 ## lastInsertId()
@@ -121,7 +120,7 @@ $db->rowCount();
 Insert işlemlerinde kaydedilen son satırın birincil anahtarını döndürür.
 
 ```php
-$db->lastInsertId();
+echo $db->lastInsertId();
 ```
 
 ---
@@ -315,10 +314,10 @@ $touch = $db->table('products')
 
 ## Delete
 
-Bir veya birden fazla kaydı silmek için kullanılır. Örnekte `products` tablosundaki `slug` sütunu boş olan tüm satırlar silinir.
+Bir veya birden fazla kaydı silmek için kullanılır.
 
 ```php
-$delete = $db->isNull('slug')
+$delete = $db->in('id', [321, 412, 324, 142])
              ->delete('products');
 ```
 
@@ -640,4 +639,4 @@ Metodlar: `truncate()`, `drop()`, `optimize()`, `analyze()`, `check()`, `checksu
 
 ## Contributors
 
--   [mlevent](https://github.com/mlevent) Mert Levent - creator, maintainer
+-   [mlevent](https://github.com/mlevent) Mert Levent
