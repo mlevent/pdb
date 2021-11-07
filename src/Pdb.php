@@ -578,6 +578,19 @@
                         $min = ($totalPage - 9);
                     }
                 }
+                // first
+                $this->pagerHtml .= str_replace(
+                    ['{active}', '{text}', '{url}'],
+                    [null, '«', str_replace('{page}', 1, $url)],
+                    $this->pagerTemplate
+                );
+                // prev
+                $this->pagerHtml .= str_replace(
+                    ['{active}', '{text}', '{url}'],
+                    [null, '‹', str_replace('{page}', ($this->pagerData['current'] > 1 ? $this->pagerData['current'] - 1 : 1), $url)],
+                    $this->pagerTemplate
+                );
+                // pages
                 for($i = $min; $i <= $max; $i++){
                     $this->pagerHtml .= str_replace(
                         ['{active}', '{text}', '{url}'],
@@ -585,6 +598,18 @@
                         $this->pagerTemplate
                     );
                 }
+                // next
+                $this->pagerHtml .= str_replace(
+                    ['{active}', '{text}', '{url}'],
+                    [null, '›', str_replace('{page}', ($this->pagerData['current'] < $totalPage ? $this->pagerData['current'] + 1 : $totalPage), $url)],
+                    $this->pagerTemplate
+                );
+                // last
+                $this->pagerHtml .= str_replace(
+                    ['{active}', '{text}', '{url}'],
+                    [null, '»', str_replace('{page}', $totalPage, $url)],
+                    $this->pagerTemplate
+                );
                 return $this->pagerHtml;
             }
         }
