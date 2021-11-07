@@ -30,6 +30,7 @@ Varsayılan yapılandırma ayarları.
 ```php
 [
     'host'      => 'localhost',
+    'driver'    => 'mysql',
     'database'  => '',
     'username'  => 'root',
     'password'  => '',
@@ -40,6 +41,11 @@ Varsayılan yapılandırma ayarları.
     'cachePath' => __DIR__ . '/Cache'
 ]
 ```
+
+Şu anda kullanılabilir durumda olan driver listesi
+
+-   Mysql
+-   Sqlite (test aşamasında)
 
 ---
 

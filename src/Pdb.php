@@ -12,8 +12,9 @@
 
     class Pdb
     {
-        private $pdo;
-        private $config;
+        public $pdo;
+        public $config;
+        
         private $cache;
         private $redis;
         private $redisActive;
@@ -26,15 +27,15 @@
 
         private $rawQuery      = null;
 
-        private $select        = null;
-        private $table         = null;
-        private $join          = null;
-        private $where         = null;
-        private $order         = null;
-        private $group         = null;
-        private $having        = null;
-        private $limit         = null;
-        private $offset        = null;
+        public $select        = null;
+        public $table         = null;
+        public $join          = null;
+        public $where         = null;
+        public $order         = null;
+        public $group         = null;
+        public $having        = null;
+        public $limit         = null;
+        public $offset        = null;
 
         private $pager;
         private $pagerRows;
@@ -62,6 +63,7 @@
         {
             $this->config = [
                 'host'      => 'localhost',
+                'driver'    => 'mysql',
                 'database'  => '',
                 'username'  => 'root',
                 'password'  => '',
@@ -76,6 +78,11 @@
                 $this->config[$k] = !isset($config[$k]) 
                     ? $this->config[$k] 
                     : $config[$k];
+
+            $dsnList = [
+                'mysql'  => "dbname={$this->config['database']};host={$this->config['host']}",
+                'sqlite' => "{$this->config['database']}"
+            ];
             
             $options = [
                 PDO::ATTR_PERSISTENT         => true, 
@@ -85,11 +92,16 @@
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$this->config['charset']} COLLATE {$this->config['collation']}"
             ];
 
-            try{
-            
-                $this->pdo = new PDO("mysql:dbname={$this->config['database']};host={$this->config['host']}", $this->config['username'], $this->config['password'], $options);
+            try {
 
-            } catch(PDOException $e){ throw new Exception($e->getMessage()); }
+                if(!array_key_exists($this->config['driver'], $dsnList))
+                    return throw new Exception('driver bulunamadı...');
+            
+                $this->pdo = new PDO("{$this->config['driver']}:{$dsnList[$this->config['driver']]}", $this->config['username'], $this->config['password'], $options);
+
+            } catch (PDOException $e) { 
+                throw new Exception($e->getMessage()); 
+            }
         }
                      
         /**
@@ -1209,7 +1221,7 @@
         public function readQuery($fetch = 'fetch', $cursor = PDO::FETCH_ASSOC){
 
             if($this->pager){
-                if($totalRecord = $this->pagerRows ? $this->pagerRows : $this->pdo->query($this->getReadQueryRaw(['limitOffset', 'order']))->rowCount()){
+                if($totalRecord = $this->pagerRows ? $this->pagerRows : $this->pdo->query(str_replace('SELECT', 'SELECT COUNT(*)', $this->getReadQueryRaw(['select', 'limitOffset', 'order'])))->fetchColumn()){
                     $this->pagerData = [
                         'count'   => $totalRecord,
                         'limit'   => $this->limit,
@@ -1346,7 +1358,6 @@
          * find
          *
          * @param mixed $value
-         * @return void
          */
         public function find($value, $table = null){
             if(!is_null($table)) 
@@ -1560,9 +1571,6 @@
          * @return int|bool
          */
         public function delete($table = null){
-
-            if(!$this->whereParams)
-                return false;
             
             if(!is_null($table)) 
                 $this->table($table);
@@ -1628,23 +1636,11 @@
          * @param string $table
          * @return array
          */
-        public function showTable($table){
-            $query = $this->pdo->query("SHOW COLUMNS FROM {$table}");
-            $table = $query->fetchAll(PDO::FETCH_ASSOC);
-            $valid = [];
-            foreach($table as $col) $valid[$col['Field']] = $col;
-            return $valid;
-        }
-        
-        /**
-         * showKeys
-         *
-         * @param string $table
-         * @return array
-         */
-        public function showKeys($table){
-            $query = $this->pdo->query("SHOW KEYS FROM {$table}");
-            return $query->fetchAll(PDO::FETCH_ASSOC);
+        public function showTable($table = null){
+            if(!is_null($table)) 
+                $this->table($table);
+            $structure = new \Mlevent\Structure($this);
+            return $structure->getColumns();
         }
 
         /**
@@ -1654,10 +1650,10 @@
          * @return void
          */
         public function getPrimary($table = null){
-            if(is_null($table) && $this->table) 
-                $table = $this->table;
-            $query = $this->pdo->query("SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_NAME = '{$table}' AND CONSTRAINT_NAME = 'PRIMARY'");
-            return $query->fetchColumn();
+            if(!is_null($table)) 
+                $this->table($table);
+            $structure = new \Mlevent\Structure($this);
+            return $structure->getPrimary();
         }
         
         /**
