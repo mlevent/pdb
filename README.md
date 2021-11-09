@@ -354,7 +354,7 @@ $delete = $db->in('id', [321, 412, 324, 142])
 
 ## Filter
 
-Gönderilen veriyi tablodaki sütunlarla karşılaştırır ve yanlış/fazla veriyi otomatik olarak temizler. `insert()`, `insertIgnore()`, `replaceInto()`, `onDuplicate()`, `update()` metodlarıyla birlikte kullanılabilir.
+Gönderilen veriyi tablodaki sütunlarla karşılaştırır ve yanlış/fazla veriyi otomatik olarak temizler. `insert()`, `insertIgnore()`, `insertReplace()`, `upsert()`, `update()` metodlarıyla birlikte kullanılabilir.
 
 | Primary | Not Null | Not Null | Not Null | enum('Male', 'Female') |
 | ------- | :------: | -------: | -------- | ---------------------- |
