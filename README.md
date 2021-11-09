@@ -23,6 +23,15 @@ $db = new \Mlevent\Pdb([
 ]);
 ```
 
+Sqlite kullanımı için:
+
+```php
+$db = new \Mlevent\Pdb([
+    'driver'   => 'sqlite',
+    'database' => 'ecommerce.sqlite'
+]);
+```
+
 ## Yapılandırma
 
 Varsayılan yapılandırma ayarları.
