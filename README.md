@@ -256,8 +256,6 @@ $db->table('products')->insert([
 
 Son kaydedilen satırın birincil anahtarına ulaşmak için `lastInsertId()` metodunu, toplam etkilenen satır sayısı için `rowCount()` metodunu kullanabilirsiniz.
 
--   Henüz Sqlite desteği yok.
-
 ### Upsert
 
 ```php
@@ -269,6 +267,8 @@ $db->table('products')->upsert([
 ```
 
 Benzersiz anahtarlara eşleşen veri bulunursa var olan kayıt güncellenir, yoksa yeni kayıt eklenir.
+
+-   Henüz Sqlite desteği yok.
 
 ### Insert Ignore
 
