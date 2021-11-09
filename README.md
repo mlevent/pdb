@@ -292,7 +292,7 @@ $db->table('products')->insertReplace([
 ]);
 ```
 
-Benzersiz anahtarlara eşleşen veri bulunursa var olan kayıt silinir ve yeni kayıt eklenir, yoksa yeni kayıt eklenir. Her replace işleminde `auto_increment` olarak tanımlanan birincil anahtara (Genellikle ID) ait değer değişir. Değerin korunmasını istiyorsanız `upsert` metodunu kullanmanız önerilir.
+Benzersiz anahtarlara eşleşen veri bulunursa var olan kayıt silinir ve yeni kayıt eklenir, yoksa yeni kayıt eklenir. Her replace işleminde `auto_increment` olarak tanımlanan birincil anahtara (Genellikle ID) ait değer değişir. Değerin korunmasını istiyorsanız `upsert()` metodunu kullanmanız önerilir.
 
 ---
 
