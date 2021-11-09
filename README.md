@@ -256,32 +256,43 @@ $db->table('products')->insert([
 
 Son kaydedilen satırın birincil anahtarına ulaşmak için `lastInsertId()` metodunu, toplam etkilenen satır sayısı için `rowCount()` metodunu kullanabilirsiniz.
 
+-   Henüz Sqlite desteği yok.
+
+### Upsert
+
+```php
+$db->table('products')->upsert([
+    'name'  => 'Apple Iphone X 128 Gb',
+    'code'  => 'APPLEX128',
+    'price' => '999.9'
+]);
+```
+
+Benzersiz anahtarlara eşleşen veri bulunursa var olan kayıt güncellenir, yoksa yeni kayıt eklenir.
+
 ### Insert Ignore
 
 ```php
 $db->table('products')->insertIgnore([
-    ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
-    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9']
+    'name'  => 'Apple Iphone X 128 Gb',
+    'code'  => 'APPLEX128',
+    'price' => '999.9'
 ]);
 ```
 
-### Replace Into
+Benzersiz anahtarlara eşleşen veri bulunursa kayıt eklenmez, yoksa yeni kayıt eklenir.
+
+### Insert Replace
 
 ```php
-$db->table('products')->replaceInto([
-    ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
-    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9']
+$db->table('products')->insertReplace([
+    'name'  => 'Apple Iphone X 128 Gb',
+    'code'  => 'APPLEX128',
+    'price' => '999.9'
 ]);
 ```
 
-### On Duplicate
-
-```php
-$db->table('products')->onDuplicate([
-    ['name' => 'Apple Iphone X 128 Gb', 'code' => 'APPLEX128', 'price' => '999.9'],
-    ['name' => 'Apple Iphone X 256 Gb', 'code' => 'APPLEX256', 'price' => '1149.9']
-]);
-```
+Benzersiz anahtarlara eşleşen veri bulunursa var olan kayıt silinir ve yeni kayıt eklenir, yoksa yeni kayıt eklenir.
 
 ---
 

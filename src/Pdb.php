@@ -83,6 +83,9 @@
                 'mysql'  => "dbname={$this->config['database']};host={$this->config['host']}",
                 'sqlite' => "{$this->config['database']}"
             ];
+
+            if(!array_key_exists($this->config['driver'], $dsnList))
+                return throw new Exception('driver bulunamadı...');
             
             $options = [
                 PDO::ATTR_PERSISTENT         => true, 
@@ -93,11 +96,10 @@
             ];
 
             try {
-
-                if(!array_key_exists($this->config['driver'], $dsnList))
-                    return throw new Exception('driver bulunamadı...');
-            
                 $this->pdo = new PDO("{$this->config['driver']}:{$dsnList[$this->config['driver']]}", $this->config['username'], $this->config['password'], $options);
+
+                if($this->config['driver'] == 'sqlite')
+                    $this->pdo->exec('PRAGMA foreign_keys=ON');
 
             } catch (PDOException $e) { 
                 throw new Exception($e->getMessage()); 
@@ -1438,27 +1440,26 @@
                     foreach($tableStructure as $structure){
                         
                         // fill default
-                        if((!is_null($structure['Default']) && $structure['Default'] != 'current_timestamp()') && (!isset($data[$structure['Field']]) || is_null($data[$structure['Field']]) || empty($data[$structure['Field']])))
-                            $data[$structure['Field']] = $structure['Default'];
+                        if((!is_null($structure['default']) && $structure['default'] != 'current_timestamp()') && (!isset($data[$structure['field']]) || is_null($data[$structure['field']]) || empty($data[$structure['field']])))
+                            $data[$structure['field']] = $structure['default'];
                         
                         // not null
-                        if(!$structure['Extra'] && $structure['Null'] == 'NO' && (!isset($data[$structure['Field']]) || is_null($data[$structure['Field']]) || empty($data[$structure['Field']]))):
-                            throw new Exception($structure['Field'] . ' Not Null olarak tanımlanmış.');
-                        endif;
-
+                        if(!$structure['extra'] && !$structure['null'] && (!isset($data[$structure['field']]) || is_null($data[$structure['field']])))
+                            throw new Exception($structure['field'] . ' Not Null olarak tanımlanmış.');
+                            
                         // enum
-                        if(strpos($structure['Type'], 'enum') !== false):
-                            if(isset($data[$structure['Field']])):
-                                preg_match_all("/'(.*?)'/", $structure['Type'], $enumArray);
-                                if(!in_array($data[$structure['Field']], $enumArray[1])):
-                                    throw new Exception($structure['Field'] . ' için geçerli bir veri girilmedi.');
+                        if(strpos($structure['type'], 'enum') !== false):
+                            if(isset($data[$structure['field']])):
+                                preg_match_all("/'(.*?)'/", $structure['type'], $enumArray);
+                                if(!in_array($data[$structure['field']], $enumArray[1])):
+                                    throw new Exception($structure['field'] . ' için geçerli bir veri girilmedi.');
                                 endif;
                             endif;
                         endif;
                         
                         // trim
-                        if(isset($data[$structure['Field']]))
-                            $filtered[$key][$structure['Field']] = $data[$structure['Field']];
+                        if(isset($data[$structure['field']]))
+                            $filtered[$key][$structure['field']] = $data[$structure['field']];
                     }
                 endif;
             }
@@ -1475,13 +1476,13 @@
          */
         public function insert($insertData, $table = null, $type = 'INSERT'){
 
-            $typeList = ['INSERT', 'INSERT IGNORE', 'REPLACE', 'DUPLICATE'];
+            $typeList = ['INSERT', 'INSERT IGNORE', 'INSERT OR IGNORE', 'REPLACE', 'DUPLICATE'];
             
-            if(!is_null($table)) 
-                $this->table($table);
-
             if(!in_array($type, $typeList) || !is_array($insertData) || !count($insertData))
                 return false;
+
+            if(!is_null($table)) 
+                $this->table($table);
 
             if($this->isFilter)
                 $insertData = $this->filterData($this->tableBuild(), $insertData, $this->isFilterValid);
@@ -1515,13 +1516,13 @@
         }
 
         /**
-         * replaceInto
+         * insertReplace
          *
          * @param array $insertData
          * @param string $table
          * @return int|bool
          */
-        public function replaceInto($insertData, $table = null){
+        public function insertReplace($insertData, $table = null){
             return $this->insert($insertData, $table, 'REPLACE');
         }
 
@@ -1533,17 +1534,17 @@
          * @return int|bool
          */
         public function insertIgnore($insertData, $table = null){
-            return $this->insert($insertData, $table, 'INSERT IGNORE');
+            return $this->insert($insertData, $table, $this->getQueryForDriver('insertIgnore'));
         }
         
         /**
-         * onDuplicate
+         * upsert
          *
          * @param array $insertData
          * @param string $table
          * @return int|bool
          */
-        public function onDuplicate($insertData, $table = null){
+        public function upsert($insertData, $table = null){
             return $this->insert($insertData, $table, 'DUPLICATE');
         }
            
@@ -1664,8 +1665,8 @@
         public function showTable($table = null){
             if(!is_null($table)) 
                 $this->table($table);
-            $structure = new \Mlevent\Structure($this);
-            return $structure->getColumns();
+            $columns = $this->pdo->query($this->getQueryForDriver('getColumns'))->fetchAll(2);                
+            return call_user_func(array($this, $this->config['driver'] . 'ColParser'), $columns);
         }
 
         /**
@@ -1677,8 +1678,71 @@
         public function getPrimary($table = null){
             if(!is_null($table)) 
                 $this->table($table);
-            $structure = new \Mlevent\Structure($this);
-            return $structure->getPrimary();
+            return $this->pdo->query($this->getQueryForDriver('getPrimary'))->fetchColumn();
+        }
+        
+        /**
+         * getQuery
+         *
+         * @param mixed $query
+         * @return string
+         */
+        private function getQueryForDriver($query){
+            $queries = [
+                'mysql' => [
+                    'getColumns'   => "SHOW COLUMNS FROM {$this->table}",
+                    'getPrimary'   => "SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_NAME = '{$this->table}' AND CONSTRAINT_NAME = 'PRIMARY'",
+                    'insertIgnore' => 'INSERT IGNORE'
+                ],
+                'sqlite' => [
+                    'getColumns'   => "PRAGMA table_info({$this->table})",
+                    'getPrimary'   => "SELECT t.name FROM pragma_table_info('{$this->table}') as t WHERE t.pk = 1",
+                    'insertIgnore' => 'INSERT OR IGNORE'
+                ]
+            ];
+            return $queries[$this->config['driver']][$query];
+        }
+        
+        /**
+         * sqliteColParser
+         *
+         * @param mixed $columns
+         * @return array
+         */
+        private function sqliteColParser($columns){
+            $parse = [];
+            foreach($columns as $col){
+                $parse[$col['name']] = [
+                    'field'   => $col['name'],
+                    'type'    => $col['type'],
+                    'null'    => !$col['notnull'],
+                    'default' => $col['dflt_value'],
+                    'primary' => $col['pk'],
+                    'extra'   => $col['pk']
+                ];
+            }
+            return $parse;
+        }
+        
+        /**
+         * mysqlColParser
+         *
+         * @param mixed $columns
+         * @return array
+         */
+        private function mysqlColParser($columns){
+            $parse = [];
+            foreach($columns as $col){
+                $parse[$col['Field']] = [
+                    'field'   => $col['Field'],
+                    'type'    => $col['Type'],
+                    'null'    => $col['Null'] !== 'NO' ? true : false,
+                    'default' => $col['Default'],
+                    'primary' => $col['Key'] === 'PRI' ? true : false,
+                    'extra'   => $col['Extra']
+                ];
+            }
+            return $parse;
         }
         
         /**

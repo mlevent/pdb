@@ -1,3 +1,5 @@
 /vendor
+/src/Cache
+/src/Structure.php
 index.php
 db.sqlite
