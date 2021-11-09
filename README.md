@@ -97,8 +97,9 @@ $update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['pa
 Birincil anahtarla eşleşen kaydı döndürür.
 
 ```php
-$find = $db->find(15)
-           ->first('products');
+$find = $db->table('products')
+           ->find(15)
+           ->first();
 ```
 
 -   `find(15)`
