@@ -561,7 +561,7 @@ $db->in('id', [33922, 31221, 45344, 35444])...
 
 ## Find In Set
 
-Metodlar: `findInSet()`, `orFindInSet()`
+Metodlar: `findInSet()`, `orFindInSet()`, `notFindInSet()`, `orNotFindInSet()`
 
 ```php
 $db->findInSet('categoryId', 139)...

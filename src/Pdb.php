@@ -901,6 +901,29 @@
         }
 
         /**
+         * notFindInSet
+         *
+         * @param string $column
+         * @param string $search
+         * @param string $andOr
+         * @return $this
+         */
+        public function notFindInSet($column, $search, $andOr = _AND){
+            return $this->whereFactory(null, $search, $andOr, "NOT FIND_IN_SET(?, {$column})");
+        }
+
+        /**
+         * orNotFindInSet
+         *
+         * @param string $column
+         * @param string $search
+         * @return $this
+         */
+        public function orNotFindInSet($column, $search){
+            return $this->notFindInSet($column, $search, _OR);
+        }
+
+        /**
          * like
          *
          * @param string $column
@@ -1226,7 +1249,7 @@
          * @return string
          */
         public function getReadQueryRaw($deny = []){
-            return vsprintf(str_replace('?', '%s', $this->getReadQuery($deny)), $this->getReadParams());
+            return vsprintf(str_replace('?', '%s', $this->getReadQuery($deny)), array_map(function($item){ return $this->quote($item); }, $this->getReadParams()));
         }
 
         /**
