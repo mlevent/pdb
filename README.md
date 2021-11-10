@@ -344,8 +344,8 @@ $touch = $db->table('products')
 `hit` sütunu `1` veya gönderilen değer kadar artar.
 
 ```php
-$increment = $db->table('products')
-                ->find(11556)
+$increment = $db->table('posts')
+                ->where('slug', 'whats-new-in-laravel-8')
                 ->increment('hit');
 ```
 
@@ -357,8 +357,8 @@ $increment = $db->table('products')
 `hit` sütunu `1` veya gönderilen değer kadar azalır.
 
 ```php
-$increment = $db->table('products')
-                ->find(11556)
+$increment = $db->table('posts')
+                ->where('slug', 'whats-new-in-laravel-8')
                 ->decrement('hit');
 ```
 
