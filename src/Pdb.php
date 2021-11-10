@@ -27,15 +27,15 @@
 
         private $rawQuery      = null;
 
-        public $select        = null;
-        public $table         = null;
-        public $join          = null;
-        public $where         = null;
-        public $order         = null;
-        public $group         = null;
-        public $having        = null;
-        public $limit         = null;
-        public $offset        = null;
+        public $select         = null;
+        public $table          = null;
+        public $join           = null;
+        public $where          = null;
+        public $order          = null;
+        public $group          = null;
+        public $having         = null;
+        public $limit          = null;
+        public $offset         = null;
 
         private $pager;
         private $pagerRows;
@@ -1557,7 +1557,7 @@
          */
         public function update($data, $table = null){
             
-            if(!$data || !$this->whereParams)
+            if(!$data)
                 return false;
 
             if(!is_null($table)) 
@@ -1584,10 +1584,30 @@
          * @param string $table
          * @return int|bool
          */
-        public function touch($column, $table = null){
-            if(!is_null($table)) 
-                $this->table($table);
+        public function touch($column){
             return $this->raw("UPDATE {$this->tableBuild()} SET {$column} = !{$column} {$this->whereBuild()}", $this->whereParams)->exec();
+        }
+
+        /**
+         * increment
+         *
+         * @param string $column
+         * @param int $count
+         * @return int|bool
+         */
+        public function increment($column, int $count = 1, $operator = '+'){
+            return $this->raw("UPDATE {$this->tableBuild()} SET {$column} = {$column} {$operator} {$count} {$this->whereBuild()}", $this->whereParams)->exec();
+        }
+
+        /**
+         * decrement
+         *
+         * @param string $column
+         * @param int $count
+         * @return int|bool
+         */
+        public function decrement($column, int $count = 1){
+            return $this->increment($column, $count, '-');
         }
         
         /**
@@ -1785,6 +1805,19 @@
         }
         
         /**
+         * quote
+         *
+         * @param mixed $data
+         * @return string
+         */
+        public function quote($data)
+        {
+            return $data === null ? 'NULL' : (
+                is_int($data) || is_float($data) ? $data : $this->pdo->quote($data)
+            );
+        }
+        
+        /**
          * lastInsertId
          *
          * @return int
@@ -1827,7 +1860,8 @@
          * @return string|array
          */
         public function lastQuery($withParams = false){
-            return $withParams ? end($this->queryHistory) : end($this->queryHistory)['query'];
+            if($this->queryHistory)
+                return $withParams ? end($this->queryHistory) : end($this->queryHistory)['query'];
         }
 
         /**

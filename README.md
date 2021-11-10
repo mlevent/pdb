@@ -339,6 +339,34 @@ $touch = $db->table('products')
 
 ---
 
+### Increment
+
+`hit` sütunu `1` veya gönderilen değer kadar artar.
+
+```php
+$increment = $db->table('products')
+                ->find(11556)
+                ->increment('hit');
+```
+
+-   `increment('hit')`
+-   `increment('hit', 5)`
+
+### Decrement
+
+`hit` sütunu `1` veya gönderilen değer kadar azalır.
+
+```php
+$increment = $db->table('products')
+                ->find(11556)
+                ->decrement('hit');
+```
+
+-   `decrement('hit')`
+-   `decrement('hit', 5)`
+
+---
+
 ## Delete
 
 Bir veya birden fazla kaydı silmek için kullanılır.
