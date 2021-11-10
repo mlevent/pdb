@@ -2,10 +2,9 @@
 
     namespace Mlevent;
 
-    use PDOException;
     use PDO;
+    use PDOException;
     use Closure;
-    use RedisException;
 
     if(!defined('_AND')) define('_AND', 'AND');
     if(!defined('_OR'))  define('_OR',  'OR');
