@@ -36,7 +36,7 @@ $db = new \Mlevent\Pdb([
 
 Yeni bir dizin oluşturarak `src` klasörü altındaki tüm dosyaları içine kopyalayın ve `autoload.php` dosyasını require ile sayfaya dahil ederek sınıfı başlatın.
 
-````php
+```php
 require '{pdb_dosyalarinin_bulundugu_dizin}/autoload.php';
 
 $db = new \Mlevent\Pdb([
@@ -64,7 +64,7 @@ Varsayılan yapılandırma ayarları:
     'cacheTime' => 60,
     'cachePath' => __DIR__ . '/Cache'
 ]
-````
+```
 
 Şu anda kullanılabilir durumda olan driver listesi:
 
