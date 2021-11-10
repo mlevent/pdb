@@ -45,6 +45,7 @@ $db = new \Mlevent\Pdb([
     'password' => 'test',
     'charset'  => 'utf8'
 ]);
+```
 
 ## Yapılandırma
 
