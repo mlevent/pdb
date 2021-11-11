@@ -75,19 +75,27 @@ Varsayılan yapılandırma ayarları:
 
 ## Fetch
 
-Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
+Sonuçlar `Object` formatında döner. `Array` olarak ulaşmak için `toArray()` metodunu kullanabilirsiniz.
+
+```php
+$results = $db->get('products');
+
+foreach ($products as $product) {
+    echo $product->name;
+}
+```
 
 ### Get
 
-Sonuçlar varsayılan olarak `Object` formatında döner. `Array` olarak ulaşmak için `toArray()`, `Json` olarak ulaşmak için `toJson()` metodlarını kullanabilirsiniz.
+Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
 
 ```php
-$results = $db->select('id, name, code, slug, price, stock')
-              ->table('products')
-              ->where('stock > ?', 5)
-              ->where('MONTH(created) = MONTH(NOW())')
-              ->order('id')
-              ->get();
+$products = $db->select('id, name, code, slug, price, stock')
+               ->table('products')
+               ->where('stock > ?', 5)
+               ->where('MONTH(created) = MONTH(NOW())')
+               ->order('id')
+               ->get();
 ```
 
 ```sql
@@ -99,6 +107,15 @@ ORDER BY id DESC
 
 -   `get()`
 -   `get('products')`
+
+### First
+
+Bir tablodan sadece tek bir satır almanız gerekiyorsa, `first()` yöntemini kullanabilirsiniz. Bu yöntem, varsayılan olarak tek bir stdClass nesnesi döndürür.
+
+```php
+$user = $db->from('users')->first();
+return $user->email;
+```
 
 ### Pluck
 
@@ -117,7 +134,7 @@ Array
 )
 ```
 
-Metoda ikinci bir parametre göndererek, elde edilen dizinin anahtarları olarak kullanılmasını istediğiniz sütunu belirtebilirsiniz:
+`pluck()` metoduna ikinci bir parametre göndererek, elde edilen dizinin anahtarları olarak kullanılmasını istediğiniz sütunu belirtebilirsiniz:
 
 ```php
 $pluck = $db->from('products')->pluck('name', 'code');
