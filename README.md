@@ -75,7 +75,24 @@ Varsayılan yapılandırma ayarları:
 
 ## Fetch
 
+Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
+
 ### Get
+
+Sonuç varsayılan olarak `Object` formatında döner. `Array` olarak ulaşmak isterseniz `toArray()` metoduna göz atın.
+
+```php
+$products = $db->get('products');
+
+foreach ($products as $product) {
+    echo $product->name;
+}
+```
+
+-   `get()`
+-   `get('products')`
+
+---
 
 Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
 
@@ -99,19 +116,6 @@ WHERE
 ORDER BY
   id DESC
 ```
-
-Sonuçlar `Object` formatında döner. `Array` olarak ulaşmak için `toArray()` metodunu kullanabilirsiniz.
-
-```php
-$products = $db->get('products');
-
-foreach ($products as $product) {
-    echo $product->name;
-}
-```
-
--   `get()`
--   `get('products')`
 
 ### toArray()
 
