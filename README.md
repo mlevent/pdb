@@ -77,7 +77,7 @@ Varsayılan yapılandırma ayarları:
 
 ### Get
 
-Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
+Sonuç varsayılan olarak `Object` formatında döner. `Array` olarak ulaşmak isterseniz `toArray()` metoduna göz atın.
 
 ```php
 $products = $db->get('products');
@@ -92,7 +92,7 @@ foreach ($products as $product) {
 
 ---
 
-Sonuç varsayılan olarak `Object` formatında döner. `Array` olarak ulaşmak isterseniz `toArray()` metoduna göz atın.
+Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
 
 ```php
 $db->select('id, name, code, slug, price, stock')
