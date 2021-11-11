@@ -95,9 +95,6 @@ WHERE stock > ? AND MONTH(created) = MONTH(NOW())
 ORDER BY id DESC
 ```
 
--   `get()`
--   `get('products')`
-
 Sonuçlar `Object` formatında döner. `Array` olarak ulaşmak için `toArray()` metodunu kullanabilirsiniz.
 
 ```php
@@ -108,13 +105,30 @@ foreach ($products as $product) {
 }
 ```
 
+-   `get()`
+-   `get('products')`
+
 ### First
 
 Bir tablodan sadece tek bir satır almanız gerekiyorsa, `first()` yöntemini kullanabilirsiniz. Bu yöntem, varsayılan olarak tek bir stdClass nesnesi döndürür.
 
 ```php
-$user = $db->from('users')->first();
-return $user->email;
+$user = $db->table('users')
+           ->first();
+
+echo $user->email;
+```
+
+### Value
+
+Bir satırın tamamına ihtiyacınız yoksa, value yöntemini kullanarak bir kayıttan tek bir değer çıkarabilirsiniz.
+
+```php
+$email = $db->table('users')
+            ->where('name', 'Walter')
+            ->value('email');
+
+echo $email;
 ```
 
 ### Pluck
@@ -122,7 +136,8 @@ return $user->email;
 Tek bir sütunun değerlerini içeren bir dizi istiyorsanız `pluck()` yöntemini kullanabilirsiniz.
 
 ```php
-$pluck = $db->from('products')->pluck('name');
+$pluck = $db->table('products')
+            ->pluck('name');
 ```
 
 ```
@@ -137,7 +152,8 @@ Array
 `pluck()` metoduna ikinci bir parametre göndererek, elde edilen dizinin anahtarları olarak kullanılmasını istediğiniz sütunu belirtebilirsiniz:
 
 ```php
-$pluck = $db->from('products')->pluck('name', 'code');
+$pluck = $db->table('products')
+            ->pluck('name', 'code');
 ```
 
 ```
@@ -154,7 +170,8 @@ Array
 Birincil anahtarla eşleşen kaydı döndürür.
 
 ```php
-$find = $db->table('products')->find(15);
+$find = $db->table('products')
+           ->find(15);
 ```
 
 ```sql
