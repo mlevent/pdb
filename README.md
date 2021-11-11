@@ -90,12 +90,7 @@ $db->select('id, name, code, slug, price, stock')
 
 ```sql
 SELECT
-  id,
-  name,
-  code,
-  slug,
-  price,
-  stock
+  id, name, code, slug, price, stock
 FROM
   products
 WHERE
