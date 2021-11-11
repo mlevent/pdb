@@ -75,17 +75,9 @@ Varsayılan yapılandırma ayarları:
 
 ## Fetch
 
-Sonuçlar `Object` formatında döner. `Array` olarak ulaşmak için `toArray()` metodunu kullanabilirsiniz.
+Sonuçlar varsayılan olarak `Object` formatında döner. `Array` olarak ulaşmak için `toArray()` metodunu kullanabilirsiniz.
 
-```php
-$results = $db->get('products');
-```
-
-```sql
-SELECT * FROM products
-```
-
-## Get
+### Get
 
 Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`
 
@@ -99,15 +91,20 @@ $results = $db->select('id, name, code, slug, price, stock')
 ```
 
 ```sql
-SELECT id, name, code, slug, price, stock
-FROM products
-WHERE stock > ? AND MONTH(created) = MONTH(NOW())
-ORDER BY id DESC
+SELECT
+    id, name, code, slug, price, stock
+FROM
+    products
+WHERE
+    stock > ? AND MONTH(created) = MONTH(NOW())
+ORDER BY
+    id DESC
 ```
 
----
+-   `get()`
+-   `get('products')`
 
-## Find
+### Find
 
 Birincil anahtarla eşleşen kaydı döndürür.
 
@@ -122,7 +119,7 @@ SELECT * FROM products WHERE id=?
 -   `find(15)`
 -   `find(15, 'products')`
 
-## Total
+### Total
 
 Toplam satır sayısına ulaşmak için kullanılır.
 
@@ -131,7 +128,7 @@ $total = $db->where('userGroup', 'Admin')
             ->total('users');
 ```
 
-## rowCount()
+### rowCount()
 
 Etkilenen satır sayısı veya okunan satır sayısına ulaşmak için kullanılır.
 
@@ -139,7 +136,7 @@ Etkilenen satır sayısı veya okunan satır sayısına ulaşmak için kullanıl
 echo $db->rowCount();
 ```
 
-## lastInsertId()
+### lastInsertId()
 
 Insert işlemlerinde kaydedilen son satırın birincil anahtarını döndürür.
 
