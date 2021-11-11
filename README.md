@@ -6,13 +6,13 @@ PHP için PDO sınıfı
 [![Latest Unstable Version](https://poser.pugx.org/mlevent/pdb/v/unstable.svg)](https://packagist.org/packages/mlevent/pdb)
 [![License](https://poser.pugx.org/mlevent/pdb/license.svg)](https://packagist.org/packages/mlevent/pdb)
 
-## Kurulum
+## Kurulum ve Kullanım
 
 ```
 $ composer require mlevent/pdb
 ```
 
-## Örnek Kullanım
+### Örnek Kullanım
 
 ```php
 $db = new \Mlevent\Pdb([
@@ -32,7 +32,7 @@ $db = new \Mlevent\Pdb([
 ]);
 ```
 
-## Composer Kullanmadan
+### Composer Kullanmadan
 
 Yeni bir dizin oluşturarak `src` klasörü altındaki tüm dosyaları içine kopyalayın ve `autoload.php` dosyasını require ile sayfaya dahil ederek sınıfı başlatın.
 
@@ -47,7 +47,7 @@ $db = new \Mlevent\Pdb([
 ]);
 ```
 
-## Yapılandırma
+### Yapılandırma
 
 Varsayılan yapılandırma ayarları:
 
@@ -178,7 +178,7 @@ $posts = $db->table('posts')
 $db->pager(25, 'sayfa');
 ```
 
-## pagerLinks()
+### pagerLinks()
 
 Linklerin çıktısını almak için kullanılır.
 
@@ -188,7 +188,7 @@ echo $db->pagerLinks();
 
 -   `«` `‹` `1` `2` `3` `4` `5` `6` `...` `›` `»`
 
-## pagerData()
+### pagerData()
 
 Toplam sonuç, sayfa sayısı, limit, ofset ve aktif sayfa gibi bilgilere ulaşmak için kullanılır.
 
@@ -207,7 +207,7 @@ Array
 )
 ```
 
-## setPagerTemplate()
+### setPagerTemplate()
 
 Link çıktısına ait HTML şablonu düzenlemek için kullanılır.
 
