@@ -75,9 +75,11 @@ Varsayılan yapılandırma ayarları:
 
 ## Fetch
 
+Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
+
 ### Get
 
-Sonuç varsayılan olarak `Object` formatında döner. `Array` olarak ulaşmak için `toArray()` metodunu kullanabilirsiniz.
+Sonuçlar varsayılan olarak `Object` formatında döner. `Array` olarak ulaşmak için `toArray()`, `Json` olarak ulaşmak için `toJson()` metodlarını kullanabilirsiniz.
 
 ```php
 $results = $db->select('id, name, code, slug, price, stock')
@@ -87,8 +89,6 @@ $results = $db->select('id, name, code, slug, price, stock')
               ->order('id')
               ->get();
 ```
-
-Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`
 
 ```sql
 SELECT id, name, code, slug, price, stock
