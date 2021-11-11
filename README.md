@@ -75,27 +75,17 @@ Varsayılan yapılandırma ayarları:
 
 ## Fetch
 
-Sonuçlar `Object` formatında döner. `Array` olarak ulaşmak için `toArray()` metodunu kullanabilirsiniz.
-
-```php
-$results = $db->get('products');
-
-foreach ($products as $product) {
-    echo $product->name;
-}
-```
-
 ### Get
 
 Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
 
 ```php
-$products = $db->select('id, name, code, slug, price, stock')
-               ->table('products')
-               ->where('stock > ?', 5)
-               ->where('MONTH(created) = MONTH(NOW())')
-               ->order('id')
-               ->get();
+$db->select('id, name, code, slug, price, stock')
+   ->table('products')
+   ->where('stock > ?', 5)
+   ->where('MONTH(created) = MONTH(NOW())')
+   ->order('id')
+   ->get();
 ```
 
 ```sql
@@ -107,6 +97,16 @@ ORDER BY id DESC
 
 -   `get()`
 -   `get('products')`
+
+Sonuçlar `Object` formatında döner. `Array` olarak ulaşmak için `toArray()` metodunu kullanabilirsiniz.
+
+```php
+$products = $db->get('products');
+
+foreach ($products as $product) {
+    echo $product->name;
+}
+```
 
 ### First
 
