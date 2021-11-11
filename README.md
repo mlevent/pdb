@@ -108,6 +108,30 @@ foreach ($products as $product) {
 -   `get()`
 -   `get('products')`
 
+### toArray()
+
+Sonuçlara `Array` formatında ulaşmak için kullanılır.
+
+```php
+$products = $db->table('products')
+               ->toArray()
+               ->get();
+
+foreach ($products as $product) {
+    echo $product['name'];
+}
+```
+
+Sonuçlara `Json` formatında ulaşmak için kullanılır.
+
+### toJson()
+
+```php
+$products = $db->table('products')
+               ->toJson()
+               ->get();
+```
+
 ### First
 
 Bir tablodan sadece tek bir satır almanız gerekiyorsa, `first()` yöntemini kullanabilirsiniz. Bu yöntem, varsayılan olarak tek bir stdClass nesnesi döndürür.
@@ -186,9 +210,13 @@ SELECT * FROM products WHERE id=?
 Toplam satır sayısına ulaşmak için kullanılır.
 
 ```php
-$total = $db->where('userGroup', 'Admin')
-            ->total('users');
+$total = $db->table('users')
+            ->where('userGroup', 'Admin')
+            ->total();
 ```
+
+-   `total()`
+-   `total('users')`
 
 ### rowCount()
 
@@ -415,8 +443,6 @@ $touch = $db->table('products')
 ```
 
 -   `touch('active', 'products')`
-
----
 
 ### Increment
 
