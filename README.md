@@ -112,6 +112,16 @@ Array
     [1] => Apple Iphone X 256 GB
     [2] => Apple Iphone X 512 GB
 )
+
+$pluck = $db->from('products')->pluck('name', 'code');
+
+// Output
+Array
+(
+    [APPLEX128] => Apple Iphone X 128 GB
+    [APPLEX256] => Apple Iphone X 256 GB
+    [APPLEX512] => Apple Iphone X 512 GB
+)
 ```
 
 ### Find
