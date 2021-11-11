@@ -89,10 +89,20 @@ $db->select('id, name, code, slug, price, stock')
 ```
 
 ```sql
-SELECT id, name, code, slug, price, stock
-FROM products
-WHERE stock > ? AND MONTH(created) = MONTH(NOW())
-ORDER BY id DESC
+SELECT
+  id,
+  name,
+  code,
+  slug,
+  price,
+  stock
+FROM
+  products
+WHERE
+  stock > ?
+  AND MONTH(created) = MONTH(NOW())
+ORDER BY
+  id DESC
 ```
 
 Sonuçlar `Object` formatında döner. `Array` olarak ulaşmak için `toArray()` metodunu kullanabilirsiniz.
@@ -122,9 +132,9 @@ foreach ($products as $product) {
 }
 ```
 
-Sonuçlara `Json` formatında ulaşmak için kullanılır.
-
 ### toJson()
+
+Sonuçlara `Json` formatında ulaşmak için kullanılır.
 
 ```php
 $products = $db->table('products')
