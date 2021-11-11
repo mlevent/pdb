@@ -95,12 +95,12 @@ foreach ($products as $product) {
 Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
 
 ```php
-$db->select('id, name, code, slug, price, stock')
-   ->table('products')
-   ->where('stock > ?', 5)
-   ->where('MONTH(created) = MONTH(NOW())')
-   ->order('id')
-   ->get();
+$products = $db->select('id, name, code, slug, price, stock')
+               ->table('products')
+               ->where('stock > ?', 5)
+               ->where('MONTH(created) = MONTH(NOW())')
+               ->order('id')
+               ->get();
 ```
 
 Yukarıdaki zincirin sorgu çıktısı şu şekilde olacaktır:
@@ -203,12 +203,12 @@ Array
 Birincil anahtarla eşleşen kaydı döndürür.
 
 ```php
-$find = $db->table('products')
+$user = $db->table('users')
            ->find(15);
 ```
 
 ```sql
-SELECT * FROM products WHERE id=?
+SELECT * FROM users WHERE id=?
 ```
 
 -   `find(15)`
