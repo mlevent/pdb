@@ -75,7 +75,7 @@ Varsayılan yapılandırma ayarları:
 
 ## Fetch
 
-Sonuçlar varsayılan olarak `Object` formatında döner. `Array` olarak ulaşmak için `toArray()` metodunu kullanabilirsiniz.
+Sonuç varsayılan olarak `Object` formatında döner. `Array` olarak ulaşmak için `toArray()` metodunu kullanabilirsiniz.
 
 ### Get
 
@@ -91,14 +91,10 @@ $results = $db->select('id, name, code, slug, price, stock')
 ```
 
 ```sql
-SELECT
-    id, name, code, slug, price, stock
-FROM
-    products
-WHERE
-    stock > ? AND MONTH(created) = MONTH(NOW())
-ORDER BY
-    id DESC
+SELECT id, name, code, slug, price, stock
+FROM products
+WHERE stock > ? AND MONTH(created) = MONTH(NOW())
+ORDER BY id DESC
 ```
 
 -   `get()`
