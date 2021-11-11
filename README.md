@@ -41,7 +41,7 @@ require '{pdb_dosyalarinin_bulundugu_dizin}/autoload.php';
 
 $db = new \Mlevent\Pdb([
     'database' => 'ecommerce',
-    'username' => 'root'
+    'username' => 'root',
     'password' => 'test',
     'charset'  => 'utf8'
 ]);
@@ -75,13 +75,17 @@ Varsayılan yapılandırma ayarları:
 
 ## Fetch
 
-Sonuçlar `Object` formatında döner. `Array` olarak ulaşmak için `getArr()` metodunu kullanabilirsiniz.
+Sonuçlar `Object` formatında döner. `Array` olarak ulaşmak için `toArray()` metodunu kullanabilirsiniz.
 
 ```php
 $results = $db->get('products');
 ```
 
--   `products` tablosundaki tüm sütun ve satırlar okunur.
+```sql
+SELECT * FROM products
+```
+
+Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`
 
 ```php
 $results = $db->select('id, name, code, slug, price, stock')
@@ -92,7 +96,12 @@ $results = $db->select('id, name, code, slug, price, stock')
               ->get();
 ```
 
-Kullanılabilecek metotlar: `get()`, `getArr()`, `getRow() or first()`, `getRowArr()`, `getCol()`, `getCols()`
+```sql
+SELECT id, name, code, slug, price, stock
+FROM products
+WHERE stock > ? AND MONTH(created) = MONTH(NOW())
+ORDER BY id DESC
+```
 
 ---
 
@@ -121,9 +130,11 @@ $update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['pa
 Birincil anahtarla eşleşen kaydı döndürür.
 
 ```php
-$find = $db->table('products')
-           ->find(15)
-           ->first();
+$find = $db->table('products')->find(15);
+```
+
+```sql
+SELECT * FROM products WHERE id=?
 ```
 
 -   `find(15)`
@@ -328,14 +339,6 @@ Bir veya birden fazla kaydı güncellemek için kullanılır.
 ```php
 $update = $db->table('products')
              ->where('id', 11255)
-             ->update(['active' => 1]);
-```
-
--   `find()` metodu ile
-
-```php
-$update = $db->table('products')
-             ->find(11255)
              ->update(['active' => 1]);
 ```
 

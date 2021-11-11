@@ -21,6 +21,9 @@
         private $fromDisk      = false;
         private $fromRedis     = false;
 
+        private $fetchMode     = null;
+        private $toJson        = false;
+
         private $queryHistory  = [];
         private $rowCount      = 0;
 
@@ -70,7 +73,7 @@
                 'collation' => 'utf8_unicode_ci',
                 'debug'     => false,
                 'cacheTime' => 60,
-                'cachePath' => __DIR__ . '/Cache'
+                'cachePath' => __DIR__ . '/Cache',
             ];
 
             foreach($this->config as $k => $v) 
@@ -90,7 +93,7 @@
                 PDO::ATTR_PERSISTENT         => true, 
                 PDO::MYSQL_ATTR_FOUND_ROWS   => true,
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$this->config['charset']} COLLATE {$this->config['collation']}"
             ];
 
@@ -110,6 +113,8 @@
          */
         protected function init(){
             
+            $this->fetchMode     = null;
+            $this->toJson        = false;
             $this->rowCount      = 0;
             $this->cache         = null;
             $this->redisActive   = false;
@@ -236,21 +241,9 @@
         /**
          * selectInit
          */
-        protected function selectFlush(){
-            $this->select = null;
+        protected function selectFlush($select = null){
+            $this->select = $select;
         }
-        
-        /**
-         * total
-         *
-         * @param mixed $table
-         */
-        public function total($table = null){
-            if(!is_null($table)) 
-                $this->table($table);
-            $this->selectFlush();
-            return $this->count()->getCol();
-        }   
         
         /**
          * selectFunctions
@@ -1264,10 +1257,12 @@
          * readQuery
          *
          * @param string $fetch
-         * @param int $cursor
+         * @param void $fetchMode
          * @return mixed
          */
-        public function readQuery($fetch = 'fetch', $cursor = PDO::FETCH_ASSOC){
+        public function readQuery($fetch = 'fetch', $fetchMode = null){
+
+            if(!$fetchMode && $this->fetchMode) $fetchMode = $this->fetchMode;
 
             if($this->pager){
                 if($totalRecord = $this->pagerRows ? $this->pagerRows : $this->pdo->query(str_replace('SELECT', 'SELECT COUNT(*)', $this->getReadQueryRaw(['select', 'limitOffset', 'order'])))->fetchColumn()){
@@ -1283,43 +1278,51 @@
                 
             $query  = $this->getReadQuery();
             $params = $this->getReadParams();
-            $hash   = $this->getReadHash($query, join((array)$params), $fetch, $cursor);
+            $hash   = $this->getReadHash($query, join((array)$params), $fetch, $fetchMode);
 
             // Redis Cache
-            if($this->redisActive){
-                if($this->redis->exists($hash)){
-                    $data = unserialize($this->redis->get($hash));
-                    $this->killQuery($query, $params, 'redis');
-                    $this->fromRedis = true;
-                    $this->rowCount = sizeof((array)$data);
-                    return $data;
-                }
+            if($this->redisActive && $this->redis->exists($hash)){
+                $data = unserialize($this->redis->get($hash));
+                $this->killQuery($query, $params, sizeof((array)$data), 'redis');
+                $this->fromRedis = true;
+                return $data;
             }
 
             // Disk Cache
-            if($this->cache)
-                $this->cache->setFile($hash);
-
+            if($this->cache) $this->cache->setFile($hash);
             if($this->cache && $cached = $this->cache->get()){
-                $this->killQuery($query, $params, 'disk');
+                $this->killQuery($query, $params, $cached['rows'], 'disk');
                 $this->fromDisk = true;
-                $this->rowCount = $cached['rows'];
                 return $cached['data'];
             }
 
             // SQL Query
             $runQuery = $this->pdo->prepare($query);
             if($runQuery->execute($params)){
-                $results = call_user_func_array([$runQuery, $fetch], [$cursor]);
+                
+                $results = call_user_func_array([$runQuery, $fetch], [$fetchMode]);
+                $results = $this->toJson ? json_encode($results) : $results;
+
                 if($this->redisActive)
                     $this->redis->set($hash, serialize($results), $this->redisActive);
                 if($this->cache)
                     $this->cache->set($results);
-                $this->killQuery($query, $params, 'mysql');
-                $this->rowCount = $runQuery->rowCount();
+
+                $this->killQuery($query, $params, $runQuery->rowCount(), 'mysql');
                 return $results;
             }
         }
+
+        /**
+         * total
+         *
+         * @param mixed $table
+         */
+        public function total($table = null){
+            if(!is_null($table)) 
+                $this->table($table);
+            return $this->value('COUNT(*)');
+        }   
         
         /**
          * get
@@ -1330,69 +1333,9 @@
         public function get($table = null){
             if(!is_null($table)) 
                 $this->table($table);
-            return $this->readQuery('fetchAll', PDO::FETCH_OBJ);
+            return $this->readQuery('fetchAll');
         }
         
-        /**
-         * getObj
-         *
-         * @param mixed $table
-         * @return void
-         */
-        public function getArr($table = null){
-            if(!is_null($table)) 
-                $this->table($table);
-            return $this->readQuery('fetchAll', PDO::FETCH_ASSOC);
-        }
-        
-        /**
-         * getRow
-         *
-         * @param mixed $table
-         * @return void
-         */
-        public function getRow($table = null){
-            if(!is_null($table)) 
-                $this->table($table);
-            return $this->readQuery('fetch', PDO::FETCH_OBJ);
-        }
-                
-        /**
-         * getRowObj
-         *
-         * @param mixed $table
-         * @return void
-         */
-        public function getRowArr($table = null){
-            if(!is_null($table)) 
-                $this->table($table);
-            return $this->readQuery('fetch', PDO::FETCH_ASSOC);
-        }
-
-        /**
-         * getCol
-         *
-         * @param mixed $table
-         * @return void
-         */
-        public function getCol($table = null){
-            if(!is_null($table)) 
-                $this->table($table);
-            return $this->readQuery('fetchColumn', 0);
-        }
-                
-        /**
-         * getCols
-         *
-         * @param mixed $table
-         * @return void
-         */
-        public function getCols($table = null){
-            if(!is_null($table)) 
-                $this->table($table);
-            return $this->readQuery('fetchAll', PDO::FETCH_COLUMN);
-        }
-
         /**
          * first
          *
@@ -1400,7 +1343,71 @@
          * @return void
          */
         public function first($table = null){
-            return $this->getRow($table);
+            if(!is_null($table)) 
+                $this->table($table);
+            return $this->readQuery('fetch');
+        }
+                
+        /**
+         * value
+         *
+         * @param mixed $column
+         * @return void
+         */
+        public function value($column){
+            $this->selectFlush($column);
+            return $this->readQuery('fetchColumn', 0);
+        }
+                
+        /**
+         * pluck
+         *
+         * @param mixed $table
+         * @return void
+         */
+        public function pluck($value, $key = null){
+            if (!is_null($key)) {
+                $this->selectFlush(implode(', ', [$key, $value]));
+                $data = $this->readQuery('fetchAll');
+                if (is_array($data) || is_object($data)) {
+                    return array_column($data, $value, $key);
+                } else {
+                    return $data;
+                }
+            } else {
+                $this->selectFlush($value);
+                return $this->readQuery('fetchAll', PDO::FETCH_COLUMN);
+            }
+        }
+
+        /**
+         * toArray
+         *
+         * @return $this
+         */
+        public function toArray(){
+            $this->fetchMode = PDO::FETCH_ASSOC;
+            return $this;
+        }
+
+        /**
+         * toObject
+         *
+         * @return $this
+         */
+        public function toObject(){
+            $this->fetchMode = PDO::FETCH_OBJ;
+            return $this;
+        }
+
+        /**
+         * toJson
+         *
+         * @return $this
+         */
+        public function toJson(){
+            $this->toJson = true;
+            return $this;
         }
 
         /**
@@ -1411,8 +1418,7 @@
         public function find($value, $table = null){
             if(!is_null($table)) 
                 $this->table($table);
-            $this->where($this->getPrimary($table), $value);
-            return $this;
+            return $this->where($this->getPrimary($table), $value)->first();
         }
 
         /**
@@ -1530,8 +1536,7 @@
                 $runQuery = $this->pdo->prepare($query);
 
                 if($runQuery->execute($valuesList))
-                    $this->killQuery($query, $insertData);
-                    $this->rowCount = $runQuery->rowCount();
+                    $this->killQuery($query, $insertData, $runQuery->rowCount());
                     return $this->pdo->lastInsertId();
             }
             $this->init();
@@ -1592,8 +1597,7 @@
                 $query = "UPDATE {$this->tableBuild()} SET {$this->createMarkerWithKey($data)} {$this->whereBuild()}";
                 $runQuery = $this->pdo->prepare($query);
                 if($runQuery->execute(array_merge(array_values($data), $this->whereParams)))
-                    $this->killQuery($query, $data);
-                    $this->rowCount = $runQuery->rowCount();
+                    $this->killQuery($query, $data, $runQuery->rowCount());
                     return $this->rowCount;
             }
             return false;
@@ -1648,8 +1652,7 @@
             $runQuery = $this->pdo->prepare($query);
 
             if($runQuery->execute($this->whereParams))
-                $this->killQuery($query, $this->whereParams);
-                $this->rowCount = $runQuery->rowCount();
+                $this->killQuery($query, $this->whereParams, $runQuery->rowCount());
                 return $this->rowCount;
 
             return false;
@@ -1902,10 +1905,11 @@
          * @param string|array $params
          * @return array
          */
-        public function addQueryHistory($query, $params = null, $from = false){
+        public function addQueryHistory($query, $params = null, $rowCount = 0, $from = null){
             return $this->queryHistory[] = [
                 'query'  => $query,
                 'params' => $params,
+                'count'  => $rowCount,
                 'from'   => $from,
             ];
         }
@@ -1917,9 +1921,10 @@
          * @param string|array $params
          * @return void
          */
-        public function killQuery($query, $params = null, $from = null){
-            $this->addQueryHistory($query, $params, $from);
+        public function killQuery($query, $params = null, $rowCount = 0, $from = null){
+            $this->addQueryHistory($query, $params, $rowCount, $from);
             $this->init();
+            if($rowCount) $this->rowCount = $rowCount;
         }
         
         /**
