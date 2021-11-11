@@ -100,6 +100,20 @@ ORDER BY id DESC
 -   `get()`
 -   `get('products')`
 
+### Pluck
+
+```php
+$pluck = $db->from('products')->pluck('name');
+
+// Output
+Array
+(
+    [0] => Apple Iphone X 128 GB
+    [1] => Apple Iphone X 256 GB
+    [2] => Apple Iphone X 512 GB
+)
+```
+
 ### Find
 
 Birincil anahtarla eşleşen kaydı döndürür.
