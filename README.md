@@ -102,20 +102,28 @@ ORDER BY id DESC
 
 ### Pluck
 
+Tek bir sütunun değerlerini içeren bir dizi istiyorsanız `pluck()` yöntemini kullanabilirsiniz.
+
 ```php
 $pluck = $db->from('products')->pluck('name');
+```
 
-// Output
+```
 Array
 (
     [0] => Apple Iphone X 128 GB
     [1] => Apple Iphone X 256 GB
     [2] => Apple Iphone X 512 GB
 )
+```
 
+Metoda ikinci bir parametre göndererek, elde edilen dizinin anahtarları olarak kullanılmasını istediğiniz sütunu belirtebilirsiniz:
+
+```php
 $pluck = $db->from('products')->pluck('name', 'code');
+```
 
-// Output
+```
 Array
 (
     [APPLEX128] => Apple Iphone X 128 GB
