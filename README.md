@@ -85,6 +85,8 @@ $results = $db->get('products');
 SELECT * FROM products
 ```
 
+## Get
+
 Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`
 
 ```php
@@ -101,26 +103,6 @@ SELECT id, name, code, slug, price, stock
 FROM products
 WHERE stock > ? AND MONTH(created) = MONTH(NOW())
 ORDER BY id DESC
-```
-
----
-
-## Raw Query
-
-Salt sql sorgusu çalıştırmak için kullanılır.
-
-### Raw Fecth
-
-```php
-$results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
-              ->getCols();
-```
-
-### Raw Exec
-
-```php
-$update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['paid'])
-             ->exec();
 ```
 
 ---
@@ -163,6 +145,26 @@ Insert işlemlerinde kaydedilen son satırın birincil anahtarını döndürür.
 
 ```php
 echo $db->lastInsertId();
+```
+
+---
+
+## Raw Query
+
+Salt sql sorgusu çalıştırmak için kullanılır.
+
+### Raw Fecth
+
+```php
+$results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
+              ->getCols();
+```
+
+### Raw Exec
+
+```php
+$update = $db->raw('UPDATE payments SET active = !active WHERE status = ?', ['paid'])
+             ->exec();
 ```
 
 ---
