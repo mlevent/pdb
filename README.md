@@ -75,11 +75,9 @@ Varsayılan yapılandırma ayarları:
 
 ## Fetch
 
-Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
-
 ### Get
 
-Sonuç varsayılan olarak `Object` formatında döner. `Array` olarak ulaşmak isterseniz `toArray()` metoduna göz atın.
+Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
 
 ```php
 $products = $db->get('products');
@@ -94,7 +92,7 @@ foreach ($products as $product) {
 
 ---
 
-Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
+Sonuç varsayılan olarak `Object` formatında döner. `Array` olarak ulaşmak isterseniz `toArray()` metoduna göz atın.
 
 ```php
 $db->select('id, name, code, slug, price, stock')
@@ -104,6 +102,8 @@ $db->select('id, name, code, slug, price, stock')
    ->order('id')
    ->get();
 ```
+
+Yukarıdaki zincirin sorgu çıktısı şu şekilde olacaktır:
 
 ```sql
 SELECT
