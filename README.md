@@ -221,6 +221,43 @@ SELECT * FROM users WHERE id=?
 -   `find(15)`
 -   `find(15, 'products')`
 
+### setChild()
+
+İlişki kurulan tablodaki verilerle sonuç içerisinde yeni bir element oluşturmak için `setChild()` yöntemini kullanabilirsiniz.
+
+```php
+$basketData = $db->table('users AS u')
+                 ->select('u.*')
+                 ->leftJoin('cart AS c', 'c.userId', 'u.id')
+                 ->setChild('cartData', ['name' => 'c.productName', 'quantity' => 'c.quantity'])
+                 ->where('u.id', 159)
+                 ->first();
+```
+
+```
+stdClass Object
+(
+    [id] => 159
+    [fullName] => John Doe
+    [email] => john@doe.com
+    [cartData] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [name] => Apple Iphone X 128 GB
+                    [quantity] => 1
+                )
+
+            [1] => stdClass Object
+                (
+                    [name] => Apple Iphone X 256 GB
+                    [quantity] => 1
+                )
+
+        )
+)
+```
+
 ### Total
 
 Toplam satır sayısına ulaşmak için kullanılır.

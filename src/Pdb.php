@@ -51,6 +51,7 @@
         private $isFilter      = false;
         private $isFilterValid = false;
 
+        private $joinChilds    = [];
         private $joinParams    = [];
         private $havingParams  = [];
         private $whereParams   = [];
@@ -135,6 +136,7 @@
             $this->isGroupIn     = false;
             $this->isFilter      = false;
             $this->isFilterValid = false;
+            $this->joinChilds    = [];
             $this->joinParams    = [];
             $this->havingParams  = [];
             $this->whereParams   = [];
@@ -317,10 +319,10 @@
          * @param string|array $table
          * @return $this
          */
-        public function table($table){
+        public function table($table, $as = null){
             $this->table = is_array($table) 
                 ? implode(', ', $table) 
-                : $table;
+                : (!empty($as) ? ($table . ' AS ' . $as) : $table);
             return $this;
         }
         
@@ -330,8 +332,8 @@
          * @param string|array $table
          * @return $this
          */
-        public function from($table){
-            $this->table($table);
+        public function from($table, $as = null){
+            $this->table($table, $as);
             return $this;
         }
         
@@ -449,6 +451,46 @@
          */
         public function joinBuild(){
             return $this->join ? $this->join : null;
+        }
+
+        /**
+         * setChild
+         *
+         * @param string $alias
+         * @param array $columns
+         * @return $this
+         */
+        public function setChild($alias, $columns){
+
+            if(is_null($this->joinBuild()))
+                return $this;
+            
+            $this->joinChilds[] = $alias;
+
+            $cols = array_map(function($k, $v){
+                return "'{$k}', {$v}";
+            }, array_keys($columns), array_values($columns));
+
+            $this->select("IF(count(" . current($columns) . "), CONCAT('[', GROUP_CONCAT(JSON_OBJECT(" . implode(', ', $cols) . ")), ']'), JSON_ARRAY()) AS {$alias}");
+            return $this;
+        }
+
+        /**
+         * childParser
+         *
+         * @param mixed $data
+         * @return array|object
+         */
+        public function childParser($results){
+            array_walk_recursive($results, function(&$v, $k){
+                if(is_object($v)){
+                    return $this->childParser($v);
+                }
+                if(in_array($k, $this->joinChilds)){
+                    $v = json_decode($v, $this->fetchMode == PDO::FETCH_ASSOC ? true : false);
+                }
+            });
+            return $results;
         }
         
         /**
@@ -1301,6 +1343,10 @@
             if($runQuery->execute($params)){
                 
                 $results = call_user_func_array([$runQuery, $fetch], [$fetchMode]);
+                
+                if(sizeof($this->joinChilds))
+                    $results = $this->childParser($results);
+
                 $results = $this->toJson ? json_encode($results) : $results;
 
                 if($this->redisActive)
