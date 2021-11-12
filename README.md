@@ -234,7 +234,7 @@ $basketData = $db->table('users AS u')
                  ->first();
 ```
 
-```
+```php
 stdClass Object
 (
     [id] => 159
