@@ -180,7 +180,7 @@ $pluck = $db->table('products')
             ->pluck('name');
 ```
 
-```
+```php
 Array
 (
     [0] => Apple Iphone X 128 GB
@@ -196,7 +196,7 @@ $pluck = $db->table('products')
             ->pluck('name', 'code');
 ```
 
-```
+```php
 Array
 (
     [APPLEX128] => Apple Iphone X 128 GB
@@ -343,7 +343,7 @@ Toplam sonuç, sayfa sayısı, limit, ofset ve aktif sayfa gibi bilgilere ulaşm
 var_dump($db->pagerData());
 ```
 
-```
+```php
 Array
 (
     [count] => 255
@@ -788,7 +788,7 @@ Sorgu listesine ulaşmak için kullanılır.
 var_dump($db->queryHistory());
 ```
 
-```
+```php
 Array
 (
     [0] => Array
@@ -823,7 +823,7 @@ Son sorguyu ait parametreleri görmek için kullanılır.
 var_dump($db->lastParams());
 ```
 
-```
+```php
 Array
 (
     [0] => 34066,
