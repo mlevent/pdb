@@ -97,15 +97,16 @@ foreach ($products as $product) {
 Bir SQL sorgusu oluşturup, bu sorguyu çalıştırmak için metodları zincir şeklinde kullanabilirsiniz.
 
 ```php
-$products = $db->select('id, name, code, price, stock')
-               ->table('products')
-               ->between('price', 900, 1500)
-               ->grouped(function($q){
-                    $q->like(['code', 'name'], '%iphone%')->orWhere('featured', 1);
-               })
-               ->in('categoryId', [1, 2, 3, 4, 5, 6])
-               ->order('price')
-               ->get();
+$query = $db->select('id, name, code, price, stock')
+            ->table('products')
+            ->between('price', 900, 1500)
+            ->grouped( function($q) {
+                $q->like(['code', 'name'], '%iphone%')
+                  ->orWhere('featured', 1);
+            })
+            ->in('categoryId', [1, 2, 3, 4, 5, 6])
+            ->order('price')
+            ->get();
 ```
 
 Yukarıdaki zincirin sorgu çıktısı şu şekilde olacaktır:
