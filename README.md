@@ -94,16 +94,16 @@ foreach ($products as $product) {
 
 ---
 
-Bir SQL sorgusu oluşturmak için metodları zincir şeklinde kullanabilirsiniz.
+Bir SQL sorgusu oluşturup, bu sorguyu çalıştırmak için metodları zincir şeklinde kullanabilirsiniz.
 
 ```php
-$products = $db->select('id, name, code, slug, price, stock')
+$products = $db->select('id, name, code, price, stock')
                ->table('products')
-               ->in('categoryId', [1, 2, 3])
-               ->between('price', 1000, 1500)
+               ->between('price', 900, 1500)
                ->grouped(function($q){
                     $q->like(['code', 'name'], '%iphone%')->orWhere('featured', 1);
                })
+               ->in('categoryId', [1, 2, 3, 4, 5, 6])
                ->order('price')
                ->get();
 ```
@@ -112,13 +112,13 @@ Yukarıdaki zincirin sorgu çıktısı şu şekilde olacaktır:
 
 ```sql
 SELECT
-  id, name, code, slug, price, stock
+  id, name, code, price, stock
 FROM
   products
 WHERE
-  categoryId IN(?,?,?)
-  AND price BETWEEN ? AND ?
+  price BETWEEN ? AND ?
   AND ((name LIKE ? OR code LIKE ?) OR featured=?)
+  AND categoryId IN(?,?,?,?,?,?)
 ORDER BY
   price DESC
 ```
@@ -694,6 +694,9 @@ Metodlar: `like()`, `orLike()`, `notLike()`, `orNotlike()`
 ```php
 $db->like('name', '%Apple%')...
 ```
+
+-   `like('name')`
+-   `like(['name', ...])`
 
 ## Order
 
