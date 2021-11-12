@@ -75,9 +75,11 @@ Varsayılan yapılandırma ayarları:
 
 ## Fetch
 
+Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
+
 ### Get
 
-Sonuç varsayılan olarak `Object` formatında döner. `Array` olarak ulaşmak isterseniz `toArray()` metoduna göz atın.
+Bu yöntem varsayılan olarak bir stdClass nesnesi döndürür. Sonuçlara `Array` formatında ulaşmak isterseniz `toArray()` metoduna göz atın.
 
 ```php
 $products = $db->get('products');
@@ -92,14 +94,17 @@ foreach ($products as $product) {
 
 ---
 
-Kullanılabilecek metodlar: `get()`, `first()`, `value()`, `pluck()`, `find()`
+Bir SQL sorgusu oluşturmak için metodları zincir şeklinde kullanabilirsiniz.
 
 ```php
 $products = $db->select('id, name, code, slug, price, stock')
                ->table('products')
-               ->where('stock > ?', 5)
-               ->where('MONTH(created) = MONTH(NOW())')
-               ->order('id')
+               ->in('categoryId', [1, 2, 3])
+               ->between('price', 1000, 1500)
+               ->grouped(function($q){
+                    $q->like(['code', 'name'], '%iphone%')->orWhere('featured', 1);
+               })
+               ->order('price')
                ->get();
 ```
 
@@ -111,10 +116,11 @@ SELECT
 FROM
   products
 WHERE
-  stock > ?
-  AND MONTH(created) = MONTH(NOW())
+  categoryId IN(?,?,?)
+  AND price BETWEEN ? AND ?
+  AND ((name LIKE ? OR code LIKE ?) OR featured=?)
 ORDER BY
-  id DESC
+  price DESC
 ```
 
 ### toArray()
@@ -252,8 +258,8 @@ Salt sql sorgusu çalıştırmak için kullanılır.
 ### Raw Fecth
 
 ```php
-$results = $db->raw('SELECT id FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
-              ->getCols();
+$results = $db->raw('SELECT * FROM products WHERE active = ? AND MONTH(created) = MONTH(NOW())', 1)
+              ->get();
 ```
 
 ### Raw Exec

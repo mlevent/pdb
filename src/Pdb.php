@@ -927,9 +927,9 @@
          */
         public function like($column, $search, $group = null, $andOr = _AND, $pattern = '%s LIKE ?'){
             $params = [];
-            $column = (array)$column;
-            foreach($column as $val) $params[sprintf($pattern, $val)] = $search;
-            return $this->whereFactory($params, $group, $andOr);
+            $tmpcol = (array)$column;
+            foreach($tmpcol as $val) $params[sprintf($pattern, $val)] = $search;
+            return $this->whereFactory($params, is_array($column) ? _OR : $group, $andOr);
         }
                 
         /**
