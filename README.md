@@ -223,7 +223,7 @@ SELECT * FROM users WHERE id=?
 
 ### setChild()
 
-İlişki kurulan tablodaki verilerle sonuç içerisinde yeni bir element oluşturmak için `setChild()` yöntemini kullanabilirsiniz.
+İlişki kurulan tablodaki verilerle sonuç içerisinde yeni bir element oluşturmak için `setChild()` yöntemini kullanabilirsiniz. `group()` veya `where()` metodlarıyla birlikte kullanılmalıdır.
 
 ```php
 $basketData = $db->table('users AS u')
