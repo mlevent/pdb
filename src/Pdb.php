@@ -11,8 +11,8 @@
 
     class Pdb
     {
-        public $pdo;
-        public $config;
+        private $pdo;
+        private $config;
         
         private $cache;
         private $redis;
@@ -29,15 +29,15 @@
 
         private $rawQuery      = null;
 
-        public $select         = null;
-        public $table          = null;
-        public $join           = null;
-        public $where          = null;
-        public $order          = null;
-        public $group          = null;
-        public $having         = null;
-        public $limit          = null;
-        public $offset         = null;
+        private $select         = null;
+        private $table          = null;
+        private $join           = null;
+        private $where          = null;
+        private $order          = null;
+        private $group          = null;
+        private $having         = null;
+        private $limit          = null;
+        private $offset         = null;
 
         private $pager;
         private $pagerRows;
