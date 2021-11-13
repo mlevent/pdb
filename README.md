@@ -221,43 +221,6 @@ SELECT * FROM users WHERE id=?
 -   `find(15)`
 -   `find(15, 'products')`
 
-### setChild()
-
-İlişki kurulan tabloyla sonuç içerisinde yeni bir child element oluşturmak için `setChild()` yöntemini kullanabilirsiniz. `group()` veya `where()` metodlarından en az biriyle birlikte kullanılmalıdır.
-
-```php
-$basketData = $db->table('users AS u')
-                 ->select('u.*')
-                 ->leftJoin('cart AS c', 'c.userId', 'u.id')
-                 ->setChild('cartData', ['name' => 'c.productName', 'quantity' => 'c.quantity'])
-                 ->where('u.id', 159)
-                 ->first();
-```
-
-```php
-stdClass Object
-(
-    [id] => 159
-    [fullName] => John Doe
-    [email] => john@doe.com
-    [cartData] => Array
-        (
-            [0] => stdClass Object
-                (
-                    [name] => Apple Iphone X 128 GB
-                    [quantity] => 1
-                )
-
-            [1] => stdClass Object
-                (
-                    [name] => Apple Iphone X 256 GB
-                    [quantity] => 1
-                )
-
-        )
-)
-```
-
 ### Total
 
 Toplam satır sayısına ulaşmak için kullanılır.
@@ -663,6 +626,43 @@ $db->table('products as p')
 -   `leftJoin('images', 'products.id', 'images.productId')`
 -   `leftJoin('images', 'products.id = images.productId')`
 -   `leftJoin('images ON products.id = images.productId')`
+
+### joinNode()
+
+İlişki kurulan tabloyla sonuç içerisinde yeni bir child element oluşturmak için `joinNode()` yöntemini kullanabilirsiniz.
+
+```php
+$basketData = $db->table('users AS u')
+                 ->select('u.*')
+                 ->leftJoin('cart AS c', 'c.userId', 'u.id')
+                 ->joinNode('cartData', ['name' => 'c.productName', 'quantity' => 'c.quantity'])
+                 ->group('u.id')
+                 ->first();
+```
+
+```php
+stdClass Object
+(
+    [id] => 159
+    [fullName] => John Doe
+    [email] => john@doe.com
+    [cartData] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [name] => Apple Iphone X 128 GB
+                    [quantity] => 1
+                )
+
+            [1] => stdClass Object
+                (
+                    [name] => Apple Iphone X 256 GB
+                    [quantity] => 1
+                )
+
+        )
+)
+```
 
 ## Where
 

@@ -51,7 +51,7 @@
         private $isFilter      = false;
         private $isFilterValid = false;
 
-        private $joinChilds    = [];
+        private $joinNodes     = [];
         private $joinParams    = [];
         private $havingParams  = [];
         private $whereParams   = [];
@@ -136,7 +136,7 @@
             $this->isGroupIn     = false;
             $this->isFilter      = false;
             $this->isFilterValid = false;
-            $this->joinChilds    = [];
+            $this->joinNodes     = [];
             $this->joinParams    = [];
             $this->havingParams  = [];
             $this->whereParams   = [];
@@ -454,39 +454,39 @@
         }
 
         /**
-         * setChild
+         * joinNode
          *
          * @param string $alias
          * @param array $columns
          * @return $this
          */
-        public function setChild($alias, $columns){
+        public function joinNode($alias, $columns){
 
             if(is_null($this->joinBuild()))
                 return $this;
             
-            $this->joinChilds[] = $alias;
+            $this->joinNodes[] = $alias;
 
             $cols = array_map(function($k, $v){
                 return "'{$k}', {$v}";
             }, array_keys($columns), array_values($columns));
 
-            $this->select("IF(count(" . current($columns) . "), CONCAT('[', GROUP_CONCAT(JSON_OBJECT(" . implode(', ', $cols) . ")), ']'), JSON_ARRAY()) AS {$alias}");
+            $this->select("IF(ISNULL(".current($columns)."), JSON_ARRAY(), CONCAT('[', GROUP_CONCAT(JSON_OBJECT(" . implode(', ', $cols) . ")), ']')) AS {$alias}");
             return $this;
         }
 
         /**
-         * childParser
+         * nodeParser
          *
          * @param mixed $data
          * @return array|object
          */
-        public function childParser($results){
+        public function nodeParser($results){
             array_walk_recursive($results, function(&$v, $k){
                 if(is_object($v)){
-                    return $this->childParser($v);
+                    return $this->nodeParser($v);
                 }
-                if(in_array($k, $this->joinChilds)){
+                if(in_array($k, $this->joinNodes)){
                     $v = json_decode($v, $this->fetchMode == PDO::FETCH_ASSOC ? true : false);
                 }
             });
@@ -1344,8 +1344,8 @@
                 
                 $results = call_user_func_array([$runQuery, $fetch], [$fetchMode]);
                 
-                if(sizeof($this->joinChilds))
-                    $results = $this->childParser($results);
+                if(sizeof($this->joinNodes))
+                    $results = $this->nodeParser($results);
 
                 $results = $this->toJson ? json_encode($results) : $results;
 
