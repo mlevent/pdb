@@ -17,7 +17,7 @@ $ composer require mlevent/pdb
 ```php
 $db = new \Mlevent\Pdb([
     'database' => 'ecommerce',
-    'username' => 'root'
+    'username' => 'root',
     'password' => 'test',
     'charset'  => 'utf8'
 ]);
