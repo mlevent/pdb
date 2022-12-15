@@ -21,7 +21,7 @@
         private $fromDisk      = false;
         private $fromRedis     = false;
 
-        private $fetchMode     = null;
+        private $fetchMode     = PDO::FETCH_OBJ;
         private $toJson        = false;
 
         private $queryHistory  = [];
@@ -94,7 +94,7 @@
                 PDO::ATTR_PERSISTENT         => true, 
                 PDO::MYSQL_ATTR_FOUND_ROWS   => true,
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+                PDO::ATTR_DEFAULT_FETCH_MODE => $this->fetchMode,
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$this->config['charset']} COLLATE {$this->config['collation']}"
             ];
 
@@ -114,7 +114,7 @@
          */
         protected function init(){
             
-            $this->fetchMode     = null;
+            $this->fetchMode     = PDO::FETCH_OBJ;
             $this->toJson        = false;
             $this->rowCount      = 0;
             $this->cache         = null;
