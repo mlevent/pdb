@@ -1,32 +1,40 @@
-# PDB
+<h1 align="center">⛓️ PDB</h1>
+<p align="center">PHP için PDO query-builder</p>
+<p align="center">
+<img src="https://img.shields.io/packagist/v/mlevent/pdb?style=plastic"/>
+<img src="https://img.shields.io/github/license/mlevent/pdb?style=plastic"/>
+<img src="https://img.shields.io/github/issues/mlevent/pdb?style=plastic"/>
+<img src="https://img.shields.io/github/last-commit/mlevent/pdb?style=plastic"/>
+<img src="https://img.shields.io/github/stars/mlevent/pdb?style=plastic"/>
+<img src="https://img.shields.io/github/forks/mlevent/pdb?style=plastic"/>
+</p>
 
-PHP için PDO sınıfı
+## Kurulum
 
-[![Latest Stable Version](https://poser.pugx.org/mlevent/pdb/v/stable.svg)](https://packagist.org/packages/mlevent/pdb)
-[![Latest Unstable Version](https://poser.pugx.org/mlevent/pdb/v/unstable.svg)](https://packagist.org/packages/mlevent/pdb)
-[![License](https://poser.pugx.org/mlevent/pdb/license.svg)](https://packagist.org/packages/mlevent/pdb)
+🛠️ Paketi composer ile projenize dahil edin;
 
-## Kurulum ve Kullanım
-
-```
-$ composer require mlevent/pdb
+```bash
+composer require mlevent/pdb
 ```
 
 ### Örnek Kullanım
 
 ```php
-$db = new \Mlevent\Pdb([
+use Mlevent\Pdb;
+
+/**
+ * MYSQL
+ */
+$db = new Pdb([
     'database' => 'ecommerce',
     'username' => 'root',
-    'password' => 'test',
-    'charset'  => 'utf8'
+    'password' => 'test'
 ]);
-```
 
-Sqlite kullanımı için:
-
-```php
-$db = new \Mlevent\Pdb([
+/**
+ * SQLITE
+ */
+$db = new Pdb([
     'driver'   => 'sqlite',
     'database' => 'ecommerce.sqlite'
 ]);
@@ -39,11 +47,12 @@ Yeni bir dizin oluşturarak `src` klasörü altındaki tüm dosyaları içine ko
 ```php
 require '{pdb_dosyalarinin_bulundugu_dizin}/autoload.php';
 
-$db = new \Mlevent\Pdb([
+use Mlevent\Pdb;
+
+$db = new Pdb([
     'database' => 'ecommerce',
     'username' => 'root',
-    'password' => 'test',
-    'charset'  => 'utf8'
+    'password' => 'test'
 ]);
 ```
 
